@@ -1,4 +1,4 @@
-package com.backend.backend;
+package com._blog.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
