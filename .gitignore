@@ -4,7 +4,10 @@
 .idea/
 .vscode/
 *.iml
+*.ipr
+*.iws
 *.swp
+*.swo
 
 # ===================================================================
 # Operating System Files
@@ -13,10 +16,13 @@
 Thumbs.db
 
 # ===================================================================
-# Java / Spring Boot (for your backend)
+# Java / Spring Boot (Backend)
 # ===================================================================
 # Compiled output
 /target/
+/out/
+/bin/
+/build/
 *.class
 
 # Package files
@@ -26,8 +32,16 @@ Thumbs.db
 
 # Log files
 *.log
+*.out
+
+# Spring Boot specific
+.spring-boot-devtools.properties
+spring.log
 
 # Maven specific
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/timing.properties
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -36,24 +50,21 @@ release.properties
 dependency-reduced-pom.xml
 
 # Gradle specific
-.gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
 build/
 
 # ===================================================================
-# Node / Angular (for your frontend)
+# Node / Angular (Frontend)
 # ===================================================================
-# Node dependency directory
-# This is the most important one to ignore!
 /node_modules/
 /frontend/node_modules/
 
-# Build output
 /dist/
 /frontend/dist/
 /.angular/
 /frontend/.angular/
 
-# Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
