@@ -27,6 +27,14 @@ export class Register {
       return;
     }
 
-    this.authService.register(registerForm.value);
+    // Call the service and subscribe to the response
+    this.authService.register(registerForm.value).subscribe({
+      next: (response) => {
+        console.log('Registration successful!', response);
+      },
+      error: (err) => {
+        console.error('Registration failed:', err);
+      }
+    });
   }
 }
