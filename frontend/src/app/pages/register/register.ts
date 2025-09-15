@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth';
@@ -13,9 +13,12 @@ import { RouterLink } from '@angular/router';
 })
 export class Register {
 
-  constructor(private authService: AuthService) {}
+  errorMessage: string | null = null; 
+
+  constructor(private authService: AuthService , private cdr: ChangeDetectorRef) {}
 
   onSubmit(registerForm: NgForm) {
+    this.errorMessage = null;
     //  console.log('Register form submitted!');
     if (registerForm.invalid) {
       return;
@@ -33,7 +36,11 @@ export class Register {
         console.log('Registration successful!', response);
       },
       error: (err) => {
-        console.error('Registration failed:', err);
+        console.error('Full error object:', err);
+
+        this.errorMessage = err.error?.message || 'An unknown error occurred.';
+        console.error('Registration failed:', this.errorMessage);
+        this.cdr.detectChanges(); 
       }
     });
   }

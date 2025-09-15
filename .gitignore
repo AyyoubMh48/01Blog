@@ -18,30 +18,21 @@ Thumbs.db
 # ===================================================================
 # Java / Spring Boot (Backend)
 # ===================================================================
-# Compiled output
-/target/
-/out/
-/bin/
-/build/
+backend/target/
+backend/out/
+backend/bin/
+backend/build/
 *.class
-
-# Package files
 *.jar
 *.war
 *.ear
-
-# Log files
 *.log
 *.out
-
-# Spring Boot specific
-.spring-boot-devtools.properties
 spring.log
+.spring-boot-devtools.properties
 
-# Maven specific
-.mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
-.mvn/timing.properties
+# Maven
+backend/.mvn/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -49,26 +40,32 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 
-# Gradle specific
-.gradle/
-!gradle/wrapper/gradle-wrapper.jar
-build/
+# Gradle
+backend/.gradle/
+backend/build/
+!backend/gradle/wrapper/gradle-wrapper.jar
 
 # ===================================================================
 # Node / Angular (Frontend)
 # ===================================================================
-/node_modules/
-/frontend/node_modules/
-
-/dist/
-/frontend/dist/
-/.angular/
-/frontend/.angular/
-
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Other
 coverage/
 browserslist-stats.json
+
+# ===================================================================
+# Docker
+# ===================================================================
+backend/Dockerfile
+backend/docker-compose.override.yml
+backend/db-data/
+
+# ===================================================================
+# Rootless Docker (Linux)
+# ===================================================================
+.docker/
+.local/share/docker/

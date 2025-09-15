@@ -3,44 +3,33 @@
   <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
     <div>
       <label for="username">Username</label>
-      <input 
-        type="text" 
-        id="username" 
-        name="username" 
-        ngModel 
-        required>
+      <input type="text" id="username" name="username" ngModel required />
     </div>
     <div>
       <label for="email">Email</label>
-      <input 
-        type="email" 
-        id="email" 
-        name="email" 
-        ngModel 
-        required 
-        email>
+      <input type="email" id="email" name="email" ngModel required email />
     </div>
     <div>
       <label for="password">Password</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        ngModel 
-        required>
+      <input type="password" id="password" name="password" ngModel required />
     </div>
     <div>
       <label for="confirmPassword">Confirm Password</label>
-      <input 
-        type="password" 
-        id="confirmPassword" 
-        name="confirmPassword" 
-        ngModel 
-        required>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        ngModel
+        required
+      />
+    </div>
+    <div
+      *ngIf="errorMessage"
+      style="color: red; margin-top: 10px; margin-bottom: 10px"
+    >
+      {{ errorMessage }}
     </div>
     <button type="submit">Register</button>
   </form>
-  <p>
-    Already have an account? <a routerLink="/login">Login here</a>
-  </p>
+  <p>Already have an account? <a routerLink="/login">Login here</a></p>
 </div>

@@ -9,18 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import java.util.Map;
+import java.util.HashMap; 
+// import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:4200")
+// @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDto registerDto) {
         User newUser = new User();
         newUser.setUsername(registerDto.getUsername());
         newUser.setEmail(registerDto.getEmail());
@@ -28,6 +30,9 @@ public class AuthController {
 
         authService.registerUser(newUser);
 
-        return ResponseEntity.ok("User registered successfully!");
+         Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully!");
+
+        return ResponseEntity.ok(response);
     }
 }
