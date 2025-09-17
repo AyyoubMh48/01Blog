@@ -1,1 +1,28 @@
-<p>feed works!</p>
+<div class="feed-container">
+  <h1>Your Feed</h1>
+
+  <section class="post-form">
+    <form #postForm="ngForm" (ngSubmit)="onPostSubmit(postForm)">
+      <textarea
+        name="content"
+        rows="4"
+        placeholder="Share your thoughts..."
+        ngModel
+        required
+      ></textarea>
+      <button type="submit" [disabled]="postForm.invalid">Post</button>
+    </form>
+  </section>
+
+  <section class="post-list">
+    <div *ngFor="let post of posts" class="post-card">
+      <div class="post-header">
+        <span class="author">{{ post.author.username }}</span>
+        <span class="timestamp">{{ post.createdAt | date: 'medium' }}</span>
+      </div>
+      <div class="post-content">
+        <p>{{ post.content }}</p>
+      </div>
+    </div>
+  </section>
+</div>
