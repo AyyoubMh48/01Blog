@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
+
+export interface JwtResponse {
+  token: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -15,8 +21,15 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, userData);
   }
 
-  login(credentials: any) {
-    console.log('Logging in with:', credentials);
-        // return this.http.post(`${this.apiUrl}/login`, credentials);
+  login(credentials: any): Observable<JwtResponse> {
+    return this.http.post<JwtResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(response => {
+        this.saveToken(response.token);
+      })
+    );
+  }
+
+  saveToken(token: string): void {
+    localStorage.setItem('authToken', token);
   }
 }

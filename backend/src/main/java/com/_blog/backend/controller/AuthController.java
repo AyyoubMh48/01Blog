@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.HashMap; 
+import com._blog.backend.dto.LoginDto;
+import com._blog.backend.dto.JwtResponse;
 // import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
@@ -34,5 +36,10 @@ public class AuthController {
         response.put("message", "User registered successfully!");
 
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
+        String token = authService.login(loginDto);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 }

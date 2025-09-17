@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth';
-import { RouterLink } from '@angular/router'
+import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router'
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -12,12 +13,28 @@ import { RouterLink } from '@angular/router'
 })
 export class Login {
 
-  constructor(private authService: AuthService) {}
+  errorMessage: string | null = null;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   onSubmit(loginForm: NgForm) {
     if (loginForm.invalid) {
       return; 
     }
-    this.authService.login(loginForm.value);
+    this.errorMessage = null;
+
+    this.authService.login(loginForm.value).subscribe({
+      next: () => {
+        this.router.navigate(['/feed']);
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Login failed. Please check your credentials.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
