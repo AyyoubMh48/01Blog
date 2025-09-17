@@ -15,17 +15,18 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob // Specifies that this should be stored as a large object (e.g., TEXT)
+    @Lob // large object , for storing long text, not just 255 char
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime createdAt;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    // many posts belong to one user
+    @ManyToOne(fetch = FetchType.LAZY)  // "lazy" mane :when load post ,hibernate will not load user(author) immediately
+    // the posts table will have column user_id points to users.id 
+    @JoinColumn(name = "user_id", nullable = false) // create user_id and store if of the user who create the post
     private User author;
 
-    @PrePersist
+    @PrePersist // auto set createdAt  = now() when insert new post
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
