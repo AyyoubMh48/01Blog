@@ -60,7 +60,7 @@ browserslist-stats.json
 # ===================================================================
 # Docker
 # ===================================================================
-backend/Dockerfile
+#backend/Dockerfile
 backend/docker-compose.override.yml
 backend/db-data/
 
