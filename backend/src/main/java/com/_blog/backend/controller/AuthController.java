@@ -15,7 +15,7 @@ import com._blog.backend.dto.LoginDto;
 import com._blog.backend.dto.JwtResponse;
 // import org.springframework.web.bind.annotation.CrossOrigin;
 
-@RestController
+@RestController //It means methods here return JSON responses (not HTML pages)
 @RequestMapping("/api/auth")
 // @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {

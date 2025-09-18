@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.Map;
 import java.util.HashMap;
 
-@ControllerAdvice
+@ControllerAdvice //This class will handle exceptions globally for all controllers. Instead of writing try/catch in every controller
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)

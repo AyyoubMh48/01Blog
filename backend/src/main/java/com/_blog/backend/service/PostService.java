@@ -23,7 +23,7 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional
+    @Transactional //ensures all database operations inside this method are atomic (all succeed or all fail).
     public PostResponseDto createPost(PostDto postDto, String authorEmail) {
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + authorEmail));
@@ -41,7 +41,7 @@ public class PostService {
     public List<PostResponseDto> getAllPosts() {
         return postRepository.findAll()
                 .stream()
-                .map(this::mapToDto) 
+                .map(this::mapToDto) //Convert each post to a PostResponseDto
                 .toList();
     }
      private PostResponseDto mapToDto(Post post) {

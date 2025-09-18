@@ -39,7 +39,6 @@ public class JwtService {
     }
     
     private String getEncodedSecretKey() {
-        // CORRECTED: The space has been removed from this single, long string.
         return "eW91ci12ZXJ5LXNlY3VyZS1zZWNyZXQta2V5LXRoYXQtaXNsb25nLWFuZC1yYW5kb20tYW5kLWF0LWxlYXN0LTI1Ni1iaXRz";
     }
 

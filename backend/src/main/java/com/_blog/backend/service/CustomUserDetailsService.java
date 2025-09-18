@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+//This service translates your User entity into a UserDetails object that Spring Security understands.
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

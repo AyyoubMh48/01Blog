@@ -40,10 +40,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults())
-            .csrf(csrf -> csrf.disable())
-            // .authorizeHttpRequests(auth ->
-            //     auth.anyRequest().permitAll()
-            // );
+            .csrf(csrf -> csrf.disable()) //csrf disable - rest api whit jwt (not cookies) 
+
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/posts").permitAll() 
@@ -51,7 +49,7 @@ public class SecurityConfig {
             )
             // Tell Spring to not manage sessions (we're using JWTs)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // Add our JWT filter before the standard username/password filter
+            // Add JWT filter before the standard username/password filter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
