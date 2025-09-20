@@ -22,6 +22,10 @@ import java.util.Arrays;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.security.authentication.AuthenticationProvider; 
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider; 
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -30,10 +34,19 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
    @Bean
@@ -45,10 +58,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/posts").permitAll() 
+                .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll() 
                 .anyRequest().authenticated()
             )
             // Tell Spring to not manage sessions (we're using JWTs)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
+            .authenticationProvider(authenticationProvider())
             // Add JWT filter before the standard username/password filter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

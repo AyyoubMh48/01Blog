@@ -1,1 +1,35 @@
-<p>block works!</p>
+<div class="block-container">
+  <div *ngIf="!userProfile && !errorMessage">Loading profile...</div>
+  <div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div *ngIf="userProfile">
+    <div class="profile-header">
+      <h2>{{ userProfile.username }}'s Block</h2>
+      
+      <div *ngIf="isLoggedIn" class="follow-buttons">
+        <button *ngIf="!userProfile.isFollowedByCurrentUser" (click)="follow()">
+          Follow
+        </button>
+        <button *ngIf="userProfile.isFollowedByCurrentUser" (click)="unfollow()" class="unfollow-btn">
+          Unfollow
+        </button>
+      </div>
+    </div>
+    
+    <section class="post-list">
+      <h3>Posts</h3>
+      <div *ngFor="let post of userProfile?.posts" class="post-card">
+        <div class="post-header">
+          <span class="timestamp">{{ post.createdAt | date: 'medium' }}</span>
+        </div>
+        <div class="post-content">
+          <p>{{ post.content }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="userProfile.posts?.length === 0">
+        This user hasn't posted anything yet.
+      </div>
+    </section>
+  </div>
+  </div>

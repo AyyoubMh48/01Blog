@@ -32,4 +32,10 @@ export class AuthService {
   saveToken(token: string): void {
     localStorage.setItem('authToken', token);
   }
+
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('authToken');
+    // The '!!' converts the string or null to a true/false boolean
+    return !!token; 
+  }
 }
