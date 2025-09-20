@@ -27,6 +27,12 @@ public class PostController {
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
+    @GetMapping("/feed")
+    public ResponseEntity<List<PostResponseDto>> getPersonalizedFeed(Principal principal) {
+        List<PostResponseDto> feed = postService.getFeedForUser(principal.getName());
+        return ResponseEntity.ok(feed);
+    }
+
     @GetMapping
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
         List<PostResponseDto> posts = postService.getAllPosts();

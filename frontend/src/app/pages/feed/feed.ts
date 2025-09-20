@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { PostService } from '../../services/post';
 import { Post } from '../../models/post';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-feed',
@@ -13,18 +14,28 @@ import { Post } from '../../models/post';
 })
 export class Feed implements OnInit {
   posts: Post[] = [];
+  isLoggedIn = false;
 
-  constructor(private postService: PostService) {}
+  constructor(
+      private postService: PostService,
+      private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
     this.loadPosts();
   }
 
   loadPosts(): void {
-    this.postService.getPosts().subscribe(posts => {
-      // Sort posts to show the newest first
-      this.posts = posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    });
+    if (this.isLoggedIn) {
+      this.postService.getFeed().subscribe(posts => {
+        this.posts =  posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());;
+      });
+    } else {
+      this.postService.getPublicPosts().subscribe(posts => {
+        this.posts =  posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());;
+      });
+    }
   }
 
   onPostSubmit(form: NgForm): void {

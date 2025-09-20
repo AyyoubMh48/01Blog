@@ -12,8 +12,12 @@ export class PostService {
   constructor(private http: HttpClient) { }
 
   // Method to get all posts
-  getPosts(): Observable<Post[]> {
+  getPublicPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(this.apiUrl);
+  }
+  //get the personalized feed for a logged-in user
+  getFeed(): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.apiUrl}/feed`);
   }
 
   // Method to create a new post

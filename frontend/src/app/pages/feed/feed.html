@@ -1,7 +1,8 @@
 <div class="feed-container">
-  <h1>Your Feed</h1>
+  <h1 *ngIf="isLoggedIn">Your Personalized Feed</h1>
+  <h1 *ngIf="!isLoggedIn">Public Feed</h1>
 
-  <section class="post-form">
+  <section *ngIf="isLoggedIn" class="post-form">
     <form #postForm="ngForm" (ngSubmit)="onPostSubmit(postForm)">
       <textarea
         name="content"
@@ -13,6 +14,12 @@
       <button type="submit" [disabled]="postForm.invalid">Post</button>
     </form>
   </section>
+
+  <div *ngIf="!isLoggedIn" class="login-prompt">
+    <p>
+      <a routerLink="/login">Log in</a> to create posts and see your personalized feed.
+    </p>
+  </div>
 
   <section class="post-list">
     <div *ngFor="let post of posts" class="post-card">

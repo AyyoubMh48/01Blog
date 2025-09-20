@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    // Spring Data JPA automatically creates a query from this method name
     List<Post> findAllByAuthor(User author);
+    List<Post> findByAuthorInOrderByCreatedAtDesc(List<User> authors);
 }
