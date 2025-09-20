@@ -11,13 +11,22 @@
         ngModel
         required
       ></textarea>
+      <div class="file-input-container">
+        <label for="file">Add an Image</label>
+        <input type="file" id="file" (change)="onFileSelected($event)" />
+      </div>
+
+      <div *ngIf="imagePreview" class="image-preview">
+        <img [src]="imagePreview" alt="Image Preview" />
+      </div>
       <button type="submit" [disabled]="postForm.invalid">Post</button>
     </form>
   </section>
 
   <div *ngIf="!isLoggedIn" class="login-prompt">
     <p>
-      <a routerLink="/login">Log in</a> to create posts and see your personalized feed.
+      <a routerLink="/login">Log in</a> to create posts and see your
+      personalized feed.
     </p>
   </div>
 
@@ -25,8 +34,13 @@
     <div *ngFor="let post of posts" class="post-card">
       <div class="post-header">
         <span class="author">{{ post.author.username }}</span>
-        <span class="timestamp">{{ post.createdAt | date: 'medium' }}</span>
+        <span class="timestamp">{{ post.createdAt | date : "medium" }}</span>
       </div>
+
+      <div *ngIf="post.mediaUrl" class="post-image-container">
+        <img [src]="post.mediaUrl" alt="Post image" />
+      </div>
+
       <div class="post-content">
         <p>{{ post.content }}</p>
       </div>

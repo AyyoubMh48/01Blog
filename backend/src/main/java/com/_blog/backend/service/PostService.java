@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com._blog.backend.entity.Subscription;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.stream.Collectors;
 import java.util.ArrayList;
@@ -30,14 +31,24 @@ public class PostService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Transactional //ensures all database operations inside this method are atomic (all succeed or all fail).
-    public PostResponseDto createPost(PostDto postDto, String authorEmail) {
+    public PostResponseDto createPost(String content, MultipartFile file, String authorEmail) {
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + authorEmail));
 
+        String mediaUrl = null;
+        // If a file was provided, upload it
+        if (file != null && !file.isEmpty()) {
+            mediaUrl = fileStorageService.storeFile(file);
+        }
+
         Post newPost = new Post();
-        newPost.setContent(postDto.getContent());
+        newPost.setContent(content);
         newPost.setAuthor(author);
+        newPost.setMediaUrl(mediaUrl);
 
 
         Post savedPost = postRepository.save(newPost);
@@ -77,6 +88,7 @@ public class PostService {
         dto.setId(post.getId());
         dto.setContent(post.getContent());
         dto.setCreatedAt(post.getCreatedAt());
+        dto.setMediaUrl(post.getMediaUrl());
 
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(post.getAuthor().getId());

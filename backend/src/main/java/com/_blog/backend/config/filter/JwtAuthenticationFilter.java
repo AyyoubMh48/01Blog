@@ -27,11 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        System.out.println("--- [JWT FILTER] Processing request for: " + request.getRequestURI());
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-
+        System.out.println("--- [JWT FILTER] Authorization Header: " + authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                        System.out.println("--- [JWT FILTER] No JWT Token found. Passing to next filter.");
             filterChain.doFilter(request, response);
 
             return;
@@ -39,10 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwt);
-
+        System.out.println("--- [JWT FILTER] Extracted User Email from JWT: " + userEmail);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
+                                System.out.println("--- [JWT FILTER] Token is valid. Setting security context.");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -50,7 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            }else {
+                System.out.println("--- [JWT FILTER] Token is NOT valid.");
             }
+        }else {
+            System.out.println("--- [JWT FILTER] User email not found in token or user is already authenticated.");
         }
         filterChain.doFilter(request, response);
     }

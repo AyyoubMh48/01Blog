@@ -69,3 +69,7 @@ backend/db-data/
 # ===================================================================
 .docker/
 .local/share/docker/
+
+
+# Secret configuration files
+application.properties

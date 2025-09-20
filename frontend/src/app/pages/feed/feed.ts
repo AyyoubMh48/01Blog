@@ -15,6 +15,8 @@ import { AuthService } from '../../services/auth';
 export class Feed implements OnInit {
   posts: Post[] = [];
   isLoggedIn = false;
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null
 
   constructor(
       private postService: PostService,
@@ -37,16 +39,35 @@ export class Feed implements OnInit {
       });
     }
   }
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      // Show image preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
 
   onPostSubmit(form: NgForm): void {
     if (form.invalid) {
       return;
     }
 
-    this.postService.createPost(form.value).subscribe(newPost => {
-      // Add the new post to the top of the list for a real-time feel
+    const formData = new FormData();
+    formData.append('content', form.value.content);
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile, this.selectedFile.name);
+    }
+
+    this.postService.createPost(formData).subscribe(newPost => {
       this.posts.unshift(newPost);
       form.reset();
+      this.selectedFile = null;
+      this.imagePreview = null;
     });
   }
 }

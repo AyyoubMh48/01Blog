@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 public class Post {
 
+    private String mediaUrl;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

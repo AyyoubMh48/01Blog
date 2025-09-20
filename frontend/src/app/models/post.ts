@@ -1,9 +1,10 @@
 export interface Post {
   id: number;
   content: string;
-  createdAt: string; // The backend sends this as a string
+  createdAt: string; 
   author: {
     id: number;
     username: string;
   };
+   mediaUrl?: string; 
 }

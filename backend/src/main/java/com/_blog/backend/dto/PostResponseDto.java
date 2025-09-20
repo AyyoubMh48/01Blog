@@ -9,4 +9,5 @@ public class PostResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private AuthorDto author;
+    private String mediaUrl;
 }

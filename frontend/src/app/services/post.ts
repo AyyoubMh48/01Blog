@@ -21,7 +21,7 @@ export class PostService {
   }
 
   // Method to create a new post
-  createPost(postData: { content: string }): Observable<Post> {
-    return this.http.post<Post>(this.apiUrl, postData);
+  createPost(formData: FormData): Observable<Post> {
+    return this.http.post<Post>(this.apiUrl, formData);
   }
 }
