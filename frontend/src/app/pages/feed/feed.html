@@ -45,11 +45,24 @@
         <p>{{ post.content }}</p>
       </div>
       <div class="post-actions">
-    <button (click)="toggleLike(post)" [class.liked]="post.likedByCurrentUser">
-      👍 Like
-    </button>
-    <span>{{ post.likeCount }} Likes</span>
-  </div>
+        <button
+          (click)="toggleLike(post)"
+          [class.liked]="post.likedByCurrentUser"
+        >
+          👍 Like
+        </button>
+        <span>{{ post.likeCount }} Likes</span>
+        <button (click)="toggleComments(post.id)" class="comment-toggle">
+          💬 {{ post.commentCount }} Comments
+        </button>
+      </div>
+
+      <app-comment-section
+        *ngIf="expandedPostIds.has(post.id)"
+        [postId]="post.id"
+        (commentAdded)="onCommentAdded(post)"
+      >
+      </app-comment-section>
     </div>
   </section>
 </div>

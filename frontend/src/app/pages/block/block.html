@@ -5,26 +5,52 @@
   <div *ngIf="userProfile">
     <div class="profile-header">
       <h2>{{ userProfile.username }}'s Block</h2>
-      
+
       <div *ngIf="isLoggedIn" class="follow-buttons">
         <button *ngIf="!userProfile.isFollowedByCurrentUser" (click)="follow()">
           Follow
         </button>
-        <button *ngIf="userProfile.isFollowedByCurrentUser" (click)="unfollow()" class="unfollow-btn">
+        <button
+          *ngIf="userProfile.isFollowedByCurrentUser"
+          (click)="unfollow()"
+          class="unfollow-btn"
+        >
           Unfollow
         </button>
       </div>
     </div>
-    
+
     <section class="post-list">
       <h3>Posts</h3>
       <div *ngFor="let post of userProfile?.posts" class="post-card">
         <div class="post-header">
-          <span class="timestamp">{{ post.createdAt | date: 'medium' }}</span>
+          <span class="timestamp">{{ post.createdAt | date : "medium" }}</span>
+        </div>
+        <div *ngIf="post.mediaUrl" class="post-image-container">
+          <img [src]="post.mediaUrl" alt="Post image" />
         </div>
         <div class="post-content">
           <p>{{ post.content }}</p>
         </div>
+        <div class="post-actions">
+          <button
+            (click)="toggleLike(post)"
+            [class.liked]="post.likedByCurrentUser"
+          >
+            👍 Like
+          </button>
+          <span>{{ post.likeCount }} Likes</span>
+          <button (click)="toggleComments(post.id)" class="comment-toggle">
+            💬 {{ post.commentCount }} Comments
+          </button>
+        </div>
+
+        <app-comment-section
+          *ngIf="expandedPostIds.has(post.id)"
+          [postId]="post.id"
+          (commentAdded)="onCommentAdded(post)"
+        >
+        </app-comment-section>
       </div>
 
       <div *ngIf="userProfile.posts?.length === 0">
@@ -32,4 +58,4 @@
       </div>
     </section>
   </div>
-  </div>
+</div>

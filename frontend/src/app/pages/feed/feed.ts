@@ -4,12 +4,14 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { PostService } from '../../services/post';
 import { Post } from '../../models/post';
 import { AuthService } from '../../services/auth';
-import { LikeService } from '../../services/like'; 
+import { LikeService } from '../../services/like';
+import { Router } from '@angular/router';
+import { CommentSectionComponent } from '../../components/comment-section/comment-section'; 
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,CommentSectionComponent],
   templateUrl: './feed.html',
   styleUrl: './feed.scss'
 })
@@ -17,12 +19,14 @@ export class Feed implements OnInit {
   posts: Post[] = [];
   isLoggedIn = false;
   selectedFile: File | null = null;
-  imagePreview: string | ArrayBuffer | null = null
+  imagePreview: string | ArrayBuffer | null = null;
+  expandedPostIds = new Set<number>(); ;
 
   constructor(
       private postService: PostService,
       private authService: AuthService,
-      private likeService: LikeService
+      private likeService: LikeService,
+      private router : Router
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +79,7 @@ export class Feed implements OnInit {
 
    toggleLike(post: Post): void {
     if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -82,6 +87,18 @@ export class Feed implements OnInit {
       post.likedByCurrentUser = !post.likedByCurrentUser;
       post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
     });
+  }
+
+  toggleComments(postId: number): void {
+    if (this.expandedPostIds.has(postId)) {
+      this.expandedPostIds.delete(postId);
+    } else {
+      this.expandedPostIds.add(postId);
+    }
+  }
+
+  onCommentAdded(post: Post): void {
+    post.commentCount++;
   }
 
 }

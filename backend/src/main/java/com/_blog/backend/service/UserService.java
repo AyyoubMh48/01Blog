@@ -26,29 +26,24 @@ public class UserService {
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+
+    @Autowired
+    private PostService postService; 
     
     @Transactional(readOnly = true) 
     public UserProfileDto getUserProfile(String username, String currentUsername) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        boolean isFollowing = false;
-        if (currentUsername != null) {
-            User currentUser = userRepository.findByEmail(currentUsername).orElse(null);
-            if (currentUser != null) {
-                isFollowing = subscriptionRepository.findByFollowerAndFollowing(currentUser, user).isPresent();
-            }
-        }
+        User currentUser = (currentUsername != null) ? userRepository.findByEmail(currentUsername).orElse(null) : null;
+
+        boolean isFollowing = (currentUser != null) && subscriptionRepository.findByFollowerAndFollowing(currentUser, user).isPresent();
         
         List<Post> userPosts = postRepository.findAllByAuthor(user);
         
-        List<PostResponseDto> postDtos = userPosts.stream().map(post -> {
-            PostResponseDto dto = new PostResponseDto();
-            dto.setId(post.getId());
-            dto.setContent(post.getContent());
-            dto.setCreatedAt(post.getCreatedAt());
-            return dto;
-        }).collect(Collectors.toList());
+        List<PostResponseDto> postDtos = userPosts.stream()
+                .map(post -> postService.mapToDto(post, currentUser))
+                .collect(Collectors.toList());
 
         UserProfileDto profileDto = new UserProfileDto();
         profileDto.setId(user.getId());

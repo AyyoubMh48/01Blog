@@ -9,4 +9,5 @@ export interface Post {
   mediaUrl?: string; 
   likeCount: number; 
   likedByCurrentUser: boolean;
+  commentCount: number;
 }

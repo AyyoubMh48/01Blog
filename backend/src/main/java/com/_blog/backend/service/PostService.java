@@ -89,7 +89,7 @@ public class PostService {
     }
 
 
-    private PostResponseDto mapToDto(Post post, User currentUser) {
+    public PostResponseDto mapToDto(Post post, User currentUser) {
         PostResponseDto dto = new PostResponseDto();
         dto.setId(post.getId());
         dto.setContent(post.getContent());
