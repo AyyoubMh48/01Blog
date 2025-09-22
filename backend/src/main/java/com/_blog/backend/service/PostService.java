@@ -5,6 +5,7 @@ import com._blog.backend.dto.PostDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.entity.Post;
 import com._blog.backend.entity.User;
+import com._blog.backend.repository.LikeRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.SubscriptionRepository;
 import com._blog.backend.repository.UserRepository;
@@ -34,6 +35,9 @@ public class PostService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private LikeRepository likeRepository;
+
     @Transactional //ensures all database operations inside this method are atomic (all succeed or all fail).
     public PostResponseDto createPost(String content, MultipartFile file, String authorEmail) {
         User author = userRepository.findByEmail(authorEmail)
@@ -52,14 +56,16 @@ public class PostService {
 
 
         Post savedPost = postRepository.save(newPost);
-        return mapToDto(savedPost);
+        return mapToDto(savedPost, author);
     }
     
 
-    public List<PostResponseDto> getAllPosts() {
+   @Transactional(readOnly = true)
+    public List<PostResponseDto> getAllPosts(String currentUserEmail) {
+        User currentUser = (currentUserEmail != null) ? userRepository.findByEmail(currentUserEmail).orElse(null) : null;
         return postRepository.findAll()
                 .stream()
-                .map(this::mapToDto) //Convert each post to a PostResponseDto
+                .map(post -> mapToDto(post, currentUser))
                 .toList();
     }
 
@@ -78,12 +84,12 @@ public class PostService {
         List<Post> posts = postRepository.findByAuthorInOrderByCreatedAtDesc(authorsToFetch);
 
         return posts.stream()
-                .map(this::mapToDto)
+                .map(post -> mapToDto(post, currentUser))
                 .toList();
     }
 
 
-    private PostResponseDto mapToDto(Post post) {
+    private PostResponseDto mapToDto(Post post, User currentUser) {
         PostResponseDto dto = new PostResponseDto();
         dto.setId(post.getId());
         dto.setContent(post.getContent());
@@ -95,6 +101,12 @@ public class PostService {
         authorDto.setUsername(post.getAuthor().getUsername());
         
         dto.setAuthor(authorDto);
+
+        dto.setLikeCount(likeRepository.countByPost(post));
+        
+        boolean isLiked = (currentUser != null) && likeRepository.findByPostAndUser(post, currentUser).isPresent();
+        dto.setLikedByCurrentUser(isLiked);
+        
         return dto;
     }
 }

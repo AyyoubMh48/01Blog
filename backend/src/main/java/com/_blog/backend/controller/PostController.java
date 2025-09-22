@@ -35,8 +35,10 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> posts = postService.getAllPosts();
+    public ResponseEntity<List<PostResponseDto>> getAllPosts(Principal principal) {
+        String currentUserEmail = (principal != null) ? principal.getName() : null;
+
+        List<PostResponseDto> posts = postService.getAllPosts(currentUserEmail);
         return ResponseEntity.ok(posts);
     }
 }

@@ -10,4 +10,6 @@ public class PostResponseDto {
     private LocalDateTime createdAt;
     private AuthorDto author;
     private String mediaUrl;
+    private long likeCount; 
+    private boolean likedByCurrentUser;
 }

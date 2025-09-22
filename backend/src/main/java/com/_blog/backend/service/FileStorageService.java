@@ -17,13 +17,10 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
         try {
-            // Upload the file to Cloudinary
             Map<String, Object> options = new HashMap<>();
-            options.put("folder", "01blog_uploads"); // Optional: organize uploads in a folder
-
+            options.put("folder", "01blog_uploads"); 
             Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), options);
 
-            // Get the secure URL of the uploaded file
             return (String) result.get("secure_url");
 
         } catch (IOException e) {

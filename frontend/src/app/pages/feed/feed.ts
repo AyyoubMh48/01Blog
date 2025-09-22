@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { PostService } from '../../services/post';
 import { Post } from '../../models/post';
 import { AuthService } from '../../services/auth';
+import { LikeService } from '../../services/like'; 
 
 @Component({
   selector: 'app-feed',
@@ -20,7 +21,8 @@ export class Feed implements OnInit {
 
   constructor(
       private postService: PostService,
-      private authService: AuthService
+      private authService: AuthService,
+      private likeService: LikeService
   ) {}
 
   ngOnInit(): void {
@@ -70,4 +72,16 @@ export class Feed implements OnInit {
       this.imagePreview = null;
     });
   }
+
+   toggleLike(post: Post): void {
+    if (!this.isLoggedIn) {
+      return;
+    }
+
+    this.likeService.toggleLike(post.id).subscribe(() => {
+      post.likedByCurrentUser = !post.likedByCurrentUser;
+      post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
+    });
+  }
+
 }

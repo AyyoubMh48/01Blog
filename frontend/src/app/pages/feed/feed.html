@@ -44,6 +44,12 @@
       <div class="post-content">
         <p>{{ post.content }}</p>
       </div>
+      <div class="post-actions">
+    <button (click)="toggleLike(post)" [class.liked]="post.likedByCurrentUser">
+      👍 Like
+    </button>
+    <span>{{ post.likeCount }} Likes</span>
+  </div>
     </div>
   </section>
 </div>

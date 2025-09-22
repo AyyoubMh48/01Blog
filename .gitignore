@@ -71,5 +71,3 @@ backend/db-data/
 .local/share/docker/
 
 
-# Secret configuration files
-application.properties

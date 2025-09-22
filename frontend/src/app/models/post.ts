@@ -6,5 +6,7 @@ export interface Post {
     id: number;
     username: string;
   };
-   mediaUrl?: string; 
+  mediaUrl?: string; 
+  likeCount: number; 
+  likedByCurrentUser: boolean;
 }
