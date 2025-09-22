@@ -6,19 +6,32 @@
     <div class="profile-header">
       <h2>{{ userProfile.username }}'s Block</h2>
 
-      <div *ngIf="isLoggedIn" class="follow-buttons">
-        <button *ngIf="!userProfile.isFollowedByCurrentUser" (click)="follow()">
-          Follow
-        </button>
-        <button
-          *ngIf="userProfile.isFollowedByCurrentUser"
-          (click)="unfollow()"
-          class="unfollow-btn"
-        >
-          Unfollow
+      <div class="profile-actions">
+        <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
+          <button *ngIf="!userProfile.isFollowedByCurrentUser" (click)="follow()">
+            Follow
+          </button>
+          <button *ngIf="userProfile.isFollowedByCurrentUser" (click)="unfollow()" class="unfollow-btn">
+            Unfollow
+          </button>
+        </div>
+
+        <button *ngIf="isLoggedIn && !isOwnProfile" (click)="showReportForm = !showReportForm" class="report-btn">
+          Report User
         </button>
       </div>
     </div>
+
+    <section *ngIf="showReportForm" class="report-form">
+      <h4>Report {{ userProfile.username }}</h4>
+      <form #reportForm="ngForm" (ngSubmit)="onReportSubmit(reportForm)">
+        <textarea name="reason" rows="4" placeholder="Please provide a reason for your report..." ngModel required></textarea>
+        <div class="form-actions">
+          <button type="submit" [disabled]="reportForm.invalid">Submit Report</button>
+          <button type="button" (click)="showReportForm = false">Cancel</button>
+        </div>
+      </form>
+    </section>
 
     <section class="post-list">
       <h3>Posts</h3>
@@ -33,10 +46,7 @@
           <p>{{ post.content }}</p>
         </div>
         <div class="post-actions">
-          <button
-            (click)="toggleLike(post)"
-            [class.liked]="post.likedByCurrentUser"
-          >
+          <button (click)="toggleLike(post)" [class.liked]="post.likedByCurrentUser">
             👍 Like
           </button>
           <span>{{ post.likeCount }} Likes</span>
@@ -44,18 +54,13 @@
             💬 {{ post.commentCount }} Comments
           </button>
         </div>
-
-        <app-comment-section
-          *ngIf="expandedPostIds.has(post.id)"
-          [postId]="post.id"
-          (commentAdded)="onCommentAdded(post)"
-        >
+        <app-comment-section *ngIf="expandedPostIds.has(post.id)" [postId]="post.id"
+          (commentAdded)="onCommentAdded(post)">
         </app-comment-section>
       </div>
-
       <div *ngIf="userProfile.posts?.length === 0">
         This user hasn't posted anything yet.
       </div>
     </section>
-  </div>
-</div>
+
+  </div> </div> ```

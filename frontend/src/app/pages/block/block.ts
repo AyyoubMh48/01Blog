@@ -9,12 +9,13 @@ import { LikeService } from '../../services/like';
 import { Post } from '../../models/post';
 import { Router } from '@angular/router';
 import { CommentSectionComponent } from '../../components/comment-section/comment-section';
-
+import { ReportService } from '../../services/report'; 
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-block',
   standalone: true,
-  imports: [CommonModule,CommentSectionComponent],
+  imports: [CommonModule,CommentSectionComponent,FormsModule],
   templateUrl: './block.html',
   styleUrl: './block.scss'
 })
@@ -22,7 +23,9 @@ export class Block implements OnInit {
   userProfile: UserProfile | null = null;
   errorMessage: string | null = null;
   isLoggedIn = false;
-  expandedPostIds = new Set<number>(); ;
+  expandedPostIds = new Set<number>();
+  isOwnProfile = false; 
+  showReportForm = false;
 
   constructor(
     private route: ActivatedRoute, //  read URL
@@ -30,15 +33,20 @@ export class Block implements OnInit {
     private subscriptionService: SubscriptionService,
     private authService: AuthService,
     private likeService: LikeService,
-    private router : Router
-
+    private router : Router,
+    private reportService: ReportService 
 
   ) {}
 
   ngOnInit(): void {
-       this.isLoggedIn = this.authService.isLoggedIn();
-    // Get 'username' from the URL
+    this.isLoggedIn = this.authService.isLoggedIn();
     const username = this.route.snapshot.paramMap.get('username');
+
+    const currentUser = this.authService.getCurrentUser(); 
+    if (this.isLoggedIn && currentUser?.sub === username) {
+      this.isOwnProfile = true;
+    }
+
 
     if (username) {
       this.userService.getUserProfile(username).subscribe({
@@ -92,4 +100,15 @@ export class Block implements OnInit {
   onCommentAdded(post: Post): void {
     post.commentCount++;
   }
+
+  onReportSubmit(form: NgForm): void {
+    if (form.invalid || !this.userProfile) {
+      return;
+    }
+    this.reportService.reportUser(this.userProfile.id, form.value.reason).subscribe(() => {
+      this.showReportForm = false;
+      alert('Report submitted successfully. Thank you.'); 
+    });
+  }
+
 }

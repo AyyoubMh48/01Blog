@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-
+import { jwtDecode } from 'jwt-decode'; // npm install jwt-decode 
 
 export interface JwtResponse {
   token: string;
@@ -37,5 +37,13 @@ export class AuthService {
     const token = localStorage.getItem('authToken');
     // The '!!' converts the string or null to a true/false boolean
     return !!token; 
+  }
+
+   getCurrentUser(): { sub: string } | null {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      return null;
+    }
+    return jwtDecode(token); // Decodes the token to get the payload
   }
 }
