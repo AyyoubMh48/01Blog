@@ -1,1 +1,30 @@
-<p>admin works!</p>
+<div class="admin-dashboard">
+  <h2>Admin Dashboard</h2>
+  
+  <section class="reports-section">
+    <h3>Open User Reports</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Reason</th>
+          <th>Reporter</th>
+          <th>Reported User</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of reports">
+          <td>{{ report.id }}</td>
+          <td>{{ report.reason }}</td>
+          <td>{{ report.reporter.username }}</td>
+          <td>{{ report.reportedUser.username }}</td>
+          <td>{{ report.createdAt | date:'short' }}</td>
+        </tr>
+        <tr *ngIf="reports.length === 0">
+          <td colspan="5">No open reports.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

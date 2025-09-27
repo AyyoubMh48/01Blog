@@ -4,5 +4,5 @@ export interface UserProfile {
   id: number;
   username: string;
   posts: Post[];
-  isFollowedByCurrentUser: boolean;
+  followedByCurrentUser: boolean;
 }

@@ -3,9 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode'; // npm install jwt-decode 
+import { Router } from '@angular/router';
 
+// This interface is for the login response from the server
 export interface JwtResponse {
   token: string;
+}
+// This interface is for the data inside the decoded JWT.
+export interface DecodedToken {
+  sub: string;      // subject (email)
+  username: string;
+  role: string;
+   exp: number; //(expiration time)
 }
 @Injectable({
   providedIn: 'root'
@@ -14,7 +23,10 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8080/api/auth';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+  private router: Router 
+  ) { }
 
   register(userData: any) {
 
@@ -39,11 +51,41 @@ export class AuthService {
     return !!token; 
   }
 
-   getCurrentUser(): { sub: string } | null {
+  getCurrentUser(): DecodedToken | null {
     const token = localStorage.getItem('authToken');
     if (!token) {
       return null;
     }
-    return jwtDecode(token); // Decodes the token to get the payload
+    
+    try {
+      return jwtDecode<DecodedToken>(token);
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      return null;
+    }
   }
+
+  checkTokenValidity(): void {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    try {
+      const decodedToken = jwtDecode<DecodedToken>(token);
+      const isExpired = decodedToken.exp * 1000 < Date.now();
+      
+      if (isExpired) {
+        console.log("Token is expired, logging out.");
+        this.logout();
+      }
+    } catch (error) {
+      console.error("Invalid token found, logging out.", error);
+      this.logout();
+    }
+  }
+}
+
+
+logout(): void {
+  localStorage.removeItem('authToken');
+  window.location.href = '/login';
+}
 }

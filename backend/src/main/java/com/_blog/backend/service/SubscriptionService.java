@@ -30,7 +30,7 @@ public class SubscriptionService {
             throw new SubscriptionException("You cannot follow yourself.");
         }
 
-        if (subscriptionRepository.findByFollowerAndFollowing(follower, following).isPresent()) {
+        if (subscriptionRepository.existsByFollower_IdAndFollowing_Id(follower.getId(), following.getId())) {
             throw new SubscriptionException("You are already following this user.");
         }
 

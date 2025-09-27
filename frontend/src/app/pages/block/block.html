@@ -8,10 +8,10 @@
 
       <div class="profile-actions">
         <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
-          <button *ngIf="!userProfile.isFollowedByCurrentUser" (click)="follow()">
+          <button *ngIf="!userProfile.followedByCurrentUser" (click)="follow()">
             Follow
           </button>
-          <button *ngIf="userProfile.isFollowedByCurrentUser" (click)="unfollow()" class="unfollow-btn">
+          <button *ngIf="userProfile.followedByCurrentUser" (click)="unfollow()" class="unfollow-btn">
             Unfollow
           </button>
         </div>

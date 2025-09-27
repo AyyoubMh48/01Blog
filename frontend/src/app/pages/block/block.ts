@@ -51,6 +51,7 @@ export class Block implements OnInit {
     if (username) {
       this.userService.getUserProfile(username).subscribe({
         next: (profile) => {
+                    console.log("--- [FRONTEND DEBUG] Profile data received:", profile);
           this.userProfile = profile;
         },
         error: (err) => {
@@ -64,7 +65,7 @@ export class Block implements OnInit {
     if (!this.userProfile) return;
     this.subscriptionService.follow(this.userProfile.id).subscribe(() => {
       if (this.userProfile) {
-        this.userProfile.isFollowedByCurrentUser = true;
+        this.userProfile.followedByCurrentUser = true;
       }
     });
   }
@@ -73,7 +74,7 @@ export class Block implements OnInit {
     if (!this.userProfile) return;
     this.subscriptionService.unfollow(this.userProfile.id).subscribe(() => {
       if (this.userProfile) {
-        this.userProfile.isFollowedByCurrentUser = false;
+        this.userProfile.followedByCurrentUser = false;
       }
     });
   }
