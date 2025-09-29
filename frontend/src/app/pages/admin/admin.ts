@@ -44,4 +44,10 @@ export class Admin implements OnInit {
       });
     }
   }
+  resolveReport(reportId: number, action: string): void {
+    this.adminService.resolveReport(reportId, action).subscribe(() => {
+      // Remove the report from the local array since it's no longer "OPEN"
+      this.reports = this.reports.filter(r => r.id !== reportId);
+    });
+  }
 }

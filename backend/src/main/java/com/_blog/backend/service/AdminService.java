@@ -78,6 +78,20 @@ public class AdminService {
         // Finally, delete the post itself
         postRepository.delete(post);
     }
+    @Transactional
+    public void resolveReport(Long reportId, String action) {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
+
+        if ("RESOLVE".equalsIgnoreCase(action)) {
+            report.setStatus(ReportStatus.RESOLVED);
+        } else if ("IGNORE".equalsIgnoreCase(action)) {
+            report.setStatus(ReportStatus.IGNORED);
+        } else {
+            throw new IllegalArgumentException("Invalid action: " + action);
+        }
+        reportRepository.save(report);
+    }
 
     private UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();

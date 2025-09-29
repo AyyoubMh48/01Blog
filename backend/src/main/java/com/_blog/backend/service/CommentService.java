@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private CommentRepository commentRepository;
     @Autowired
     private PostRepository postRepository;
@@ -40,6 +43,10 @@ public class CommentService {
         newComment.setAuthor(author);
         
         Comment savedComment = commentRepository.save(newComment);
+        
+         String message = author.getOriginalUsername() + " commented on your post.";
+        notificationService.createNotification(post.getAuthor(), message, "/posts/" + post.getId());
+
         return mapToDto(savedComment);
     }
 

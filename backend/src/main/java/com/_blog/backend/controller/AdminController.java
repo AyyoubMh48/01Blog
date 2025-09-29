@@ -49,4 +49,10 @@ public class AdminController {
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
         return ResponseEntity.ok(adminService.getAllPosts());
     }
+    @PostMapping("/reports/{reportId}/action")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> resolveReport(@PathVariable Long reportId, @RequestParam String action) {
+        adminService.resolveReport(reportId, action);
+        return ResponseEntity.ok(Map.of("message", "Report status updated successfully."));
+    }
 }

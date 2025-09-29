@@ -1,0 +1,25 @@
+<header class="main-header">
+  <nav class="nav-links">
+    <a routerLink="/feed">01Blog</a>
+    <a routerLink="/admin" *ngIf="isAdmin">Admin</a>
+    <button *ngIf="isLoggedIn" (click)="logout()" class="logout-btn">Logout</button>
+  </nav>
+
+  <div class="user-actions" *ngIf="isLoggedIn">
+    <div class="notification-bell" (click)="showNotifications = !showNotifications">
+      <span>🔔</span>
+      <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+
+      <div *ngIf="showNotifications" class="notification-dropdown">
+        <div *ngIf="notifications.length === 0">No notifications yet.</div>
+        <ul>
+          <li *ngFor="let notification of notifications" 
+              [class.unread]="!notification.read"
+              (click)="markAsRead(notification)">
+            {{ notification.message }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>

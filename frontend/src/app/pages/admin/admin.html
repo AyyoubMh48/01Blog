@@ -11,6 +11,7 @@
           <th>Reporter</th>
           <th>Reported User</th>
           <th>Date</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -20,9 +21,23 @@
           <td>{{ report.reporter.username }}</td>
           <td>{{ report.reportedUser.username }}</td>
           <td>{{ report.createdAt | date : "short" }}</td>
+          <td>
+            <button
+              (click)="resolveReport(report.id, 'RESOLVE')"
+              class="btn-resolve"
+            >
+              Resolve
+            </button>
+            <button
+              (click)="resolveReport(report.id, 'IGNORE')"
+              class="btn-ignore"
+            >
+              Ignore
+            </button>
+          </td>
         </tr>
         <tr *ngIf="reports.length === 0">
-          <td colspan="5">No open reports.</td>
+          <td colspan="6">No open reports.</td>
         </tr>
       </tbody>
     </table>

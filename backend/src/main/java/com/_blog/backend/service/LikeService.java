@@ -17,6 +17,9 @@ import java.util.Optional;
 public class LikeService {
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private LikeRepository likeRepository;
 
     @Autowired
@@ -45,5 +48,8 @@ public class LikeService {
             newLike.setPost(post);
             likeRepository.save(newLike);
         }
+        String message = user.getOriginalUsername() + " liked your post.";
+        notificationService.createNotification(post.getAuthor(), message, "/posts/" + post.getId());
     }
+    
 }

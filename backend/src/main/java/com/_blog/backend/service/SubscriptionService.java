@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubscriptionService {
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private SubscriptionRepository subscriptionRepository;
 
     @Autowired //no need to create objects manually ->"userRepository = new UserRepositoryImpl();"
@@ -38,6 +41,9 @@ public class SubscriptionService {
         subscription.setFollower(follower);
         subscription.setFollowing(following);
         subscriptionRepository.save(subscription);
+
+        String message = follower.getOriginalUsername() + " started following you.";
+    notificationService.createNotification(following, message, "/block/" + follower.getOriginalUsername());
     }
 
     @Transactional
