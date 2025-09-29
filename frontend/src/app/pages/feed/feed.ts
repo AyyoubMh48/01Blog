@@ -20,7 +20,8 @@ export class Feed implements OnInit {
   isLoggedIn = false;
   selectedFile: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
-  expandedPostIds = new Set<number>(); ;
+  expandedPostIds = new Set<number>();
+  currentUsername: string | null = null;
 
   constructor(
       private postService: PostService,
@@ -31,6 +32,7 @@ export class Feed implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
+    this.currentUsername = this.authService.getCurrentUser()?.username || null;
     this.loadPosts();
   }
 
@@ -42,6 +44,14 @@ export class Feed implements OnInit {
     } else {
       this.postService.getPublicPosts().subscribe(posts => {
         this.posts =  posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());;
+      });
+    }
+  }
+  deletePost(postId: number): void {
+    if (confirm('Are you sure you want to delete this post?')) {
+      this.postService.deletePost(postId).subscribe(() => {
+        // Remove the post from the local array for an instant UI update
+        this.posts = this.posts.filter(p => p.id !== postId);
       });
     }
   }

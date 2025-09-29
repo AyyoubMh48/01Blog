@@ -12,7 +12,7 @@ import java.util.List;
 import com._blog.backend.dto.PostResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
-
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -26,6 +26,21 @@ public class PostController {
         String authorEmail = principal.getName();
         PostResponseDto createdPost = postService.createPost(content,file, authorEmail);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+    }
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> updatePost(
+            @PathVariable Long postId,
+            @RequestBody Map<String, String> payload, // Expecting {"content": "new text"}
+            Principal principal) {
+        
+        PostResponseDto updatedPost = postService.updatePost(postId, payload.get("content"), principal.getName());
+        return ResponseEntity.ok(updatedPost);
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId, Principal principal) {
+        postService.deletePost(postId, principal.getName());
+        return ResponseEntity.ok(Map.of("message", "Post deleted successfully."));
     }
 
     @GetMapping("/feed")

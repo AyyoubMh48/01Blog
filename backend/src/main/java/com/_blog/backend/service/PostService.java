@@ -5,6 +5,7 @@ import com._blog.backend.dto.PostDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.entity.Post;
 import com._blog.backend.entity.User;
+import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.SubscriptionRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com._blog.backend.entity.Subscription;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.stream.Collectors;
 import java.util.ArrayList;
@@ -38,6 +40,9 @@ public class PostService {
     @Autowired
     private LikeRepository likeRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     @Transactional //ensures all database operations inside this method are atomic (all succeed or all fail).
     public PostResponseDto createPost(String content, MultipartFile file, String authorEmail) {
         User author = userRepository.findByEmail(authorEmail)
@@ -57,6 +62,41 @@ public class PostService {
 
         Post savedPost = postRepository.save(newPost);
         return mapToDto(savedPost, author);
+    }
+
+    @Transactional
+    public PostResponseDto updatePost(Long postId, String content, String userEmail) {
+        User currentUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // Security Check: Ensure the user owns the post
+        if (!post.getAuthor().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("You do not have permission to edit this post.");
+        }
+
+        post.setContent(content);
+        Post updatedPost = postRepository.save(post);
+        return mapToDto(updatedPost, currentUser);
+    }
+
+    @Transactional
+    public void deletePost(Long postId, String userEmail) {
+        User currentUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // Security Check: Ensure the user owns the post
+        if (!post.getAuthor().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("You do not have permission to delete this post.");
+        }
+
+        // We can reuse the admin logic for deletion
+        commentRepository.deleteAllByPost(post);
+        likeRepository.deleteAllByPost(post);
+        postRepository.delete(post);
     }
     
 
