@@ -5,13 +5,13 @@ import { PostService } from '../../services/post';
 import { Post } from '../../models/post';
 import { AuthService } from '../../services/auth';
 import { LikeService } from '../../services/like';
-import { Router } from '@angular/router';
+import { Router,RouterLink } from '@angular/router';
 import { CommentSectionComponent } from '../../components/comment-section/comment-section'; 
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, FormsModule,CommentSectionComponent],
+  imports: [CommonModule, FormsModule,CommentSectionComponent,RouterLink],
   templateUrl: './feed.html',
   styleUrl: './feed.scss'
 })

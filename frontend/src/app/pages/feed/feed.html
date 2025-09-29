@@ -36,8 +36,14 @@
         <span class="author">{{ post.author.username }}</span>
         <span class="timestamp">{{ post.createdAt | date : "medium" }}</span>
       </div>
-       <div *ngIf="isLoggedIn && post.author.username === currentUsername" class="post-owner-actions">
-      <button class="btn-delete" (click)="deletePost(post.id)">Delete</button>
+      <div
+        *ngIf="isLoggedIn && post.author.username === currentUsername"
+        class="post-owner-actions"
+      >
+        <button [routerLink]="['/post/edit', post.id]" class="btn-edit">
+          Edit
+        </button>
+        <button class="btn-delete" (click)="deletePost(post.id)">Delete</button>
       </div>
 
       <div *ngIf="post.mediaUrl" class="post-image-container">

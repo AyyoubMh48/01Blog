@@ -12,4 +12,5 @@ public class PostResponseDto {
     private String mediaUrl;
     private long likeCount; 
     private boolean likedByCurrentUser;
+    private long commentCount;
 }

@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import com._blog.backend.dto.PostResponseDto;
+import com._blog.backend.entity.Post;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import java.util.Map;
@@ -56,4 +58,12 @@ public class PostController {
         List<PostResponseDto> posts = postService.getAllPosts(currentUserEmail);
         return ResponseEntity.ok(posts);
     }
+    
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long postId, Principal principal) {
+        String currentUserEmail = (principal != null) ? principal.getName() : null;
+        PostResponseDto post = postService.getPostById(postId, currentUserEmail);
+        return ResponseEntity.ok(post);
+    }
+    
 }

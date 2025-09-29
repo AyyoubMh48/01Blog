@@ -24,8 +24,16 @@ export class PostService {
   createPost(formData: FormData): Observable<Post> {
     return this.http.post<Post>(this.apiUrl, formData);
   }
-  
+
   deletePost(postId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${postId}`);
+  }
+
+  getPost(postId: number): Observable<Post> {
+    return this.http.get<Post>(`${this.apiUrl}/${postId}`);
+  }
+
+  updatePost(postId: number, formData: FormData): Observable<Post> {
+    return this.http.put<Post>(`${this.apiUrl}/${postId}`, formData);
   }
 }
