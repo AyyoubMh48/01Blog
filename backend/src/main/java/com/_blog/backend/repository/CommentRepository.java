@@ -12,4 +12,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // posts from oldest to newest
     List<Comment> findAllByPostOrderByCreatedAtAsc(Post post);
+
+    void deleteAllByPost(Post post);
 }

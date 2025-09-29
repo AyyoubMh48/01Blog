@@ -16,4 +16,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     // Efficiently counts the number of likes on a post
     long countByPost(Post post);
+
+    void deleteAllByPost(Post post); 
 }

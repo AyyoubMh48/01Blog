@@ -22,4 +22,11 @@ export class AdminService {
   banUser(userId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/${userId}/ban`, {});
   }
+  getAllPosts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/posts`);
+  }
+
+  deletePost(postId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/posts/${postId}`);
+  }
 }

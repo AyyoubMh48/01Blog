@@ -1,5 +1,6 @@
 package com._blog.backend.controller;
 
+import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.ReportResponseDto;
 import com._blog.backend.dto.UserDto;
 import com._blog.backend.entity.Report;
@@ -35,5 +36,17 @@ public class AdminController {
     public ResponseEntity<?> banUser(@PathVariable Long userId) {
         adminService.banUser(userId);
         return ResponseEntity.ok(Map.of("message", "User has been banned successfully."));
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        adminService.deletePost(postId);
+        return ResponseEntity.ok(Map.of("message", "Post deleted successfully."));
+    }
+    @GetMapping("/posts")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+        return ResponseEntity.ok(adminService.getAllPosts());
     }
 }

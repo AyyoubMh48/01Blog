@@ -1,6 +1,6 @@
 <div class="admin-dashboard">
   <h2>Admin Dashboard</h2>
-  
+
   <section class="reports-section">
     <h3>Open User Reports</h3>
     <table>
@@ -19,7 +19,7 @@
           <td>{{ report.reason }}</td>
           <td>{{ report.reporter.username }}</td>
           <td>{{ report.reportedUser.username }}</td>
-          <td>{{ report.createdAt | date:'short' }}</td>
+          <td>{{ report.createdAt | date : "short" }}</td>
         </tr>
         <tr *ngIf="reports.length === 0">
           <td colspan="5">No open reports.</td>
@@ -41,22 +41,55 @@
         </tr>
       </thead>
       <tbody>
-  <tr *ngFor="let user of users">
-    <td>{{ user.id }}</td>
-    <td>{{ user.username }}</td>
-    <td>{{ user.email }}</td>
-    <td>{{ user.role }}</td>
-    <td>
-      <span *ngIf="user.banned" class="status-banned">Banned</span>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <span *ngIf="user.banned" class="status-banned">Banned</span>
 
-      <span *ngIf="user.role === 'ROLE_ADMIN' && !user.banned">Admin</span>
+            <span *ngIf="user.role === 'ROLE_ADMIN' && !user.banned"
+              >Admin</span
+            >
 
-      <button *ngIf="!user.banned && user.role === 'ROLE_USER'" (click)="banUser(user.id)" class="btn-ban">
-        Ban User
-      </button>
-    </td>
-  </tr>
-</tbody>
+            <button
+              *ngIf="!user.banned && user.role === 'ROLE_USER'"
+              (click)="banUser(user.id)"
+              class="btn-ban"
+            >
+              Ban User
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="posts-section">
+    <h3>All Posts</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Content</th>
+          <th>Author</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td>{{ post.id }}</td>
+          <td>{{ post.content.slice(0, 50) }}...</td>
+          <td>{{ post.author.username }}</td>
+          <td>{{ post.createdAt | date : "short" }}</td>
+          <td>
+            <button (click)="deletePost(post.id)" class="btn-delete">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </section>
 </div>

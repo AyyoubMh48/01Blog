@@ -2,10 +2,15 @@ package com._blog.backend.service;
 
 import com._blog.backend.dto.UserDto;
 import com._blog.backend.dto.AuthorDto;
+import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.ReportResponseDto;
+import com._blog.backend.entity.Post;
 import com._blog.backend.entity.Report;
 import com._blog.backend.entity.ReportStatus;
 import com._blog.backend.entity.User;
+import com._blog.backend.repository.CommentRepository;
+import com._blog.backend.repository.LikeRepository;
+import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.ReportRepository;
 import com._blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,16 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private LikeRepository likeRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private PostService postService;
+
     public List<ReportResponseDto> getOpenReports() {
         return reportRepository.findAllByStatus(ReportStatus.OPEN)
                 .stream()
@@ -36,6 +51,13 @@ public class AdminService {
                 .map(this::mapToUserDto)
                 .collect(Collectors.toList());
     }
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getAllPosts() {
+        // We can't know who the "current user" is in this context, so we pass null
+        return postRepository.findAll().stream()
+                .map(post -> postService.mapToDto(post, null))
+                .toList();
+    }
 
     @Transactional
     public void banUser(Long userId) {
@@ -43,6 +65,18 @@ public class AdminService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
         user.setBanned(true);
         userRepository.save(user);
+    }
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // First, delete all associated likes and comments
+        commentRepository.deleteAllByPost(post);
+        likeRepository.deleteAllByPost(post);
+
+        // Finally, delete the post itself
+        postRepository.delete(post);
     }
 
     private UserDto mapToUserDto(User user) {
