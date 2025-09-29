@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.EqualsAndHashCode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,13 +14,14 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
+@EqualsAndHashCode(of = "id")
 public class User implements UserDetails{
 
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
     private Long id;
 
-    @Column(nullable = false, unique = true) // cannot be null && unique values
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -30,7 +32,9 @@ public class User implements UserDetails{
 
     private String role;
 
-     @Override
+    private boolean isBanned = false;
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
     }
@@ -38,6 +42,9 @@ public class User implements UserDetails{
      @Override
     public String getUsername() {
         return email;
+    }
+    public String getOriginalUsername() {
+        return this.username;
     }
 
     @Override

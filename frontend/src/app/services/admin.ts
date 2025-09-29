@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -12,5 +13,13 @@ export class AdminService {
 
   getOpenReports(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/reports`);
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/users`);
+  }
+  
+  banUser(userId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/${userId}/ban`, {});
   }
 }

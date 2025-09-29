@@ -17,7 +17,6 @@ export const routes: Routes = [
   { path: 'post/new', component: PostEditor },
   { path: 'post/edit/:postId', component: PostEditor },
   { path: 'profile', component: Profile },
-  { path: 'admin', component: Admin },
   { path: '', redirectTo: '/feed', pathMatch: 'full' },
   {
     path: 'admin',

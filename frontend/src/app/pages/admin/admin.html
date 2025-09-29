@@ -27,4 +27,36 @@
       </tbody>
     </table>
   </section>
+
+  <section class="users-section">
+    <h3>All Users</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+  <tr *ngFor="let user of users">
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.role }}</td>
+    <td>
+      <span *ngIf="user.banned" class="status-banned">Banned</span>
+
+      <span *ngIf="user.role === 'ROLE_ADMIN' && !user.banned">Admin</span>
+
+      <button *ngIf="!user.banned && user.role === 'ROLE_USER'" (click)="banUser(user.id)" class="btn-ban">
+        Ban User
+      </button>
+    </td>
+  </tr>
+</tbody>
+    </table>
+  </section>
 </div>

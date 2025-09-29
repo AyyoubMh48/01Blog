@@ -31,7 +31,7 @@ public class JwtService {
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", user.getUsername());
+        claims.put("username", user.getOriginalUsername());
         claims.put("role", user.getRole());
         // The subject is correctly set to the user's unique email
         return createToken(claims, user.getEmail());
