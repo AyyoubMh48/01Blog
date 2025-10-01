@@ -4,6 +4,13 @@
     <a routerLink="/admin" *ngIf="isAdmin">Admin</a>
     <button *ngIf="isLoggedIn" (click)="logout()" class="logout-btn">Logout</button>
   </nav>
+  <div class="user-actions">
+    <button (click)="themeService.toggleTheme()" class="theme-toggle-btn">
+      <span *ngIf="!themeService.isDarkMode()">🌙</span>
+      <span *ngIf="themeService.isDarkMode()">☀️</span>
+    </button>
+    
+  </div>
 
   <div class="user-actions" *ngIf="isLoggedIn">
     <div class="notification-bell" (click)="showNotifications = !showNotifications">

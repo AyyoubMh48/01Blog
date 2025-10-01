@@ -1,1 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+
+// Define palettes
+// $blog-primary: mat.m2-define-palette(m.$indigo-palette);
+// $blog-accent: mat.m2-define-palette(m.$pink-palette, A200, A100, A400);
+// $blog-warn: mat.m2-define-palette(m.$red-palette);
+
+// // Light theme
+// $blog-light-theme: m.define-light-theme((
+//   color: (
+//     primary: $blog-primary,
+//     accent: $blog-accent,
+//     warn: $blog-warn,
+//   )
+// ));
+
+// // Dark theme
+// $blog-dark-theme: mat.define-dark-theme((
+//   color: (
+//     primary: mat.m2-define-palette(m.$blue-grey-palette, 700),
+//     accent: mat.m2-define-palette(m.$amber-palette, A200, A100, A400),
+//     warn: $blog-warn,
+//   )
+// ));
+
+// Apply themes
+// @include mat.all-component-themes($blog-light-theme);
+
+// .dark-mode {
+//   @include mat.all-component-colors($blog-dark-theme);
+// }
+
+// Global styles
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.dark-mode body {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+}
+
+.main-content {
+  padding: 20px;
+}
