@@ -29,13 +29,15 @@ public class PostController {
         PostResponseDto createdPost = postService.createPost(content,file, authorEmail);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
+    
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody Map<String, String> payload, // Expecting {"content": "new text"}
+            @RequestParam("content") String content,
+            @RequestParam(value = "file", required = false) MultipartFile file,
             Principal principal) {
         
-        PostResponseDto updatedPost = postService.updatePost(postId, payload.get("content"), principal.getName());
+        PostResponseDto updatedPost = postService.updatePost(postId, content, file, principal.getName());
         return ResponseEntity.ok(updatedPost);
     }
 

@@ -1,15 +1,30 @@
 <div class="editor-container">
-  <h2 *ngIf="!isEditMode">Create a New Post</h2>
   <h2 *ngIf="isEditMode">Edit Your Post</h2>
 
-  <form *ngIf="!isEditMode || (isEditMode && post)" #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
+  <form *ngIf="post" #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
     <textarea
       name="content"
       rows="10"
       placeholder="Share your thoughts..."
-      [ngModel]="post?.content"
+      [ngModel]="post.content"
       required
     ></textarea>
+
+    <div *ngIf="post.mediaUrl && !imagePreview" class="image-preview">
+      <p>Current Image:</p>
+      <img [src]="post.mediaUrl" alt="Current post image">
+    </div>
+
+    <div class="file-input-container">
+      <label for="file">Change Image</label>
+      <input type="file" id="file" (change)="onFileSelected($event)">
+    </div>
+    
+    <div *ngIf="imagePreview" class="image-preview">
+      <p>New Image:</p>
+      <img [src]="imagePreview" alt="New image preview">
+    </div>
+
     <button type="submit">Save Post</button>
   </form>
 </div>

@@ -90,8 +90,9 @@ public class PostService {
                 .toList();
     }
 
+    
     @Transactional
-    public PostResponseDto updatePost(Long postId, String content, String userEmail) {
+    public PostResponseDto updatePost(Long postId, String content, MultipartFile file, String userEmail) {
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Post post = postRepository.findById(postId)
@@ -102,6 +103,12 @@ public class PostService {
         }
 
         post.setContent(content);
+
+        if (file != null && !file.isEmpty()) {
+            String mediaUrl = fileStorageService.storeFile(file);
+            post.setMediaUrl(mediaUrl);
+        }
+
         Post updatedPost = postRepository.save(post);
         return mapToDto(updatedPost, currentUser);
     }

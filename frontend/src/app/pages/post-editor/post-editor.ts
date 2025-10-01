@@ -16,6 +16,8 @@ export class PostEditor implements OnInit {
   isEditMode = false;
   postId: number | null = null;
   post: Post | null = null;
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
   
   constructor(
     private route: ActivatedRoute,
@@ -33,24 +35,33 @@ export class PostEditor implements OnInit {
       });
     }
   }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
   onSubmit(form: NgForm): void {
-    if (form.invalid) {
+    if (form.invalid || !this.isEditMode || !this.postId) {
       return;
     }
 
     const formData = new FormData();
     formData.append('content', form.value.content);
-
-
-    if (this.isEditMode && this.postId) {
-      this.postService.updatePost(this.postId, formData).subscribe(() => {
-        this.router.navigate(['/feed']);
-      });
-    } else if (!this.isEditMode) {
-      this.postService.createPost(formData).subscribe(() => {
-          this.router.navigate(['/feed']);
-      });
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile, this.selectedFile.name);
     }
-}
+    
+    this.postService.updatePost(this.postId, formData).subscribe(() => {
+      this.router.navigate(['/feed']);
+    });
+  }
 
 }
