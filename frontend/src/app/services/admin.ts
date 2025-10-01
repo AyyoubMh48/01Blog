@@ -33,4 +33,7 @@ export class AdminService {
   resolveReport(reportId: number, action: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/reports/${reportId}/action?action=${action}`, {});
   }
+  getAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/analytics`);
+  }
 }

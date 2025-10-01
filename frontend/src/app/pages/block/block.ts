@@ -106,10 +106,12 @@ export class Block implements OnInit {
     if (form.invalid || !this.userProfile) {
       return;
     }
+    if (window.confirm('Are you sure you want to submit this report?')) {
     this.reportService.reportUser(this.userProfile.id, form.value.reason).subscribe(() => {
       this.showReportForm = false;
-      alert('Report submitted successfully. Thank you.'); 
+      alert('Report submitted successfully. Thank you.');
     });
+  }
   }
 
 }

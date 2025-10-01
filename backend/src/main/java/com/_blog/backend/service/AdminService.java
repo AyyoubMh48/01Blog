@@ -1,6 +1,7 @@
 package com._blog.backend.service;
 
 import com._blog.backend.dto.UserDto;
+import com._blog.backend.dto.AdminAnalyticsDto;
 import com._blog.backend.dto.AuthorDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.ReportResponseDto;
@@ -91,6 +92,14 @@ public class AdminService {
             throw new IllegalArgumentException("Invalid action: " + action);
         }
         reportRepository.save(report);
+    }
+    
+    public AdminAnalyticsDto getAnalytics() {
+        AdminAnalyticsDto analytics = new AdminAnalyticsDto();
+        analytics.setTotalUsers(userRepository.count());
+        analytics.setTotalPosts(postRepository.count());
+        analytics.setOpenReports(reportRepository.findAllByStatus(ReportStatus.OPEN).size());
+        return analytics;
     }
 
     private UserDto mapToUserDto(User user) {

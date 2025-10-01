@@ -1,5 +1,6 @@
 package com._blog.backend.controller;
 
+import com._blog.backend.dto.AdminAnalyticsDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.ReportResponseDto;
 import com._blog.backend.dto.UserDto;
@@ -54,5 +55,11 @@ public class AdminController {
     public ResponseEntity<?> resolveReport(@PathVariable Long reportId, @RequestParam String action) {
         adminService.resolveReport(reportId, action);
         return ResponseEntity.ok(Map.of("message", "Report status updated successfully."));
+    }
+    
+    @GetMapping("/analytics")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AdminAnalyticsDto> getAnalytics() {
+        return ResponseEntity.ok(adminService.getAnalytics());
     }
 }

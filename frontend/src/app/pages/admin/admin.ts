@@ -12,7 +12,8 @@ import { AdminService } from '../../services/admin';
 export class Admin implements OnInit {
   reports: any[] = [];
   users: any[] = [];
-  posts: any[] = []; 
+  posts: any[] = [];
+  analytics: any = {};
 
   constructor(private adminService: AdminService) {}
 
@@ -25,6 +26,9 @@ export class Admin implements OnInit {
     });
     this.adminService.getAllPosts().subscribe(data => {
       this.posts = data;
+    });
+    this.adminService.getAnalytics().subscribe(data => {
+      this.analytics = data;
     });
   }
   banUser(userId: number): void {
