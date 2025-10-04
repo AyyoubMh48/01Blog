@@ -7,11 +7,14 @@ import { AuthService } from '../../services/auth';
 import { LikeService } from '../../services/like';
 import { Router,RouterLink } from '@angular/router';
 import { CommentSectionComponent } from '../../components/comment-section/comment-section'; 
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, FormsModule,CommentSectionComponent,RouterLink],
+  imports: [CommonModule, FormsModule,CommentSectionComponent,RouterLink,MatCardModule,MatButtonModule,MatIconModule],
   templateUrl: './feed.html',
   styleUrl: './feed.scss'
 })

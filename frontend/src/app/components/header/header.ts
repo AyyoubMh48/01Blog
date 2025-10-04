@@ -5,7 +5,7 @@ import { Notification } from '../../models/notification';
 import { AuthService } from '../../services/auth';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ThemeService } from '../../services/theme'; 
+//import { ThemeService } from '../../services/theme'; 
 
 @Component({
   selector: 'app-header',
@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public authService: AuthService, 
     public notificationService: NotificationService, 
     private router: Router,
-    public themeService: ThemeService,
+   // public themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {
