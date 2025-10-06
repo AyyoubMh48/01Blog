@@ -1,0 +1,26 @@
+.admin-dashboard {
+  padding: 20px;
+
+  h2, h3 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+
+  .analytics-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    .stat-card {
+      flex-grow: 1;
+      p {
+        font-size: 2em;
+        font-weight: bold;
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+  }
+}

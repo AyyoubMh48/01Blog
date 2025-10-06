@@ -14,14 +14,12 @@ body {
   color: #f5f5f5;
 }
 
-// Main content container to center the layout
 .main-content {
   max-width: 900px;
   margin: 20px auto;
   padding: 0 15px;
 }
 
-// Style for pages with a single form card (Login, Register, Post Editor)
 .form-container {
   display: flex;
   justify-content: center;
@@ -38,7 +36,14 @@ body {
   }
 }
 
-// Basic style for post cards
 .post-card {
   margin-bottom: 20px;
+}
+
+.header-container {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  
+  .dark-mode & {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
 }

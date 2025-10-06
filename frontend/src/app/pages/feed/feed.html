@@ -2,72 +2,118 @@
   <h1 *ngIf="isLoggedIn">Your Personalized Feed</h1>
   <h1 *ngIf="!isLoggedIn">Public Feed</h1>
 
-  <section *ngIf="isLoggedIn" class="post-form">
-    <form #postForm="ngForm" (ngSubmit)="onPostSubmit(postForm)">
-      <textarea
-        name="content"
-        rows="4"
-        placeholder="Share your thoughts..."
-        ngModel
-        required
-      ></textarea>
-      <div class="file-input-container">
-        <label for="file">Add an Image</label>
-        <input type="file" id="file" (change)="onFileSelected($event)" />
-      </div>
+  <mat-card *ngIf="isLoggedIn" class="post-form-card">
+    <mat-card-content>
+      <form #postForm="ngForm" (ngSubmit)="onPostSubmit(postForm)">
+        <mat-form-field appearance="outline">
+          <mat-label>Share your thoughts...</mat-label>
+          <textarea
+            matInput
+            name="content"
+            rows="4"
+            ngModel
+            required
+          ></textarea>
+        </mat-form-field>
 
-      <div *ngIf="imagePreview" class="image-preview">
-        <img [src]="imagePreview" alt="Image Preview" />
-      </div>
-      <button type="submit" [disabled]="postForm.invalid">Post</button>
-    </form>
-  </section>
+        <div *ngIf="imagePreview" class="image-preview">
+          <img [src]="imagePreview" alt="Image Preview" />
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon>add_photo_alternate</mat-icon>
+            Add Image
+          </button>
+          <input
+            hidden
+            (change)="onFileSelected($event)"
+            #fileInput
+            type="file"
+          />
+
+          <span class="spacer"></span>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="postForm.invalid"
+          >
+            Post
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
   <div *ngIf="!isLoggedIn" class="login-prompt">
-    <p>
-      <a routerLink="/login">Log in</a> to create posts and see your
-      personalized feed.
-    </p>
+    <mat-card>
+      <mat-card-content>
+        <h3>Welcome to 01Blog!</h3>
+        <a mat-stroked-button color="primary" routerLink="/login">
+          Log in to create posts and see your personalized feed
+        </a>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <section class="post-list">
     <mat-card *ngFor="let post of posts" class="post-card">
       <mat-card-header>
         <mat-card-title>{{ post.author.username }}</mat-card-title>
-        <mat-card-subtitle>{{ post.createdAt | date:'medium' }}</mat-card-subtitle>
+        <mat-card-subtitle>{{
+          post.createdAt | date : "medium"
+        }}</mat-card-subtitle>
       </mat-card-header>
-  
-      <img mat-card-image *ngIf="post.mediaUrl" [src]="post.mediaUrl" alt="Post image">
-  
+
+      <img
+        mat-card-image
+        *ngIf="post.mediaUrl"
+        [src]="post.mediaUrl"
+        alt="Post image"
+      />
+
       <mat-card-content>
         <p>{{ post.content }}</p>
       </mat-card-content>
-  
+
       <mat-card-actions>
-        <button mat-icon-button (click)="toggleLike(post)" [color]="post.likedByCurrentUser ? 'warn' : ''">
+        <button
+          mat-icon-button
+          (click)="toggleLike(post)"
+          [color]="post.likedByCurrentUser ? 'warn' : ''"
+        >
           <mat-icon>favorite</mat-icon>
         </button>
         <span>{{ post.likeCount }}</span>
-  
+
         <button mat-icon-button (click)="toggleComments(post.id)">
           <mat-icon>comment</mat-icon>
         </button>
         <span>{{ post.commentCount }}</span>
-  
+
         <span class="spacer"></span>
-  
-        <div *ngIf="isLoggedIn && post.author.username === currentUsername" class="post-owner-actions">
-          <button mat-button [routerLink]="['/post/edit', post.id]">EDIT</button>
-          <button mat-button color="warn" (click)="deletePost(post.id)">DELETE</button>
+
+        <div
+          *ngIf="isLoggedIn && post.author.username === currentUsername"
+          class="post-owner-actions"
+        >
+          <button mat-button [routerLink]="['/post/edit', post.id]">
+            EDIT
+          </button>
+          <button mat-button color="warn" (click)="deletePost(post.id)">
+            DELETE
+          </button>
         </div>
       </mat-card-actions>
-  
+
       <app-comment-section
         *ngIf="expandedPostIds.has(post.id)"
         [postId]="post.id"
-        (commentAdded)="onCommentAdded(post)">
+        (commentAdded)="onCommentAdded(post)"
+      >
       </app-comment-section>
     </mat-card>
   </section>
-  
 </div>

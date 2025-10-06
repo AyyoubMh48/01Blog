@@ -5,18 +5,30 @@ import { PostService } from '../../services/post';
 import { Post } from '../../models/post';
 import { AuthService } from '../../services/auth';
 import { LikeService } from '../../services/like';
-import { Router,RouterLink } from '@angular/router';
-import { CommentSectionComponent } from '../../components/comment-section/comment-section'; 
+import { Router, RouterLink } from '@angular/router';
+import { CommentSectionComponent } from '../../components/comment-section/comment-section';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, FormsModule,CommentSectionComponent,RouterLink,MatCardModule,MatButtonModule,MatIconModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CommentSectionComponent,
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './feed.html',
-  styleUrl: './feed.scss'
+  styleUrl: './feed.scss',
 })
 export class Feed implements OnInit {
   posts: Post[] = [];
@@ -27,10 +39,10 @@ export class Feed implements OnInit {
   currentUsername: string | null = null;
 
   constructor(
-      private postService: PostService,
-      private authService: AuthService,
-      private likeService: LikeService,
-      private router : Router
+    private postService: PostService,
+    private authService: AuthService,
+    private likeService: LikeService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -41,12 +53,18 @@ export class Feed implements OnInit {
 
   loadPosts(): void {
     if (this.isLoggedIn) {
-      this.postService.getFeed().subscribe(posts => {
-        this.posts =  posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());;
+      this.postService.getFeed().subscribe((posts) => {
+        this.posts = posts.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       });
     } else {
-      this.postService.getPublicPosts().subscribe(posts => {
-        this.posts =  posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());;
+      this.postService.getPublicPosts().subscribe((posts) => {
+        this.posts = posts.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       });
     }
   }
@@ -54,7 +72,7 @@ export class Feed implements OnInit {
     if (confirm('Are you sure you want to delete this post?')) {
       this.postService.deletePost(postId).subscribe(() => {
         // Remove the post from the local array for an instant UI update
-        this.posts = this.posts.filter(p => p.id !== postId);
+        this.posts = this.posts.filter((p) => p.id !== postId);
       });
     }
   }
@@ -82,7 +100,7 @@ export class Feed implements OnInit {
       formData.append('file', this.selectedFile, this.selectedFile.name);
     }
 
-    this.postService.createPost(formData).subscribe(newPost => {
+    this.postService.createPost(formData).subscribe((newPost) => {
       this.posts.unshift(newPost);
       form.reset();
       this.selectedFile = null;
@@ -90,7 +108,7 @@ export class Feed implements OnInit {
     });
   }
 
-   toggleLike(post: Post): void {
+  toggleLike(post: Post): void {
     if (!this.isLoggedIn) {
       this.router.navigate(['/login']);
       return;
@@ -113,5 +131,4 @@ export class Feed implements OnInit {
   onCommentAdded(post: Post): void {
     post.commentCount++;
   }
-
 }

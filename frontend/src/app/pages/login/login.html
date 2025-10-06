@@ -1,25 +1,34 @@
-<div>
-  <h2>Login to 01Blog</h2>
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Login to 01Blog</mat-card-title>
+    </mat-card-header>
 
-  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-    <div>
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" ngModel required email />
-    </div>
+    <mat-card-content>
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" name="email" ngModel required email>
+        </mat-form-field>
 
-    <div>
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" ngModel required />
-    </div>
-    <div
-      *ngIf="errorMessage"
-      style="color: red; margin-top: 10px; margin-bottom: 10px"
-    >
-      {{ errorMessage }}
-    </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" ngModel required>
+        </mat-form-field>
 
-    <button type="submit">Login</button>
-  </form>
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
 
-  <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+          Login
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+    </mat-card-actions>
+  </mat-card>
 </div>

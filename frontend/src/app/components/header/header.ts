@@ -6,11 +6,18 @@ import { AuthService } from '../../services/auth';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 //import { ThemeService } from '../../services/theme'; 
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatBadgeModule],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })

@@ -1,24 +1,18 @@
-<header class="main-header">
-  <nav class="nav-links">
-    <a routerLink="/feed">01Blog</a>
-    <a routerLink="/admin" *ngIf="isAdmin">Admin</a>
-    <button *ngIf="isLoggedIn" (click)="logout()" class="logout-btn">Logout</button>
-  </nav>
-  <div class="user-actions">
-    <!-- <button (click)="themeService.toggleTheme()" class="theme-toggle-btn">
-      <span *ngIf="!themeService.isDarkMode()">🌙</span>
-      <span *ngIf="themeService.isDarkMode()">☀️</span>
-    </button> -->
+<mat-toolbar class="main-toolbar">
+  <a mat-button routerLink="/feed">01Blog</a>
+  <a mat-button routerLink="/admin" *ngIf="isAdmin">Admin</a>
+
+  <span class="toolbar-spacer"></span>
+
+  <div *ngIf="isLoggedIn" class="user-actions">
     
-  </div>
-
-  <div class="user-actions" *ngIf="isLoggedIn">
     <div class="notification-bell" (click)="showNotifications = !showNotifications">
-      <span>🔔</span>
-      <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount }}</span>
-
+      <button mat-icon-button aria-label="Toggle notifications">
+        <mat-icon matBadge="{{ unreadCount > 0 ? unreadCount : null }}" matBadgeColor="warn">notifications</mat-icon>
+      </button>
+      
       <div *ngIf="showNotifications" class="notification-dropdown">
-        <div *ngIf="notifications.length === 0">No notifications yet.</div>
+        <div *ngIf="notifications.length === 0" class="no-notifications">No notifications yet.</div>
         <ul>
           <li *ngFor="let notification of notifications" 
               [class.unread]="!notification.read"
@@ -28,5 +22,12 @@
         </ul>
       </div>
     </div>
+    
+    <button mat-button (click)="logout()">Logout</button>
   </div>
-</header>
+
+  <div *ngIf="!isLoggedIn">
+    <a mat-button routerLink="/login">Login</a>
+    <a mat-stroked-button color="accent" routerLink="/register">Register</a>
+  </div>
+</mat-toolbar>

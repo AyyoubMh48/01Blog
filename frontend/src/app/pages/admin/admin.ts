@@ -2,10 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../services/admin';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,MatCardModule, MatTableModule, MatButtonModule],
   templateUrl: './admin.html',
   styleUrl: './admin.scss'
 })
@@ -14,6 +18,10 @@ export class Admin implements OnInit {
   users: any[] = [];
   posts: any[] = [];
   analytics: any = {};
+
+  reportColumns: string[] = ['id', 'reason', 'reporter', 'reportedUser', 'date', 'actions'];
+  userColumns: string[] = ['id', 'username', 'email', 'role', 'status'];
+  postColumns: string[] = ['id', 'content', 'author', 'createdAt', 'actions'];
 
   constructor(private adminService: AdminService) {}
 

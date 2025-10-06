@@ -1,35 +1,43 @@
-<div>
-  <h2>Create an Account on 01Blog</h2>
-  <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
-    <div>
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username" ngModel required />
-    </div>
-    <div>
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" ngModel required email />
-    </div>
-    <div>
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" ngModel required />
-    </div>
-    <div>
-      <label for="confirmPassword">Confirm Password</label>
-      <input
-        type="password"
-        id="confirmPassword"
-        name="confirmPassword"
-        ngModel
-        required
-      />
-    </div>
-    <div
-      *ngIf="errorMessage"
-      style="color: red; margin-top: 10px; margin-bottom: 10px"
-    >
-      {{ errorMessage }}
-    </div>
-    <button type="submit">Register</button>
-  </form>
-  <p>Already have an account? <a routerLink="/login">Login here</a></p>
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Create an Account on 01Blog</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput name="username" ngModel required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" name="email" ngModel required email>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" ngModel required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput type="password" name="confirmPassword" ngModel required>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
+          Register
+        </button>
+
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <p>Already have an account? <a routerLink="/login">Login here</a></p>
+    </mat-card-actions>
+  </mat-card>
 </div>
