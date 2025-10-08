@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router'; 
+import { ActivatedRoute,Router,RouterLink } from '@angular/router'; 
 import { UserService } from '../../services/user';
 import { UserProfile } from '../../models/user-profile';
 import { SubscriptionService } from '../../services/subscription';
 import { AuthService } from '../../services/auth';
 import { LikeService } from '../../services/like'; 
+import { PostService } from '../../services/post';
 import { Post } from '../../models/post';
-import { Router } from '@angular/router';
 import { CommentSectionComponent } from '../../components/comment-section/comment-section';
 import { ReportService } from '../../services/report'; 
 import { FormsModule, NgForm } from '@angular/forms';
@@ -21,7 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-block',
   standalone: true,
-  imports: [CommonModule,CommentSectionComponent,FormsModule, MatCardModule,
+  imports: [CommonModule,CommentSectionComponent,FormsModule,RouterLink, MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -44,7 +44,8 @@ export class Block implements OnInit {
     private authService: AuthService,
     private likeService: LikeService,
     private router : Router,
-    private reportService: ReportService 
+    private reportService: ReportService,
+    private postService: PostService
 
   ) {}
 
@@ -87,6 +88,15 @@ export class Block implements OnInit {
         this.userProfile.followedByCurrentUser = false;
       }
     });
+  }
+   deletePost(postId: number): void {
+    if (confirm('Are you sure you want to delete this post?')) {
+      this.postService.deletePost(postId).subscribe(() => {
+        if (this.userProfile) {
+          this.userProfile.posts = this.userProfile.posts.filter(p => p.id !== postId);
+        }
+      });
+    }
   }
 
   toggleLike(post: Post): void {

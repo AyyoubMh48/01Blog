@@ -22,6 +22,12 @@
         color: #757575;
       }
     }
+    mat-card-content {
+      p {
+        overflow-wrap: break-word;
+        word-wrap: break-word; 
+      }
+    }
   }
 }
 

@@ -9,25 +9,64 @@
 
         <div class="profile-actions">
           <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
-            <button *ngIf="!userProfile.followedByCurrentUser" mat-raised-button color="primary" (click)="follow()">Follow</button>
-            <button *ngIf="userProfile.followedByCurrentUser" mat-stroked-button (click)="unfollow()">Unfollow</button>
+            <button
+              *ngIf="!userProfile.followedByCurrentUser"
+              mat-raised-button
+              color="primary"
+              (click)="follow()"
+            >
+              Follow
+            </button>
+            <button
+              *ngIf="userProfile.followedByCurrentUser"
+              mat-stroked-button
+              (click)="unfollow()"
+            >
+              Unfollow
+            </button>
           </div>
-          <button *ngIf="isLoggedIn && !isOwnProfile" mat-button color="warn" (click)="showReportForm = !showReportForm">Report</button>
+          <button
+            *ngIf="isLoggedIn && !isOwnProfile"
+            mat-button
+            color="warn"
+            (click)="showReportForm = !showReportForm"
+          >
+            Report
+          </button>
         </div>
       </div>
     </mat-card>
 
     <mat-card *ngIf="showReportForm" class="report-form">
-      <mat-card-header><mat-card-title>Report {{ userProfile.username }}</mat-card-title></mat-card-header>
+      <mat-card-header
+        ><mat-card-title
+          >Report {{ userProfile.username }}</mat-card-title
+        ></mat-card-header
+      >
       <mat-card-content>
         <form #reportForm="ngForm" (ngSubmit)="onReportSubmit(reportForm)">
           <mat-form-field appearance="outline">
             <mat-label>Please provide a reason...</mat-label>
-            <textarea matInput name="reason" rows="4" ngModel required></textarea>
+            <textarea
+              matInput
+              name="reason"
+              rows="4"
+              ngModel
+              required
+            ></textarea>
           </mat-form-field>
           <div class="form-actions">
-            <button type="button" mat-button (click)="showReportForm = false">Cancel</button>
-            <button type="submit" mat-raised-button color="warn" [disabled]="reportForm.invalid">Submit Report</button>
+            <button type="button" mat-button (click)="showReportForm = false">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              mat-raised-button
+              color="warn"
+              [disabled]="reportForm.invalid"
+            >
+              Submit Report
+            </button>
           </div>
         </form>
       </mat-card-content>
@@ -35,22 +74,63 @@
 
     <section class="post-list">
       <h3>Posts</h3>
+
+      <div *ngIf="userProfile.posts?.length === 0">
+        This user hasn't posted anything yet.
+      </div>
+
       <mat-card *ngFor="let post of userProfile?.posts" class="post-card">
         <mat-card-header>
-          <mat-card-title>{{ post.author.username }}</mat-card-title>
-          <mat-card-subtitle>{{ post.createdAt | date:'medium' }}</mat-card-subtitle>
+          <mat-card-subtitle>{{
+            post.createdAt | date : "medium"
+          }}</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-image *ngIf="post.mediaUrl" [src]="post.mediaUrl" alt="Post image">
-        <mat-card-content><p>{{ post.content }}</p></mat-card-content>
+
+        <img
+          mat-card-image
+          *ngIf="post.mediaUrl"
+          [src]="post.mediaUrl"
+          alt="Post image"
+        />
+
+        <mat-card-content>
+          <p>{{ post.content }}</p>
+        </mat-card-content>
+
         <mat-card-actions>
-            <button mat-icon-button (click)="toggleLike(post)" [class.liked]="post.likedByCurrentUser" [color]="post.likedByCurrentUser ? 'warn' : ''"><mat-icon>favorite</mat-icon></button>
-            <span>{{ post.likeCount }}</span>
-            <button mat-icon-button (click)="toggleComments(post.id)"><mat-icon>comment</mat-icon></button>
-            <span>{{ post.commentCount }}</span>
+          <button
+            mat-icon-button
+            (click)="toggleLike(post)"
+            [color]="post.likedByCurrentUser ? 'warn' : ''"
+          >
+            <mat-icon>favorite</mat-icon>
+          </button>
+          <span>{{ post.likeCount }}</span>
+
+          <button mat-icon-button (click)="toggleComments(post.id)">
+            <mat-icon>comment</mat-icon>
+          </button>
+          <span>{{ post.commentCount }}</span>
+
+          <span class="spacer"></span>
+
+          <div *ngIf="isOwnProfile" class="post-owner-actions">
+            <button mat-button [routerLink]="['/post/edit', post.id]">
+              EDIT
+            </button>
+            <button mat-button color="warn" (click)="deletePost(post.id)">
+              DELETE
+            </button>
+          </div>
         </mat-card-actions>
-        <app-comment-section *ngIf="expandedPostIds.has(post.id)" [postId]="post.id" (commentAdded)="onCommentAdded(post)"></app-comment-section>
+
+        <app-comment-section
+          *ngIf="expandedPostIds.has(post.id)"
+          [postId]="post.id"
+          (commentAdded)="onCommentAdded(post)"
+        >
+        </app-comment-section>
       </mat-card>
-      <div *ngIf="userProfile.posts?.length === 0">This user hasn't posted anything yet.</div>
     </section>
   </div>
 </div>
