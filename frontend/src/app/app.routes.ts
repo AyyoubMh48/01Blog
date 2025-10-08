@@ -8,6 +8,7 @@ import { PostEditor } from './pages/post-editor/post-editor';
 import { Profile } from './pages/profile/profile';
 import { Register } from './pages/register/register';
 import { adminGuard } from './guards/admin-guard';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -16,11 +17,15 @@ export const routes: Routes = [
   { path: 'block/:username', component: Block },
   { path: 'post/new', component: PostEditor },
   { path: 'post/edit/:postId', component: PostEditor },
-  { path: 'profile', component: Profile },
   { path: '', redirectTo: '/feed', pathMatch: 'full' },
   {
     path: 'admin',
     component: Admin,
     canActivate: [adminGuard],
+  },
+  {
+    path: 'profile',
+    component: Profile,
+    canActivate: [authGuard],
   },
 ];

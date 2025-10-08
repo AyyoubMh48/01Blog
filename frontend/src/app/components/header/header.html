@@ -1,6 +1,7 @@
 <mat-toolbar class="main-toolbar">
   <a mat-button routerLink="/feed">01Blog</a>
   <a mat-button routerLink="/admin" *ngIf="isAdmin">Admin</a>
+  <a mat-button routerLink="/profile" *ngIf="isLoggedIn">My Profile</a>
 
   <span class="toolbar-spacer"></span>
 

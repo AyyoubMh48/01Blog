@@ -1,1 +1,37 @@
-<p>profile works!</p>
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Change Your Password</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form #passwordForm="ngForm" (ngSubmit)="onSubmit(passwordForm)">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Current Password</mat-label>
+          <input matInput type="password" name="oldPassword" ngModel required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>New Password</mat-label>
+          <input matInput type="password" name="newPassword" ngModel required>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm New Password</mat-label>
+          <input matInput type="password" name="confirmPassword" ngModel required>
+        </mat-form-field>
+        
+        <div *ngIf="successMessage" class="success-message">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">
+          Update Password
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

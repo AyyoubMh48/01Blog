@@ -14,4 +14,8 @@ export class UserService {
   getUserProfile(username: string): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${this.apiUrl}/${username}`);
   }
+
+  changePassword(passwordData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/change-password`, passwordData);
+  }
 }

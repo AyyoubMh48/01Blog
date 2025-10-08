@@ -1,5 +1,6 @@
 package com._blog.backend.service;
 
+import com._blog.backend.dto.ChangePasswordDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.UserProfileDto;
 import com._blog.backend.entity.Post;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder; 
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +30,10 @@ public class UserService {
     private SubscriptionRepository subscriptionRepository;
 
     @Autowired
-    private PostService postService; 
+    private PostService postService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder; 
     
     @Transactional(readOnly = true) 
     public UserProfileDto getUserProfile(String username, String currentUsername) {
@@ -61,5 +66,19 @@ public class UserService {
         profileDto.setFollowedByCurrentUser(isFollowing);
         
         return profileDto;
+    }
+
+    @Transactional
+    public void changePassword(String userEmail, ChangePasswordDto changePasswordDto) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect old password.");
+        }
+
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+
+        userRepository.save(user);
     }
 }
