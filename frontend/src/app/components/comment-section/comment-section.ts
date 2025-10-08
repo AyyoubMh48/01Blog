@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Comment } from '../../models/comment';
 import { CommentService } from '../../services/comment';
 import { AuthService } from '../../services/auth';
+import { RouterLink } from '@angular/router';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-comment-section',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule,
+  imports: [CommonModule, FormsModule, RouterLink, MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatListModule,
