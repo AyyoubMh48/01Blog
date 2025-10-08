@@ -5,10 +5,20 @@ import { Comment } from '../../models/comment';
 import { CommentService } from '../../services/comment';
 import { AuthService } from '../../services/auth';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-comment-section',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule],
   templateUrl: './comment-section.html',
   styleUrl: './comment-section.scss'
 })

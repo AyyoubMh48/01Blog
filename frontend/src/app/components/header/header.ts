@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   unreadCount = 0;
   showNotifications = false;
   private notificationSub!: Subscription;
+   private authStatusSub!: Subscription;
 
   constructor(
     public authService: AuthService, 
@@ -37,20 +38,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    if (this.isLoggedIn) {
-
-      const user = this.authService.getCurrentUser();
-      if (user && user.role === 'ROLE_ADMIN') {
-        this.isAdmin = true;
+    this.authStatusSub = this.authService.loggedInStatus$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+      if (isLoggedIn) {
+        const user = this.authService.getCurrentUser();
+        this.isAdmin = (user?.role === 'ROLE_ADMIN');
+        this.notificationService.connect();
+        this.notificationSub = this.notificationService.notifications$.subscribe(data => {
+            this.notifications = data;
+            this.unreadCount = this.notifications.filter(n => !n.read).length;
+        });
       }
-      this.notificationService.connect();
-      
-      this.notificationSub = this.notificationService.notifications$.subscribe(data => {
-        this.notifications = data;
-        this.unreadCount = this.notifications.filter(n => !n.read).length;
-      });
-    }
+    });
   }
 
   markAsRead(notification: Notification): void {
@@ -72,9 +71,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.notificationSub) {
-      this.notificationSub.unsubscribe();
-    }
+    if (this.authStatusSub) this.authStatusSub.unsubscribe();
+    if (this.notificationSub) this.notificationSub.unsubscribe();
     this.notificationService.disconnect();
   }
 }

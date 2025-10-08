@@ -3,32 +3,26 @@
 
   <section *ngIf="isLoggedIn" class="comment-form">
     <form #commentForm="ngForm" (ngSubmit)="onCommentSubmit(commentForm)">
-      <textarea
-        name="content"
-        rows="3"
-        placeholder="Add a comment..."
-        ngModel
-        required
-      ></textarea>
-      <button type="submit" [disabled]="commentForm.invalid">Comment</button>
+      <mat-form-field appearance="outline">
+        <mat-label>Add a comment...</mat-label>
+        <textarea matInput name="content" rows="3" ngModel required></textarea>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid">Comment</button>
     </form>
   </section>
   <div *ngIf="!isLoggedIn" class="login-prompt-sm">
-    <p><a routerLink="/login">Log in</a> to add a comment.</p>
+    <a mat-button routerLink="/login">Log in to add a comment</a>
   </div>
 
-  <section class="comment-list">
-    <div *ngFor="let comment of comments" class="comment-card">
-      <div class="comment-header">
-        <span class="author">{{ comment.author.username }}</span>
-        <span class="timestamp">{{ comment.createdAt | date:'short' }}</span>
+  <mat-list class="comment-list">
+    <div *ngIf="comments.length === 0" class="no-comments">No comments yet.</div>
+    <mat-list-item *ngFor="let comment of comments">
+      <mat-icon matListItemAvatar>account_circle</mat-icon>
+      <div matListItemTitle>{{ comment.author.username }}</div>
+      <div matListItemLine>
+        <span>{{ comment.content }}</span>
       </div>
-      <div class="comment-content">
-        <p>{{ comment.content }}</p>
-      </div>
-    </div>
-    <div *ngIf="comments.length === 0" class="no-comments">
-      No comments yet.
-    </div>
-  </section>
+      <div matListItemMeta>{{ comment.createdAt | date:'short' }}</div>
+    </mat-list-item>
+  </mat-list>
 </div>

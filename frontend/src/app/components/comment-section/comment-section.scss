@@ -1,0 +1,43 @@
+@use '@angular/material' as mat;
+
+.comment-section {
+  padding: 16px;
+  // Add a subtle border to separate it from the post content
+  border-top: 1px solid rgba(0,0,0,0.1);
+
+  .dark-mode & {
+    border-top-color: rgba(255,255,255,0.1);
+  }
+
+  h4 {
+    font-weight: 500;
+    margin: 0 0 16px 0;
+  }
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  //align-items: flex-end; // Pushes the button to the right
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.comment-list {
+  padding-top: 24px;
+
+  // Reduce the height of each comment to be more compact
+  .mat-mdc-list-item {
+    height: auto !important;
+    padding-bottom: 12px;
+  }
+}
+
+.no-comments {
+  color: #757575;
+  padding: 16px;
+  text-align: center;
+  font-style: italic;
+}

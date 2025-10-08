@@ -3,64 +3,54 @@
   <div *ngIf="errorMessage">{{ errorMessage }}</div>
 
   <div *ngIf="userProfile">
-    <div class="profile-header">
-      <h2>{{ userProfile.username }}'s Block</h2>
+    <mat-card class="profile-header-card">
+      <div class="profile-header">
+        <h2>{{ userProfile.username }}'s Block</h2>
 
-      <div class="profile-actions">
-        <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
-          <button *ngIf="!userProfile.followedByCurrentUser" (click)="follow()">
-            Follow
-          </button>
-          <button *ngIf="userProfile.followedByCurrentUser" (click)="unfollow()" class="unfollow-btn">
-            Unfollow
-          </button>
+        <div class="profile-actions">
+          <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
+            <button *ngIf="!userProfile.followedByCurrentUser" mat-raised-button color="primary" (click)="follow()">Follow</button>
+            <button *ngIf="userProfile.followedByCurrentUser" mat-stroked-button (click)="unfollow()">Unfollow</button>
+          </div>
+          <button *ngIf="isLoggedIn && !isOwnProfile" mat-button color="warn" (click)="showReportForm = !showReportForm">Report</button>
         </div>
-
-        <button *ngIf="isLoggedIn && !isOwnProfile" (click)="showReportForm = !showReportForm" class="report-btn">
-          Report User
-        </button>
       </div>
-    </div>
+    </mat-card>
 
-    <section *ngIf="showReportForm" class="report-form">
-      <h4>Report {{ userProfile.username }}</h4>
-      <form #reportForm="ngForm" (ngSubmit)="onReportSubmit(reportForm)">
-        <textarea name="reason" rows="4" placeholder="Please provide a reason for your report..." ngModel required></textarea>
-        <div class="form-actions">
-          <button type="submit" [disabled]="reportForm.invalid">Submit Report</button>
-          <button type="button" (click)="showReportForm = false">Cancel</button>
-        </div>
-      </form>
-    </section>
+    <mat-card *ngIf="showReportForm" class="report-form">
+      <mat-card-header><mat-card-title>Report {{ userProfile.username }}</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <form #reportForm="ngForm" (ngSubmit)="onReportSubmit(reportForm)">
+          <mat-form-field appearance="outline">
+            <mat-label>Please provide a reason...</mat-label>
+            <textarea matInput name="reason" rows="4" ngModel required></textarea>
+          </mat-form-field>
+          <div class="form-actions">
+            <button type="button" mat-button (click)="showReportForm = false">Cancel</button>
+            <button type="submit" mat-raised-button color="warn" [disabled]="reportForm.invalid">Submit Report</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
 
     <section class="post-list">
       <h3>Posts</h3>
-      <div *ngFor="let post of userProfile?.posts" class="post-card">
-        <div class="post-header">
-          <span class="timestamp">{{ post.createdAt | date : "medium" }}</span>
-        </div>
-        <div *ngIf="post.mediaUrl" class="post-image-container">
-          <img [src]="post.mediaUrl" alt="Post image" />
-        </div>
-        <div class="post-content">
-          <p>{{ post.content }}</p>
-        </div>
-        <div class="post-actions">
-          <button (click)="toggleLike(post)" [class.liked]="post.likedByCurrentUser">
-            👍 Like
-          </button>
-          <span>{{ post.likeCount }} Likes</span>
-          <button (click)="toggleComments(post.id)" class="comment-toggle">
-            💬 {{ post.commentCount }} Comments
-          </button>
-        </div>
-        <app-comment-section *ngIf="expandedPostIds.has(post.id)" [postId]="post.id"
-          (commentAdded)="onCommentAdded(post)">
-        </app-comment-section>
-      </div>
-      <div *ngIf="userProfile.posts?.length === 0">
-        This user hasn't posted anything yet.
-      </div>
+      <mat-card *ngFor="let post of userProfile?.posts" class="post-card">
+        <mat-card-header>
+          <mat-card-title>{{ post.author.username }}</mat-card-title>
+          <mat-card-subtitle>{{ post.createdAt | date:'medium' }}</mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image *ngIf="post.mediaUrl" [src]="post.mediaUrl" alt="Post image">
+        <mat-card-content><p>{{ post.content }}</p></mat-card-content>
+        <mat-card-actions>
+            <button mat-icon-button (click)="toggleLike(post)" [class.liked]="post.likedByCurrentUser" [color]="post.likedByCurrentUser ? 'warn' : ''"><mat-icon>favorite</mat-icon></button>
+            <span>{{ post.likeCount }}</span>
+            <button mat-icon-button (click)="toggleComments(post.id)"><mat-icon>comment</mat-icon></button>
+            <span>{{ post.commentCount }}</span>
+        </mat-card-actions>
+        <app-comment-section *ngIf="expandedPostIds.has(post.id)" [postId]="post.id" (commentAdded)="onCommentAdded(post)"></app-comment-section>
+      </mat-card>
+      <div *ngIf="userProfile.posts?.length === 0">This user hasn't posted anything yet.</div>
     </section>
-
-  </div> </div> ```
+  </div>
+</div>

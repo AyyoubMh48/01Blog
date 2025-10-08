@@ -1,0 +1,34 @@
+.profile-header-card, .report-form, .post-card {
+  margin-bottom: 24px;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.profile-header , h2 {
+    margin-left: 2%;
+}
+
+.profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.report-form {
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+// Re-add the image styles for the post cards
+img[mat-card-image] {
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  object-fit: cover;
+}

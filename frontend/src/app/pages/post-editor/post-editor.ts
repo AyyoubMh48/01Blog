@@ -5,10 +5,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from '../../services/post';
 import { Post } from '../../models/post';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-post-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,  MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule],
   templateUrl: './post-editor.html',
   styleUrl: './post-editor.scss'
 })

@@ -6,6 +6,22 @@
       max-height: 600px;    
       object-fit: cover; 
     }
+    mat-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px; // Adds space between the action items
+      padding: 0 16px 8px; // Add some padding
+
+      .spacer {
+        flex-grow: 1; // Pushes the Edit/Delete buttons to the far right
+      }
+
+      // Style the like and comment count text
+      span {
+        font-size: 14px;
+        color: #757575;
+      }
+    }
   }
 }
 

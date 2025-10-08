@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable,BehaviorSubject } from 'rxjs';
 import { jwtDecode } from 'jwt-decode'; // npm install jwt-decode 
 import { Router } from '@angular/router';
 
@@ -23,6 +23,10 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8080/api/auth';
 
+  private loggedInStatus = new BehaviorSubject<boolean>(!!localStorage.getItem('authToken'));
+
+  loggedInStatus$ = this.loggedInStatus.asObservable();
+
   constructor(
     private http: HttpClient,
   private router: Router 
@@ -37,6 +41,7 @@ export class AuthService {
     return this.http.post<JwtResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         this.saveToken(response.token);
+        this.loggedInStatus.next(true); 
       })
     );
   }
@@ -86,6 +91,7 @@ export class AuthService {
 
 logout(): void {
   localStorage.removeItem('authToken');
+  this.loggedInStatus.next(false);
   window.location.href = '/login';
 }
 }

@@ -12,10 +12,20 @@ import { CommentSectionComponent } from '../../components/comment-section/commen
 import { ReportService } from '../../services/report'; 
 import { FormsModule, NgForm } from '@angular/forms';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
 @Component({
   selector: 'app-block',
   standalone: true,
-  imports: [CommonModule,CommentSectionComponent,FormsModule],
+  imports: [CommonModule,CommentSectionComponent,FormsModule, MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule],
   templateUrl: './block.html',
   styleUrl: './block.scss'
 })
@@ -40,18 +50,18 @@ export class Block implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
-    const username = this.route.snapshot.paramMap.get('username');
-
+    const profileUsername = this.route.snapshot.paramMap.get('username');
     const currentUser = this.authService.getCurrentUser(); 
-    if (this.isLoggedIn && currentUser?.sub === username) {
+
+    if (this.isLoggedIn && currentUser?.username === profileUsername) {
       this.isOwnProfile = true;
     }
 
 
-    if (username) {
-      this.userService.getUserProfile(username).subscribe({
+    if (profileUsername) {
+      this.userService.getUserProfile(profileUsername).subscribe({
         next: (profile) => {
-                    console.log("--- [FRONTEND DEBUG] Profile data received:", profile);
+                  //  console.log("--- [FRONTEND DEBUG] Profile data received:", profile);
           this.userProfile = profile;
         },
         error: (err) => {

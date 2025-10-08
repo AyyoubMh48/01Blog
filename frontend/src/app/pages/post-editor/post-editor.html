@@ -1,30 +1,42 @@
-<div class="editor-container">
-  <h2 *ngIf="isEditMode">Edit Your Post</h2>
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title *ngIf="isEditMode">Edit Your Post</mat-card-title>
+      <mat-card-title *ngIf="!isEditMode">Create a New Post</mat-card-title>
+    </mat-card-header>
 
-  <form *ngIf="post" #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
-    <textarea
-      name="content"
-      rows="10"
-      placeholder="Share your thoughts..."
-      [ngModel]="post.content"
-      required
-    ></textarea>
+    <mat-card-content *ngIf="!isEditMode || (isEditMode && post)">
+      <form #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Share your thoughts...</mat-label>
+          <textarea matInput name="content" rows="10" [ngModel]="post?.content" required></textarea>
+        </mat-form-field>
 
-    <div *ngIf="post.mediaUrl && !imagePreview" class="image-preview">
-      <p>Current Image:</p>
-      <img [src]="post.mediaUrl" alt="Current post image">
-    </div>
+        <div *ngIf="post?.mediaUrl && !imagePreview" class="image-preview">
+          <p>Current Image:</p>
+          <img [src]="post?.mediaUrl" alt="Current post image">
+        </div>
+        <div *ngIf="imagePreview" class="image-preview">
+          <p>New Image Preview:</p>
+          <img [src]="imagePreview" alt="New image preview">
+        </div>
 
-    <div class="file-input-container">
-      <label for="file">Change Image</label>
-      <input type="file" id="file" (change)="onFileSelected($event)">
-    </div>
-    
-    <div *ngIf="imagePreview" class="image-preview">
-      <p>New Image:</p>
-      <img [src]="imagePreview" alt="New image preview">
-    </div>
-
-    <button type="submit">Save Post</button>
-  </form>
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon>add_photo_alternate</mat-icon>
+            <span>{{ post?.mediaUrl ? 'Change' : 'Add' }} Image</span>
+          </button>
+          <input hidden (change)="onFileSelected($event)" #fileInput type="file" accept="image/*">
+          
+          <span class="spacer"></span>
+          
+          <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid">
+            {{ isEditMode ? 'Save Changes' : 'Create Post' }}
+          </button>
+        </div>
+        
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>

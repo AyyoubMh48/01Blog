@@ -1,0 +1,29 @@
+.image-preview {
+  margin-bottom: 16px;
+  
+  p {
+    font-size: 0.8em;
+    color: #757575;
+    margin-bottom: 8px;
+  }
+  
+  img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  
+}
+
+.spacer {
+  flex-grow: 1;
+  margin: 2%;
+}

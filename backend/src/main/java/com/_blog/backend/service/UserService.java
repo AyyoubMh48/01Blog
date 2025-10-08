@@ -32,8 +32,8 @@ public class UserService {
     
     @Transactional(readOnly = true) 
     public UserProfileDto getUserProfile(String username, String currentUsername) {
-         System.out.println("--- [DEBUG] Fetching profile for: " + username);
-    System.out.println("--- [DEBUG] Current logged-in user (email): " + currentUsername);
+       //  System.out.println("--- [DEBUG] Fetching profile for: " + username);
+    //System.out.println("--- [DEBUG] Current logged-in user (email): " + currentUsername);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
@@ -42,10 +42,10 @@ public class UserService {
 
         boolean isFollowing = false;
         if (currentUser != null) {
-             System.out.println("--- [DEBUG] Profile User ID: " + user.getId());
-            System.out.println("--- [DEBUG] Current User (Follower) ID: " + currentUser.getId());
+          //   System.out.println("--- [DEBUG] Profile User ID: " + user.getId());
+          //  System.out.println("--- [DEBUG] Current User (Follower) ID: " + currentUser.getId());
         isFollowing = subscriptionRepository.existsByFollower_IdAndFollowing_Id(currentUser.getId(), user.getId());
-                    System.out.println("--- [DEBUG] Database check: Is Following? " + isFollowing);
+                  //  System.out.println("--- [DEBUG] Database check: Is Following? " + isFollowing);
         }
 
         List<Post> userPosts = postRepository.findAllByAuthor(user);
@@ -56,7 +56,7 @@ public class UserService {
 
         UserProfileDto profileDto = new UserProfileDto();
         profileDto.setId(user.getId());
-        profileDto.setUsername(user.getUsername());
+        profileDto.setUsername(user.getOriginalUsername());
         profileDto.setPosts(postDtos);
         profileDto.setFollowedByCurrentUser(isFollowing);
         
