@@ -35,6 +35,7 @@ export class Feed implements OnInit {
   isLoggedIn = false;
   selectedFile: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
+  previewFileType: 'image' | 'video' | null = null;
   expandedPostIds = new Set<number>();
   currentUsername: string | null = null;
 
@@ -80,12 +81,26 @@ export class Feed implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.selectedFile = input.files[0];
-      // Show image preview
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result;
-      };
-      reader.readAsDataURL(this.selectedFile);
+      const fileType = this.selectedFile.type;
+
+      if (fileType.startsWith('image/')) {
+        this.previewFileType = 'image';
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagePreview = reader.result;
+        };
+        reader.readAsDataURL(this.selectedFile);
+      } else if (fileType.startsWith('video/')) {
+        this.previewFileType = 'video';
+        // URL.createObjectURL is more efficient for large files like videos
+        this.imagePreview = URL.createObjectURL(this.selectedFile);
+      } else {
+        // Reset if the file type is not supported
+        this.selectedFile = null;
+        this.imagePreview = null;
+        this.previewFileType = null;
+        alert('Unsupported file type. Please select an image or video.');
+      }
     }
   }
 

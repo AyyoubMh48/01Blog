@@ -28,6 +28,12 @@
         word-wrap: break-word; 
       }
     }
+    .post-video {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      background-color: #000; 
+    }
   }
 }
 

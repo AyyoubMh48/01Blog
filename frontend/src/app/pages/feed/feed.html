@@ -16,20 +16,38 @@
           ></textarea>
         </mat-form-field>
 
-        <div *ngIf="imagePreview" class="image-preview">
-          <img [src]="imagePreview" alt="Image Preview" />
+        <div
+          *ngIf="imagePreview"
+          class="image-preview"
+          [ngSwitch]="previewFileType"
+        >
+          <img
+            *ngSwitchCase="'image'"
+            [src]="imagePreview"
+            alt="Image Preview"
+          />
+          <video
+            *ngSwitchCase="'video'"
+            [src]="imagePreview"
+            controls
+            muted
+            loop
+          >
+            Your browser does not support the video tag.
+          </video>
         </div>
 
         <div class="form-actions">
           <button mat-stroked-button type="button" (click)="fileInput.click()">
-            <mat-icon>add_photo_alternate</mat-icon>
-            Add Image
+            <mat-icon>perm_media</mat-icon> <span>Add Media</span>
           </button>
+          
           <input
             hidden
             (change)="onFileSelected($event)"
             #fileInput
             type="file"
+            accept="image/*,video/*"
           />
 
           <span class="spacer"></span>
@@ -67,12 +85,22 @@
         }}</mat-card-subtitle>
       </mat-card-header>
 
-      <img
-        mat-card-image
-        *ngIf="post.mediaUrl"
-        [src]="post.mediaUrl"
-        alt="Post image"
-      />
+      <div *ngIf="post.mediaUrl" class="media-container">
+        <img
+          *ngIf="!post.mediaUrl.includes('/video/')"
+          mat-card-image
+          [src]="post.mediaUrl"
+          alt="Post media"
+        />
+        <video
+          *ngIf="post.mediaUrl.includes('/video/')"
+          class="post-video"
+          controls
+        >
+          <source [src]="post.mediaUrl" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
       <mat-card-content>
         <p>{{ post.content }}</p>

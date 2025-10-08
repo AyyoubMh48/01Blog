@@ -16,9 +16,22 @@ public class FileStorageService {
     private Cloudinary cloudinary;
 
     public String storeFile(MultipartFile file) {
+        String contentType = file.getContentType();
+
+        if (contentType == null || (!contentType.startsWith("image/") && !contentType.startsWith("video/"))) {
+            throw new RuntimeException("Invalid file type. Only images and videos are allowed.");
+        }
+
         try {
             Map<String, Object> options = new HashMap<>();
             options.put("folder", "01blog_uploads"); 
+
+            if (contentType.startsWith("video/")) {
+                options.put("resource_type", "video");
+            } else {
+                options.put("resource_type", "image");
+            }
+
             Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), options);
 
             return (String) result.get("secure_url");
