@@ -27,3 +27,24 @@
   flex-grow: 1;
   margin: 2%;
 }
+mat-card-content {
+      p {
+        overflow-wrap: break-word;
+        word-wrap: break-word; 
+      }
+    }
+    .post-video {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      background-color: #000; 
+    }
+    mat-card-title {
+      a {
+        text-decoration: none;
+        color: inherit;       
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }

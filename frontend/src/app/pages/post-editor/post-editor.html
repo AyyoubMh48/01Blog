@@ -7,35 +7,86 @@
 
     <mat-card-content *ngIf="!isEditMode || (isEditMode && post)">
       <form #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
-        
         <mat-form-field appearance="outline">
           <mat-label>Share your thoughts...</mat-label>
-          <textarea matInput name="content" rows="10" [ngModel]="post?.content" required></textarea>
+          <textarea
+            matInput
+            name="content"
+            rows="10"
+            [ngModel]="post?.content"
+            required
+          ></textarea>
         </mat-form-field>
 
-        <div *ngIf="post?.mediaUrl && !imagePreview" class="image-preview">
-          <p>Current Image:</p>
-          <img [src]="post?.mediaUrl" alt="Current post image">
+        <div *ngIf="post?.mediaUrl && !imagePreview" class="media-preview">
+          <p>Current Media:</p>
+          <div *ngIf="post?.mediaUrl" class="media-container">
+            <img
+              *ngIf="!post?.mediaUrl?.includes('/video/')"
+              mat-card-image
+              [src]="post?.mediaUrl"
+              alt="Post media"
+            />
+
+            <video
+              *ngIf="post?.mediaUrl?.includes('/video/')"
+              class="post-video"
+              controls
+            >
+              <source [src]="post?.mediaUrl" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </div>
-        <div *ngIf="imagePreview" class="image-preview">
-          <p>New Image Preview:</p>
-          <img [src]="imagePreview" alt="New image preview">
+
+        <div
+          *ngIf="imagePreview"
+          class="media-preview"
+          [ngSwitch]="previewFileType"
+        >
+          <p>New Media Preview:</p>
+          <img
+            *ngSwitchCase="'image'"
+            [src]="imagePreview"
+            alt="New image preview"
+          />
+          <video
+            *ngSwitchCase="'video'"
+            [src]="imagePreview"
+            controls
+            muted
+            loop
+          ></video>
         </div>
 
         <div class="form-actions">
           <button mat-stroked-button type="button" (click)="fileInput.click()">
-            <mat-icon>add_photo_alternate</mat-icon>
-            <span>{{ post?.mediaUrl ? 'Change' : 'Add' }} Image</span>
+            <mat-icon>perm_media</mat-icon>
+            <span>{{ post?.mediaUrl ? "Change" : "Add" }} Media</span>
           </button>
-          <input hidden (change)="onFileSelected($event)" #fileInput type="file" accept="image/*">
-          
+          <input
+            hidden
+            (change)="onFileSelected($event)"
+            #fileInput
+            type="file"
+            accept="image/*,video/*"
+          />
+
           <span class="spacer"></span>
-          
-          <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid">
-            {{ isEditMode ? 'Save Changes' : 'Create Post' }}
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="postForm.invalid || isSubmitting"
+          >
+            <span *ngIf="isSubmitting">Saving...</span>
+
+            <span *ngIf="!isSubmitting">{{
+              isEditMode ? "Save Changes" : "Create Post"
+            }}</span>
           </button>
         </div>
-        
       </form>
     </mat-card-content>
   </mat-card>

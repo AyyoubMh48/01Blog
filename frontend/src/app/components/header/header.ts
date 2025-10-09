@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../services/notification';
 import { Notification } from '../../models/notification';
 import { AuthService } from '../../services/auth';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink,NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators'
 //import { ThemeService } from '../../services/theme'; 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,8 +28,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   unreadCount = 0;
   showNotifications = false;
+  isOnCreatePostPage = false
+  private routerSub!: Subscription;
   private notificationSub!: Subscription;
-   private authStatusSub!: Subscription;
+  private authStatusSub!: Subscription;
 
   constructor(
     public authService: AuthService, 
@@ -47,6 +50,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.notificationSub = this.notificationService.notifications$.subscribe(data => {
             this.notifications = data;
             this.unreadCount = this.notifications.filter(n => !n.read).length;
+        });
+         this.routerSub = this.router.events.pipe(
+          filter(event => event instanceof NavigationEnd)
+        ).subscribe((event: any) => {
+          this.isOnCreatePostPage = (event.url === '/post/new');
         });
       }
     });
@@ -71,6 +79,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.routerSub) this.routerSub.unsubscribe();
     if (this.authStatusSub) this.authStatusSub.unsubscribe();
     if (this.notificationSub) this.notificationSub.unsubscribe();
     this.notificationService.disconnect();

@@ -77,51 +77,9 @@ export class Feed implements OnInit {
       });
     }
   }
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.selectedFile = input.files[0];
-      const fileType = this.selectedFile.type;
+  
 
-      if (fileType.startsWith('image/')) {
-        this.previewFileType = 'image';
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imagePreview = reader.result;
-        };
-        reader.readAsDataURL(this.selectedFile);
-      } else if (fileType.startsWith('video/')) {
-        this.previewFileType = 'video';
-        // URL.createObjectURL is more efficient for large files like videos
-        this.imagePreview = URL.createObjectURL(this.selectedFile);
-      } else {
-        // Reset if the file type is not supported
-        this.selectedFile = null;
-        this.imagePreview = null;
-        this.previewFileType = null;
-        alert('Unsupported file type. Please select an image or video.');
-      }
-    }
-  }
-
-  onPostSubmit(form: NgForm): void {
-    if (form.invalid) {
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('content', form.value.content);
-    if (this.selectedFile) {
-      formData.append('file', this.selectedFile, this.selectedFile.name);
-    }
-
-    this.postService.createPost(formData).subscribe((newPost) => {
-      this.posts.unshift(newPost);
-      form.reset();
-      this.selectedFile = null;
-      this.imagePreview = null;
-    });
-  }
+  
 
   toggleLike(post: Post): void {
     if (!this.isLoggedIn) {

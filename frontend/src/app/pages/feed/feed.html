@@ -2,68 +2,7 @@
   <h1 *ngIf="isLoggedIn">Your Personalized Feed</h1>
   <h1 *ngIf="!isLoggedIn">Public Feed</h1>
 
-  <mat-card *ngIf="isLoggedIn" class="post-form-card">
-    <mat-card-content>
-      <form #postForm="ngForm" (ngSubmit)="onPostSubmit(postForm)">
-        <mat-form-field appearance="outline">
-          <mat-label>Share your thoughts...</mat-label>
-          <textarea
-            matInput
-            name="content"
-            rows="4"
-            ngModel
-            required
-          ></textarea>
-        </mat-form-field>
-
-        <div
-          *ngIf="imagePreview"
-          class="image-preview"
-          [ngSwitch]="previewFileType"
-        >
-          <img
-            *ngSwitchCase="'image'"
-            [src]="imagePreview"
-            alt="Image Preview"
-          />
-          <video
-            *ngSwitchCase="'video'"
-            [src]="imagePreview"
-            controls
-            muted
-            loop
-          >
-            Your browser does not support the video tag.
-          </video>
-        </div>
-
-        <div class="form-actions">
-          <button mat-stroked-button type="button" (click)="fileInput.click()">
-            <mat-icon>perm_media</mat-icon> <span>Add Media</span>
-          </button>
-          
-          <input
-            hidden
-            (change)="onFileSelected($event)"
-            #fileInput
-            type="file"
-            accept="image/*,video/*"
-          />
-
-          <span class="spacer"></span>
-
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="postForm.invalid"
-          >
-            Post
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+  
 
   <div *ngIf="!isLoggedIn" class="login-prompt">
     <mat-card>
@@ -79,7 +18,11 @@
   <section class="post-list">
     <mat-card *ngFor="let post of posts" class="post-card">
       <mat-card-header>
-        <mat-card-title>{{ post.author.username }}</mat-card-title>
+        <mat-card-title>
+          <a [routerLink]="['/block', post.author.username]">
+            {{ post.author.username }}
+          </a>
+        </mat-card-title>
         <mat-card-subtitle>{{
           post.createdAt | date : "medium"
         }}</mat-card-subtitle>
