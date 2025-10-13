@@ -18,6 +18,7 @@
   <section class="post-list">
     <mat-card *ngFor="let post of posts" class="post-card">
       <mat-card-header>
+        <mat-card-title>{{ post.title }}</mat-card-title>
         <mat-card-title>
           <a [routerLink]="['/block', post.author.username]">
             {{ post.author.username }}
@@ -46,7 +47,7 @@
       </div>
 
       <mat-card-content>
-        <p>{{ post.content }}</p>
+        <p [innerHTML]="post.content"></p> 
       </mat-card-content>
 
       <mat-card-actions>

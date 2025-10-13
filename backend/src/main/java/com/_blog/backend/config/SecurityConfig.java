@@ -64,6 +64,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/posts").permitAll() 
                 .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").permitAll() 
+                .requestMatchers("/api/media/upload").authenticated()
                 .anyRequest().authenticated()
             )
             // Tell Spring to not manage sessions (we're using JWTs)

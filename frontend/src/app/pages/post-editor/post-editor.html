@@ -1,89 +1,43 @@
 <div class="form-container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title *ngIf="isEditMode">Edit Your Post</mat-card-title>
-      <mat-card-title *ngIf="!isEditMode">Create a New Post</mat-card-title>
-    </mat-card-header>
-
+  <mat-card class="post-editor-card">
     <mat-card-content *ngIf="!isEditMode || (isEditMode && post)">
       <form #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
-        <mat-form-field appearance="outline">
-          <mat-label>Share your thoughts...</mat-label>
-          <textarea
-            matInput
-            name="content"
-            rows="10"
-            [ngModel]="post?.content"
-            required
-          ></textarea>
+        <input
+          type="file"
+          id="editor-media-input"
+          (change)="handleEditorMediaUpload($event)"
+          accept="image/*,video/*"
+          hidden
+        />
+        <mat-form-field appearance="outline" class="title-field">
+          <mat-label>New post title here...</mat-label>
+          <input matInput name="title" [ngModel]="post?.title" required />
         </mat-form-field>
 
-        <div *ngIf="post?.mediaUrl && !imagePreview" class="media-preview">
-          <p>Current Media:</p>
-          <div *ngIf="post?.mediaUrl" class="media-container">
-            <img
-              *ngIf="!post?.mediaUrl?.includes('/video/')"
-              mat-card-image
-              [src]="post?.mediaUrl"
-              alt="Post media"
-            />
-
-            <video
-              *ngIf="post?.mediaUrl?.includes('/video/')"
-              class="post-video"
-              controls
-            >
-              <source [src]="post?.mediaUrl" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-
-        <div
-          *ngIf="imagePreview"
-          class="media-preview"
-          [ngSwitch]="previewFileType"
-        >
-          <p>New Media Preview:</p>
-          <img
-            *ngSwitchCase="'image'"
-            [src]="imagePreview"
-            alt="New image preview"
-          />
-          <video
-            *ngSwitchCase="'video'"
-            [src]="imagePreview"
-            controls
-            muted
-            loop
-          ></video>
+        <div class="quill-editor-container">
+          <quill-editor
+            [(ngModel)]="editorContent"
+            name="editorContent"
+            [modules]="quillModules"
+            (onEditorCreated)="editorCreated($event)"
+            placeholder="Write your post content here..."
+            [required]="true"
+          >
+          </quill-editor>
         </div>
 
         <div class="form-actions">
-          <button mat-stroked-button type="button" (click)="fileInput.click()">
-            <mat-icon>perm_media</mat-icon>
-            <span>{{ post?.mediaUrl ? "Change" : "Add" }} Media</span>
-          </button>
-          <input
-            hidden
-            (change)="onFileSelected($event)"
-            #fileInput
-            type="file"
-            accept="image/*,video/*"
-          />
-
-          <span class="spacer"></span>
-
           <button
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="postForm.invalid || isSubmitting"
+            [disabled]="
+              postForm.invalid || !editorContent.trim() || isSubmitting
+            "
           >
             <span *ngIf="isSubmitting">Saving...</span>
-
             <span *ngIf="!isSubmitting">{{
-              isEditMode ? "Save Changes" : "Create Post"
+              isEditMode ? "Save Changes" : "Publish"
             }}</span>
           </button>
         </div>

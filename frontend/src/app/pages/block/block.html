@@ -81,6 +81,7 @@
 
       <mat-card *ngFor="let post of userProfile?.posts" class="post-card">
         <mat-card-header>
+          <mat-card-title>{{ post.title }}</mat-card-title>
           <mat-card-subtitle>{{
             post.createdAt | date : "medium"
           }}</mat-card-subtitle>
@@ -94,7 +95,7 @@
         />
 
         <mat-card-content>
-          <p>{{ post.content }}</p>
+          <p [innerHTML]="post.content"></p> 
         </mat-card-content>
 
         <mat-card-actions>

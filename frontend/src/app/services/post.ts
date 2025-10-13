@@ -36,4 +36,9 @@ export class PostService {
   updatePost(postId: number, formData: FormData): Observable<Post> {
     return this.http.put<Post>(`${this.apiUrl}/${postId}`, formData);
   }
+
+  uploadMedia(formData: FormData): Observable<any> {
+    return this.http.post('http://localhost:8080/api/media/upload', formData);
+  }
+
 }

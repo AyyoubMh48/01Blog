@@ -1,50 +1,107 @@
-.image-preview {
-  margin-bottom: 16px;
-  
-  p {
-    font-size: 0.8em;
-    color: #757575;
-    margin-bottom: 8px;
+// Use ::ng-deep to style the child Quill component
+::ng-deep {
+  .quill-editor-container {
+    // Toolbar styling
+    .ql-toolbar.ql-snow {
+      border: 1px solid #dcdcdc;
+      border-radius: 6px 6px 0 0;
+      padding: 6px;
+    }
+
+    // Main editor area styling
+    .ql-container.ql-snow {
+      border: 1px solid #dcdcdc;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+
+      .ql-editor {
+        min-height: 250px;
+      }
+    }
+
+    // Button styling
+    .ql-formats button {
+      &:hover, &.ql-active {
+        background-color: #f0f0f0;
+        border-radius: 4px;
+      }
+    }
   }
-  
-  img {
+}
+
+// Dark Mode Styles for the Editor
+.dark-mode ::ng-deep {
+  .quill-editor-container {
+    .ql-toolbar.ql-snow {
+      background-color: #1a1a1a;
+      border-color: #424242;
+
+      // Make icons and text in toolbar white
+      .ql-stroke { stroke: #f5f5f5; }
+      .ql-fill { fill: #f5f5f5; }
+      .ql-picker-label { color: #f5f5f5; }
+    }
+
+    .ql-container.ql-snow {
+      border-color: #424242;
+    }
+    
+    .ql-formats button:hover, .ql-active {
+      background-color: #424242;
+    }
+  }
+}
+
+// General layout styles for the component
+.post-editor-card {
+  width: 100%;
+}
+
+.cover-media-section {
+  margin-bottom: 24px;
+}
+
+.media-preview-area {
+  margin-top: 16px;
+  border: 1px solid rgba(0,0,0,.12);
+  padding: 10px;
+  border-radius: 4px;
+  position: relative;
+  max-height: 400px;
+  display: flex;
+  justify-content: center;
+  background-color: #f5f5f5;
+
+  img, video {
     max-width: 100%;
-    max-height: 300px;
-    border-radius: 4px;
-    border: 1px solid #eee;
+    max-height: 380px;
+    height: auto;
+    display: block;
+  }
+
+  .remove-media-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: white;
+  }
+}
+
+.title-field {
+  width: 100%;
+  margin-bottom: 20px;
+  
+  // Target the inner input to make the title font larger
+  ::ng-deep .mat-mdc-form-field-infix {
+    input {
+      font-size: 2em;
+      font-weight: bold;
+    }
   }
 }
 
 .form-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 16px;
-  
+  justify-content: flex-end;
+  margin-top: 20px;
 }
-
-.spacer {
-  flex-grow: 1;
-  margin: 2%;
-}
-mat-card-content {
-      p {
-        overflow-wrap: break-word;
-        word-wrap: break-word; 
-      }
-    }
-    .post-video {
-      width: 100%;
-      height: auto;
-      max-height: 600px;
-      background-color: #000; 
-    }
-    mat-card-title {
-      a {
-        text-decoration: none;
-        color: inherit;       
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }

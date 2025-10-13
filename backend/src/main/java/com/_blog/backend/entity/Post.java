@@ -17,6 +17,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String title;
+
     @Lob // large object , for storing long text, not just 255 char
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;

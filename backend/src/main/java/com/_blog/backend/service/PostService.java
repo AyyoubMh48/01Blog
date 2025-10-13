@@ -38,7 +38,7 @@ public class PostService {
     private SubscriptionRepository subscriptionRepository;
 
     @Transactional
-    public PostResponseDto createPost(String content, MultipartFile file, String authorEmail) {
+    public PostResponseDto createPost(String title,String content, MultipartFile file, String authorEmail) {
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + authorEmail));
         
@@ -48,6 +48,7 @@ public class PostService {
         }
 
         Post newPost = new Post();
+        newPost.setTitle(title);
         newPost.setContent(content);
         newPost.setAuthor(author);
         newPost.setMediaUrl(mediaUrl);
@@ -92,7 +93,7 @@ public class PostService {
 
     
     @Transactional
-    public PostResponseDto updatePost(Long postId, String content, MultipartFile file, String userEmail) {
+    public PostResponseDto updatePost(Long postId,String title, String content, MultipartFile file, String userEmail) {
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Post post = postRepository.findById(postId)
@@ -102,6 +103,7 @@ public class PostService {
             throw new AccessDeniedException("You do not have permission to edit this post.");
         }
 
+        post.setTitle(title);
         post.setContent(content);
 
         if (file != null && !file.isEmpty()) {
@@ -133,6 +135,7 @@ public class PostService {
     public PostResponseDto mapToDto(Post post, User currentUser) {
         PostResponseDto dto = new PostResponseDto();
         dto.setId(post.getId());
+        dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());
         dto.setMediaUrl(post.getMediaUrl());
         dto.setCreatedAt(post.getCreatedAt());
