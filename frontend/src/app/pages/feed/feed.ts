@@ -51,21 +51,21 @@ export class Feed implements OnInit {
   }
 
   loadPosts(): void {
-    if (this.isLoggedIn) {
-      this.postService.getFeed().subscribe((posts) => {
-        this.posts = posts.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      });
-    } else {
+    // if (this.isLoggedIn) {
+    //   this.postService.getFeed().subscribe((posts) => {
+    //     this.posts = posts.sort(
+    //       (a, b) =>
+    //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    //     );
+    //   });
+    // } else {
       this.postService.getPublicPosts().subscribe((posts) => {
         this.posts = posts.sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       });
-    }
+   // }
   }
   deletePost(postId: number): void {
     if (confirm('Are you sure you want to delete this post?')) {

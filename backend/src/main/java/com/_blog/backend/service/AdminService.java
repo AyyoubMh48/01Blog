@@ -52,6 +52,7 @@ public class AdminService {
                 .map(this::mapToUserDto)
                 .collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public List<PostResponseDto> getAllPosts() {
         // We can't know who the "current user" is in this context, so we pass null
@@ -67,6 +68,15 @@ public class AdminService {
         user.setBanned(true);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void unbanUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+        user.setBanned(false);
+        userRepository.save(user);
+    }
+
     @Transactional
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
@@ -79,6 +89,7 @@ public class AdminService {
         // Finally, delete the post itself
         postRepository.delete(post);
     }
+
     @Transactional
     public void resolveReport(Long reportId, String action) {
         Report report = reportRepository.findById(reportId)
@@ -93,7 +104,7 @@ public class AdminService {
         }
         reportRepository.save(report);
     }
-    
+
     public AdminAnalyticsDto getAnalytics() {
         AdminAnalyticsDto analytics = new AdminAnalyticsDto();
         analytics.setTotalUsers(userRepository.count());

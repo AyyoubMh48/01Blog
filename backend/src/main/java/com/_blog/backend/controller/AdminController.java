@@ -12,7 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map; 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -45,21 +46,30 @@ public class AdminController {
         adminService.deletePost(postId);
         return ResponseEntity.ok(Map.of("message", "Post deleted successfully."));
     }
+
     @GetMapping("/posts")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
         return ResponseEntity.ok(adminService.getAllPosts());
     }
+
     @PostMapping("/reports/{reportId}/action")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> resolveReport(@PathVariable Long reportId, @RequestParam String action) {
         adminService.resolveReport(reportId, action);
         return ResponseEntity.ok(Map.of("message", "Report status updated successfully."));
     }
-    
+
     @GetMapping("/analytics")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AdminAnalyticsDto> getAnalytics() {
         return ResponseEntity.ok(adminService.getAnalytics());
+    }
+
+    @PostMapping("/users/{userId}/unban")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> unbanUser(@PathVariable Long userId) {
+        adminService.unbanUser(userId);
+        return ResponseEntity.ok(Map.of("message", "User has been unbanned successfully."));
     }
 }

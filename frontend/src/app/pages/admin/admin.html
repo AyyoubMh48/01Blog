@@ -3,47 +3,172 @@
 
   <section class="analytics-section">
     <mat-card class="stat-card">
-      <mat-card-header><mat-card-title>Total Users</mat-card-title></mat-card-header>
-      <mat-card-content><p>{{ analytics.totalUsers }}</p></mat-card-content>
+      <mat-card-header
+        ><mat-card-title>Total Users</mat-card-title></mat-card-header
+      >
+      <mat-card-content
+        ><p>{{ analytics.totalUsers }}</p></mat-card-content
+      >
     </mat-card>
     <mat-card class="stat-card">
-      <mat-card-header><mat-card-title>Total Posts</mat-card-title></mat-card-header>
-      <mat-card-content><p>{{ analytics.totalPosts }}</p></mat-card-content>
+      <mat-card-header
+        ><mat-card-title>Total Posts</mat-card-title></mat-card-header
+      >
+      <mat-card-content
+        ><p>{{ analytics.totalPosts }}</p></mat-card-content
+      >
     </mat-card>
     <mat-card class="stat-card">
-      <mat-card-header><mat-card-title>Open Reports</mat-card-title></mat-card-header>
-      <mat-card-content><p>{{ analytics.openReports }}</p></mat-card-content>
+      <mat-card-header
+        ><mat-card-title>Open Reports</mat-card-title></mat-card-header
+      >
+      <mat-card-content
+        ><p>{{ analytics.openReports }}</p></mat-card-content
+      >
     </mat-card>
   </section>
 
   <h3>Open User Reports</h3>
   <table mat-table [dataSource]="reports" class="mat-elevation-z8">
-    <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>ID</th><td mat-cell *matCellDef="let r">{{r.id}}</td></ng-container>
-    <ng-container matColumnDef="reason"><th mat-header-cell *matHeaderCellDef>Reason</th><td mat-cell *matCellDef="let r">{{r.reason}}</td></ng-container>
-    <ng-container matColumnDef="reporter"><th mat-header-cell *matHeaderCellDef>Reporter</th><td mat-cell *matCellDef="let r">{{r.reporter.username}}</td></ng-container>
-    <ng-container matColumnDef="reportedUser"><th mat-header-cell *matHeaderCellDef>Reported User</th><td mat-cell *matCellDef="let r">{{r.reportedUser.username}}</td></ng-container>
-    <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>Date</th><td mat-cell *matCellDef="let r">{{r.createdAt | date:'short'}}</td></ng-container>
-    <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let r"><button mat-button color="primary" (click)="resolveReport(r.id, 'RESOLVE')">Resolve</button><button mat-button color="accent" (click)="resolveReport(r.id, 'IGNORE')">Ignore</button></td></ng-container>
-    <tr mat-header-row *matHeaderRowDef="reportColumns"></tr><tr mat-row *matRowDef="let row; columns: reportColumns;"></tr>
+    <ng-container matColumnDef="id"
+      ><th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let r">{{ r.id }}</td></ng-container
+    >
+    <ng-container matColumnDef="reason"
+      ><th mat-header-cell *matHeaderCellDef>Reason</th>
+      <td mat-cell *matCellDef="let r">{{ r.reason }}</td></ng-container
+    >
+    <ng-container matColumnDef="reporter">
+      <th mat-header-cell *matHeaderCellDef>Reporter</th>
+      <td mat-cell *matCellDef="let r">
+        <a [routerLink]="['/block', r.reporter.username]">{{
+          r.reporter.username
+        }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="reportedUser">
+      <th mat-header-cell *matHeaderCellDef>Reported User</th>
+      <td mat-cell *matCellDef="let r">
+        <a [routerLink]="['/block', r.reportedUser.username]">{{
+          r.reportedUser.username
+        }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="date"
+      ><th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let r">
+        {{ r.createdAt | date : "short" }}
+      </td></ng-container
+    >
+    <ng-container matColumnDef="actions"
+      ><th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let r">
+        <button
+          mat-button
+          color="primary"
+          (click)="resolveReport(r.id, 'RESOLVE')"
+        >
+          Resolve</button
+        ><button
+          mat-button
+          color="accent"
+          (click)="resolveReport(r.id, 'IGNORE')"
+        >
+          Ignore
+        </button>
+      </td></ng-container
+    >
+    <tr mat-header-row *matHeaderRowDef="reportColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: reportColumns"></tr>
   </table>
 
   <h3>All Users</h3>
   <table mat-table [dataSource]="users" class="mat-elevation-z8">
-    <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>ID</th><td mat-cell *matCellDef="let u">{{u.id}}</td></ng-container>
-    <ng-container matColumnDef="username"><th mat-header-cell *matHeaderCellDef>Username</th><td mat-cell *matCellDef="let u">{{u.username}}</td></ng-container>
-    <ng-container matColumnDef="email"><th mat-header-cell *matHeaderCellDef>Email</th><td mat-cell *matCellDef="let u">{{u.email}}</td></ng-container>
-    <ng-container matColumnDef="role"><th mat-header-cell *matHeaderCellDef>Role</th><td mat-cell *matCellDef="let u">{{u.role}}</td></ng-container>
-    <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>Status</th><td mat-cell *matCellDef="let u"><span *ngIf="u.banned">Banned</span><span *ngIf="u.role === 'ROLE_ADMIN' && !u.banned">Admin</span><button mat-button color="warn" *ngIf="!u.banned && u.role === 'ROLE_USER'" (click)="banUser(u.id)">Ban</button></td></ng-container>
-    <tr mat-header-row *matHeaderRowDef="userColumns"></tr><tr mat-row *matRowDef="let row; columns: userColumns;"></tr>
+    <ng-container matColumnDef="id"
+      ><th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let u">{{ u.id }}</td></ng-container
+    >
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Username</th>
+      <td mat-cell *matCellDef="let u">
+        <a [routerLink]="['/block', u.username]">{{ u.username }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="email"
+      ><th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let u">{{ u.email }}</td></ng-container
+    >
+    <ng-container matColumnDef="role"
+      ><th mat-header-cell *matHeaderCellDef>Role</th>
+      <td mat-cell *matCellDef="let u">{{ u.role }}</td></ng-container
+    >
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let u">
+        <span *ngIf="u.role === 'ROLE_ADMIN'">Admin</span>
+
+        <div *ngIf="u.role === 'ROLE_USER'">
+          <button
+            *ngIf="u.banned"
+            mat-button
+            color="accent"
+            (click)="unbanUser(u.id)"
+          >
+            Unban
+          </button>
+
+          <button
+            *ngIf="!u.banned"
+            mat-button
+            color="warn"
+            (click)="banUser(u.id)"
+          >
+            Ban
+          </button>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: userColumns"></tr>
   </table>
 
   <h3>All Posts</h3>
   <table mat-table [dataSource]="posts" class="mat-elevation-z8">
-    <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>ID</th><td mat-cell *matCellDef="let p">{{p.id}}</td></ng-container>
-    <ng-container matColumnDef="content"><th mat-header-cell *matHeaderCellDef>Content</th><td mat-cell *matCellDef="let p">{{p.content.slice(0, 50)}}...</td></ng-container>
-    <ng-container matColumnDef="author"><th mat-header-cell *matHeaderCellDef>Author</th><td mat-cell *matCellDef="let p">{{p.author.username}}</td></ng-container>
-    <ng-container matColumnDef="createdAt"><th mat-header-cell *matHeaderCellDef>Created At</th><td mat-cell *matCellDef="let p">{{p.createdAt | date:'short'}}</td></ng-container>
-    <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let p"><button mat-button color="warn" (click)="deletePost(p.id)">Delete</button></td></ng-container>
-    <tr mat-header-row *matHeaderRowDef="postColumns"></tr><tr mat-row *matRowDef="let row; columns: postColumns;"></tr>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let p">
+        <a [routerLink]="['/post', p.id]">{{ p.id }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="content"
+      ><th mat-header-cell *matHeaderCellDef>Content</th>
+      <td mat-cell *matCellDef="let p">
+        {{ p.content.slice(0, 50) }}...
+      </td></ng-container
+    >
+    <ng-container matColumnDef="author">
+      <th mat-header-cell *matHeaderCellDef>Author</th>
+      <td mat-cell *matCellDef="let p">
+        <a [routerLink]="['/block', p.author.username]">{{
+          p.author.username
+        }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="createdAt"
+      ><th mat-header-cell *matHeaderCellDef>Created At</th>
+      <td mat-cell *matCellDef="let p">
+        {{ p.createdAt | date : "short" }}
+      </td></ng-container
+    >
+    <ng-container matColumnDef="actions"
+      ><th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let p">
+        <button mat-button color="warn" (click)="deletePost(p.id)">
+          Delete
+        </button>
+      </td></ng-container
+    >
+    <tr mat-header-row *matHeaderRowDef="postColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: postColumns"></tr>
   </table>
 </div>
