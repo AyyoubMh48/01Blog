@@ -66,3 +66,64 @@ img[mat-card-image] {
       }
     }
 }
+.post-card-link {
+  text-decoration: none; // Removes the default link underline
+  color: inherit;
+}
+
+.post-card {
+  border: 1px solid transparent; // Transparent border to prevent size shift on hover
+  transition: border-color 0.2s ease-in-out;
+
+  &:hover {
+    border-color: #3b49df; // A subtle highlight on hover
+  }
+}
+
+.dark-mode .post-card {
+  &:hover {
+    border-color: #60a5fa;
+  }
+}
+
+.post-avatar {
+  background-image: url('https://www.gravatar.com/avatar/?d=mp'); // Placeholder avatar
+  background-size: cover;
+}
+
+.post-card-main-content {
+  padding: 16px;
+}
+
+.post-summary {
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 16px 0;
+    line-height: 1.25;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #575757;
+    .dark-mode & {
+      color: #d6d6d6;
+    }
+  }
+}
+
+mat-card-actions.stats {
+  padding: 0 16px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  
+  button {
+    margin-right: -8px; // Pull text closer to icon
+  }
+  
+  span {
+    font-size: 14px;
+    color: #757575;
+  }
+}

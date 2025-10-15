@@ -73,65 +73,31 @@
     </mat-card>
 
     <section class="post-list">
-      <h3>Posts</h3>
+  <h3>Posts</h3>
+  <div *ngIf="userProfile.posts?.length === 0">This user hasn't posted anything yet.</div>
 
-      <div *ngIf="userProfile.posts?.length === 0">
-        This user hasn't posted anything yet.
-      </div>
-
-      <mat-card *ngFor="let post of userProfile?.posts" class="post-card">
-        <mat-card-header>
-          <mat-card-title>{{ post.title }}</mat-card-title>
-          <mat-card-subtitle>{{
-            post.createdAt | date : "medium"
-          }}</mat-card-subtitle>
-        </mat-card-header>
-
-        <img
-          mat-card-image
-          *ngIf="post.mediaUrl"
-          [src]="post.mediaUrl"
-          alt="Post image"
-        />
-
-        <mat-card-content>
-          <p [innerHTML]="post.content"></p> 
-        </mat-card-content>
-
-        <mat-card-actions>
-          <button
-            mat-icon-button
-            (click)="toggleLike(post)"
-            [color]="post.likedByCurrentUser ? 'warn' : ''"
-          >
-            <mat-icon>favorite</mat-icon>
-          </button>
-          <span>{{ post.likeCount }}</span>
-
-          <button mat-icon-button (click)="toggleComments(post.id)">
-            <mat-icon>comment</mat-icon>
-          </button>
-          <span>{{ post.commentCount }}</span>
-
-          <span class="spacer"></span>
-
-          <div *ngIf="isOwnProfile" class="post-owner-actions">
-            <button mat-button [routerLink]="['/post/edit', post.id]">
-              EDIT
-            </button>
-            <button mat-button color="warn" (click)="deletePost(post.id)">
-              DELETE
-            </button>
-          </div>
-        </mat-card-actions>
-
-        <app-comment-section
-          *ngIf="expandedPostIds.has(post.id)"
-          [postId]="post.id"
-          (commentAdded)="onCommentAdded(post)"
-        >
-        </app-comment-section>
-      </mat-card>
-    </section>
+  <a *ngFor="let post of userProfile?.posts" [routerLink]="['/post', post.id]" class="post-card-link">
+    <mat-card class="post-card">
+      
+      <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
+      
+      <mat-card-header>
+        <mat-card-subtitle>{{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content class="post-summary">
+        <h2>{{ post.title }}</h2>
+        <p>{{ stripHtml(post.content) | slice:0:150 }}...</p>
+      </mat-card-content>
+      
+      <mat-card-actions class="stats">
+        <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
+        <span>{{ post.likeCount }}</span>
+        <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
+        <span>{{ post.commentCount }}</span>
+      </mat-card-actions>
+    </mat-card>
+  </a>
+</section>
   </div>
 </div>

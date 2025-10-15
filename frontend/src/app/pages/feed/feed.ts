@@ -6,7 +6,6 @@ import { Post } from '../../models/post';
 import { AuthService } from '../../services/auth';
 import { LikeService } from '../../services/like';
 import { Router, RouterLink } from '@angular/router';
-import { CommentSectionComponent } from '../../components/comment-section/comment-section';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,7 +18,6 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     FormsModule,
-    CommentSectionComponent,
     RouterLink,
     MatCardModule,
     MatButtonModule,
@@ -104,4 +102,10 @@ export class Feed implements OnInit {
   onCommentAdded(post: Post): void {
     post.commentCount++;
   }
+
+  stripHtml(html: string): string {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
+
 }
