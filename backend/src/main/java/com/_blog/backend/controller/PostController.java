@@ -24,10 +24,10 @@ public class PostController {
     private PostService postService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<PostResponseDto> createPost( @RequestParam("title") String title,@RequestParam("content") String content, @RequestParam(value = "file", required = false) MultipartFile file,Principal principal) {
+    public ResponseEntity<PostResponseDto> createPost( @RequestParam("title") String title,@RequestParam("content") String content, @RequestParam(value = "file", required = false) MultipartFile file,@RequestParam(value = "tags", required = false) String tags,Principal principal) {
         
         String authorEmail = principal.getName();
-        PostResponseDto createdPost = postService.createPost(title,content,file, authorEmail);
+        PostResponseDto createdPost = postService.createPost(title,content,file,tags, authorEmail);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
     
@@ -37,9 +37,10 @@ public class PostController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "tags", required = false) String tags, 
             Principal principal) {
         
-        PostResponseDto updatedPost = postService.updatePost(postId,title, content, file, principal.getName());
+        PostResponseDto updatedPost = postService.updatePost(postId,title, content, file,tags, principal.getName());
         return ResponseEntity.ok(updatedPost);
     }
 

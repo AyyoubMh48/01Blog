@@ -2,6 +2,7 @@ package com._blog.backend.dto;
 
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 public class PostResponseDto {
@@ -14,4 +15,5 @@ public class PostResponseDto {
     private long likeCount; 
     private boolean likedByCurrentUser;
     private long commentCount;
+    private Set<TagDto> tags;
 }

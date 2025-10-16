@@ -14,6 +14,11 @@
           <input matInput name="title" [ngModel]="post?.title" required />
         </mat-form-field>
 
+        <mat-form-field appearance="outline" class="tags-field">
+          <mat-label>Add up to 4 tags (comma-separated)</mat-label>
+          <input matInput name="tags" [(ngModel)]="tagsString" />
+        </mat-form-field>
+
         <div class="quill-editor-container">
           <quill-editor
             [(ngModel)]="editorContent"

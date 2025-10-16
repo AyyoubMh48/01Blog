@@ -127,3 +127,33 @@ mat-card-actions.stats {
     color: #757575;
   }
 }
+.post-tags {
+  display: flex;
+  flex-wrap: wrap; // Allows tags to wrap to the next line
+  gap: 8px;
+  margin-top: 16px;
+  padding: 0;
+
+  span {
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: #575757;
+    background-color: transparent; // No background by default
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f0f0f0; // Subtle hover effect
+      cursor: pointer; // Indicates it could be clickable
+    }
+  }
+}
+
+.dark-mode .post-tags {
+  span {
+    color: #d6d6d6;
+    &:hover {
+      background-color: #424242;
+    }
+  }
+}

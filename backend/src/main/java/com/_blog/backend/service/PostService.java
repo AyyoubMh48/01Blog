@@ -4,10 +4,14 @@ import com._blog.backend.dto.AuthorDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.entity.Post;
 import com._blog.backend.entity.User;
+import com._blog.backend.dto.TagDto;
+import com._blog.backend.entity.Tag;
+import com._blog.backend.repository.*; 
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.SubscriptionRepository;
+import com._blog.backend.repository.TagRepository;
 import com._blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -18,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com._blog.backend.entity.Subscription;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +42,11 @@ public class PostService {
     private FileStorageService fileStorageService;
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     @Transactional
-    public PostResponseDto createPost(String title,String content, MultipartFile file, String authorEmail) {
+    public PostResponseDto createPost(String title,String content, MultipartFile file, String tags, String authorEmail) {
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + authorEmail));
         
@@ -52,6 +60,9 @@ public class PostService {
         newPost.setContent(content);
         newPost.setAuthor(author);
         newPost.setMediaUrl(mediaUrl);
+
+        Set<Tag> tagSet = parseAndSaveTags(tags);
+        newPost.setTags(tagSet);
 
         Post savedPost = postRepository.save(newPost);
         return mapToDto(savedPost, author);
@@ -93,7 +104,7 @@ public class PostService {
 
     
     @Transactional
-    public PostResponseDto updatePost(Long postId,String title, String content, MultipartFile file, String userEmail) {
+    public PostResponseDto updatePost(Long postId,String title, String content, MultipartFile file,String tags, String userEmail) {
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Post post = postRepository.findById(postId)
@@ -106,6 +117,9 @@ public class PostService {
         post.setTitle(title);
         post.setContent(content);
 
+        Set<Tag> tagSet = parseAndSaveTags(tags);
+        post.setTags(tagSet);
+
         if (file != null && !file.isEmpty()) {
             String mediaUrl = fileStorageService.storeFile(file);
             post.setMediaUrl(mediaUrl);
@@ -114,6 +128,8 @@ public class PostService {
         Post updatedPost = postRepository.save(post);
         return mapToDto(updatedPost, currentUser);
     }
+
+    
 
     @Transactional
     public void deletePost(Long postId, String userEmail) {
@@ -129,6 +145,27 @@ public class PostService {
         commentRepository.deleteAllByPost(post);
         likeRepository.deleteAllByPost(post);
         postRepository.delete(post);
+    }
+
+    private Set<Tag> parseAndSaveTags(String tagsString) {
+        Set<Tag> tags = new HashSet<>();
+        if (tagsString == null || tagsString.trim().isEmpty()) {
+            return tags;
+        }
+
+        String[] tagNames = tagsString.split(",");
+        for (String name : tagNames) {
+            String trimmedName = name.trim().toLowerCase();
+            if (trimmedName.isEmpty()) continue;
+
+            Tag tag = tagRepository.findByName(trimmedName).orElseGet(() -> {
+                Tag newTag = new Tag();
+                newTag.setName(trimmedName);
+                return tagRepository.save(newTag);
+            });
+            tags.add(tag);
+        }
+        return tags;
     }
     
 
@@ -150,6 +187,15 @@ public class PostService {
         
         boolean isLiked = (currentUser != null) && likeRepository.findByPostAndUser(post, currentUser).isPresent();
         dto.setLikedByCurrentUser(isLiked);
+
+        // Convert Tag entities to TagDto objects
+        Set<TagDto> tagDtos = post.getTags().stream().map(tag -> {
+            TagDto tagDto = new TagDto();
+            tagDto.setId(tag.getId());
+            tagDto.setName(tag.getName());
+            return tagDto;
+        }).collect(Collectors.toSet());
+        dto.setTags(tagDtos);
         
         return dto;
     }

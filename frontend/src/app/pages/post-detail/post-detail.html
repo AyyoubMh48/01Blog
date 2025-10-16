@@ -6,6 +6,9 @@
         Posted by <a [routerLink]="['/block', post.author.username]">{{ post.author.username }}</a> on {{ post.createdAt | date:'medium' }}
       </mat-card-subtitle>
     </mat-card-header>
+    <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
+      <span *ngFor="let tag of post.tags">#{{ tag.name }}</span>
+    </div>
 
     <div *ngIf="post.mediaUrl" class="media-container">
       <img *ngIf="!post.mediaUrl.includes('/video/')" mat-card-image [src]="post.mediaUrl" alt="Post media">

@@ -2,8 +2,6 @@
   <h1 *ngIf="isLoggedIn">Your Personalized Feed</h1>
   <h1 *ngIf="!isLoggedIn">Public Feed</h1>
 
-  
-
   <div *ngIf="!isLoggedIn" class="login-prompt">
     <mat-card>
       <mat-card-content>
@@ -15,34 +13,51 @@
     </mat-card>
   </div>
 
- <section class="post-list">
-  <a *ngFor="let post of posts" [routerLink]="['/post', post.id]" class="post-card-link">
-    <mat-card class="post-card">
-      
-      <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
-      
-      <div class="post-card-main-content">
-        <mat-card-header>
-          <div mat-card-avatar class="post-avatar"></div>
-          <mat-card-title>{{ post.author.username }}</mat-card-title>
-          <mat-card-subtitle>{{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
-        </mat-card-header>
-        
-        <mat-card-content class="post-summary">
-          <h2>{{ post.title }}</h2>
-          <p>{{ stripHtml(post.content) | slice:0:150 }}...</p>
-        </mat-card-content>
-      </div>
-      
-      <mat-card-actions>
-        <div class="stats">
-          <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
-          <span>{{ post.likeCount }}</span>
-          <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
-          <span>{{ post.commentCount }}</span>
+  <section class="post-list">
+    <a
+      *ngFor="let post of posts"
+      [routerLink]="['/post', post.id]"
+      class="post-card-link"
+    >
+      <mat-card class="post-card">
+        <img
+          mat-card-image
+          *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')"
+          [src]="post.mediaUrl"
+          alt="Post media"
+        />
+
+        <div class="post-card-main-content">
+          <mat-card-header>
+            <div mat-card-avatar class="post-avatar"></div>
+            <mat-card-title>{{ post.author.username }}</mat-card-title>
+            <mat-card-subtitle>{{
+              post.createdAt | date : "MMM d"
+            }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content class="post-summary">
+            <h2>{{ post.title }}</h2>
+            <p>{{ stripHtml(post.content) | slice : 0 : 150 }}...</p>
+            <div class="post-tags" *ngIf="(post.tags?.length || 0) > 0">
+              <span *ngFor="let tag of post.tags ?? []">#{{ tag.name }}</span>
+            </div>
+          </mat-card-content>
         </div>
-      </mat-card-actions>
-    </mat-card>
-  </a>
-</section>
+
+        <mat-card-actions>
+          <div class="stats">
+            <button mat-icon-button disabled>
+              <mat-icon>favorite_border</mat-icon>
+            </button>
+            <span>{{ post.likeCount }}</span>
+            <button mat-icon-button disabled>
+              <mat-icon>chat_bubble_outline</mat-icon>
+            </button>
+            <span>{{ post.commentCount }}</span>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </a>
+  </section>
 </div>

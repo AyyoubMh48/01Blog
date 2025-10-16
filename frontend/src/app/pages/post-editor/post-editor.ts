@@ -103,7 +103,7 @@ export class PostEditor implements OnInit, OnDestroy {
   isEditMode = false;
   postId: number | null = null;
   post: Post | null = null;
-
+  tagsString: string = '';
   isSubmitting = false;
 
   // Store pending media files that will be uploaded on publish
@@ -138,6 +138,10 @@ export class PostEditor implements OnInit, OnDestroy {
       this.postService.getPost(this.postId).subscribe(postData => {
         this.post = postData;
         this.editorContent = this.post.content || '';
+        
+        if (this.post.tags) {
+          this.tagsString = this.post.tags.map(t => t.name).join(', ');
+        }
       });
     } else {
       this.isEditMode = false;
