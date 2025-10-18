@@ -33,6 +33,11 @@ public class User implements UserDetails{
 
     private boolean isBanned = false;
 
+    private String avatarUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));

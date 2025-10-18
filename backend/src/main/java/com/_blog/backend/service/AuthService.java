@@ -2,6 +2,7 @@ package com._blog.backend.service;
 
 import com._blog.backend.dto.LoginDto;
 import com._blog.backend.entity.User;
+import com._blog.backend.util.GravatarUtil;
 import com._blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +40,8 @@ public class AuthService {
         user.setPassword(encodedPassword);
 
         user.setRole("ROLE_USER");
+
+        user.setAvatarUrl(GravatarUtil.generateUrl(user.getEmail()));
 
         userRepository.save(user);
     }

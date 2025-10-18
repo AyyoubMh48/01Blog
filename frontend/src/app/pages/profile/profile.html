@@ -1,37 +1,58 @@
 <div class="form-container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Change Your Password</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <form #passwordForm="ngForm" (ngSubmit)="onSubmit(passwordForm)">
+  <div *ngIf="userProfile">
 
-        <mat-form-field appearance="outline">
-          <mat-label>Current Password</mat-label>
-          <input matInput type="password" name="oldPassword" ngModel required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>New Password</mat-label>
-          <input matInput type="password" name="newPassword" ngModel required>
-        </mat-form-field>
-        
-        <mat-form-field appearance="outline">
-          <mat-label>Confirm New Password</mat-label>
-          <input matInput type="password" name="confirmPassword" ngModel required>
-        </mat-form-field>
-        
-        <div *ngIf="successMessage" class="success-message">
-          {{ successMessage }}
+    <mat-card class="profile-card">
+      <mat-card-header>
+        <mat-card-title>Your Profile</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="profile-content">
+        <div class="avatar-section">
+          <img [src]="userProfile.avatarUrl" alt="Your Avatar" class="profile-avatar">
+          <button mat-stroked-button type="button" (click)="avatarInput.click()">
+            <mat-icon>photo_camera</mat-icon>
+            Change Avatar
+          </button>
+          <input hidden (change)="onAvatarSelected($event)" #avatarInput type="file" accept="image/*">
+          <mat-progress-bar *ngIf="isUploading" mode="indeterminate"></mat-progress-bar>
         </div>
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
+        
+        <form #bioForm="ngForm" (ngSubmit)="onBioSubmit(bioForm)" class="bio-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Your Bio</mat-label>
+            <textarea matInput name="bio" rows="4" [ngModel]="userProfile.bio"></textarea>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit">Save Bio</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">
-          Update Password
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+    <mat-card class="profile-card">
+      <mat-card-header>
+        <mat-card-title>Change Your Password</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form #passwordForm="ngForm" (ngSubmit)="onChangePasswordSubmit(passwordForm)">
+          <mat-form-field appearance="outline">
+            <mat-label>Current Password</mat-label>
+            <input matInput type="password" name="oldPassword" ngModel required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>New Password</mat-label>
+            <input matInput type="password" name="newPassword" ngModel required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Confirm New Password</mat-label>
+            <input matInput type="password" name="confirmPassword" ngModel required>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">
+            Update Password
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  </div>
 </div>

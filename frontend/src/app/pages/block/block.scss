@@ -157,3 +157,19 @@ mat-card-actions.stats {
     }
   }
 }
+.profile-header-card {
+  margin-bottom: 24px;
+}
+
+.profile-avatar {
+  background-size: cover;
+  background-position: center;
+}
+
+.bio-card {
+  margin-bottom: 24px;
+}
+
+.spacer {
+  flex-grow: 1;
+}

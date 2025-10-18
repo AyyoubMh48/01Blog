@@ -1,7 +1,11 @@
 package com._blog.backend.service;
 
+import com._blog.backend.repository.MediaRepository;
+import com._blog.backend.entity.User;
+import com._blog.backend.repository.UserRepository;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +19,16 @@ public class FileStorageService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public String storeFile(MultipartFile file) {
+   
+    @Autowired
+    private UserRepository userRepository;
+
+
+    public String storeFile(MultipartFile file, String uploaderEmail) {
+
+        User uploader = userRepository.findByEmail(uploaderEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("Uploader not found"));
+
         String contentType = file.getContentType();
 
         if (contentType == null || (!contentType.startsWith("image/") && !contentType.startsWith("video/"))) {

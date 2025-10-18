@@ -5,4 +5,6 @@ export interface UserProfile {
   username: string;
   posts: Post[];
   followedByCurrentUser: boolean;
+  avatarUrl?: string; 
+  bio?: string;
 }

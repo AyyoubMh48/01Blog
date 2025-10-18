@@ -5,8 +5,9 @@
   <div *ngIf="userProfile">
     <mat-card class="profile-header-card">
       <div class="profile-header">
+        <div mat-card-avatar class="profile-avatar" [style.backgroundImage]="'url(' + userProfile.avatarUrl + ')'"></div>
         <h2>{{ userProfile.username }}'s Block</h2>
-
+        <span class="spacer"></span>
         <div class="profile-actions">
           <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
             <button
@@ -35,6 +36,11 @@
           </button>
         </div>
       </div>
+    </mat-card>
+    <mat-card *ngIf="userProfile.bio" class="bio-card">
+      <mat-card-content>
+        <p>{{ userProfile.bio }}</p>
+      </mat-card-content>
     </mat-card>
 
     <mat-card *ngIf="showReportForm" class="report-form">

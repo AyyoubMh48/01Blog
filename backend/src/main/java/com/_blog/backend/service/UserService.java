@@ -2,6 +2,7 @@ package com._blog.backend.service;
 
 import com._blog.backend.dto.ChangePasswordDto;
 import com._blog.backend.dto.PostResponseDto;
+import com._blog.backend.dto.ProfileUpdateRequestDto;
 import com._blog.backend.dto.UserProfileDto;
 import com._blog.backend.entity.Post;
 import com._blog.backend.entity.User;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder; 
 
 import java.util.List;
@@ -34,6 +36,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder; 
+
+    @Autowired
+    private FileStorageService fileStorageService;
     
     @Transactional(readOnly = true) 
     public UserProfileDto getUserProfile(String username, String currentUsername) {
@@ -64,6 +69,9 @@ public class UserService {
         profileDto.setUsername(user.getOriginalUsername());
         profileDto.setPosts(postDtos);
         profileDto.setFollowedByCurrentUser(isFollowing);
+
+        profileDto.setAvatarUrl(user.getAvatarUrl());
+        profileDto.setBio(user.getBio());
         
         return profileDto;
     }
@@ -80,5 +88,25 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateProfile(String userEmail, ProfileUpdateRequestDto profileDto) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setBio(profileDto.getBio());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public String updateAvatar(String userEmail, MultipartFile file) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        String avatarUrl = fileStorageService.storeFile(file, userEmail);
+        user.setAvatarUrl(avatarUrl);
+        userRepository.save(user);
+
+        return avatarUrl;
     }
 }

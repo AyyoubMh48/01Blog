@@ -9,4 +9,6 @@ public class UserProfileDto {
     private String username;
     private List<PostResponseDto> posts;
     private boolean isFollowedByCurrentUser;
+    private String avatarUrl;
+    private String bio;
 }

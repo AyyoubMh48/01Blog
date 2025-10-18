@@ -18,4 +18,12 @@ export class UserService {
   changePassword(passwordData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/change-password`, passwordData);
   }
+  updateProfile(profileData: { bio: string }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/profile`, profileData);
+  }
+
+  updateAvatar(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/profile/avatar`, formData);
+  }
+  
 }

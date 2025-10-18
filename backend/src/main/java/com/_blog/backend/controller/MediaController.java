@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -19,8 +20,8 @@ public class MediaController {
     private FileStorageService fileStorageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadMedia(@RequestParam("file") MultipartFile file) {
-        String url = fileStorageService.storeFile(file);
+    public ResponseEntity<?> uploadMedia(@RequestParam("file") MultipartFile file, Principal principal) {
+        String url = fileStorageService.storeFile(file, principal.getName());
         return ResponseEntity.ok(Map.of("url", url));
     }
 }

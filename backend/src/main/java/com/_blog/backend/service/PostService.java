@@ -6,7 +6,6 @@ import com._blog.backend.entity.Post;
 import com._blog.backend.entity.User;
 import com._blog.backend.dto.TagDto;
 import com._blog.backend.entity.Tag;
-import com._blog.backend.repository.*; 
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
 import com._blog.backend.repository.PostRepository;
@@ -52,7 +51,7 @@ public class PostService {
         
         String mediaUrl = null;
         if (file != null && !file.isEmpty()) {
-            mediaUrl = fileStorageService.storeFile(file);
+            mediaUrl = fileStorageService.storeFile(file,authorEmail);
         }
 
         Post newPost = new Post();
@@ -120,9 +119,9 @@ public class PostService {
         Set<Tag> tagSet = parseAndSaveTags(tags);
         post.setTags(tagSet);
 
+        String mediaUrl = null;
         if (file != null && !file.isEmpty()) {
-            String mediaUrl = fileStorageService.storeFile(file);
-            post.setMediaUrl(mediaUrl);
+            mediaUrl = fileStorageService.storeFile(file, userEmail);
         }
 
         Post updatedPost = postRepository.save(post);
