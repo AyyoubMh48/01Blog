@@ -326,11 +326,11 @@ export class PostEditor implements OnInit, OnDestroy {
 
   private submitPost(form: NgForm): void {
     console.log('Submitting post to server...');
-    console.log('Content length:', this.editorContent.length);
 
     const formData = new FormData();
     formData.append('title', form.value.title);
     formData.append('content', this.editorContent);
+    formData.append('tags', this.tagsString);
 
     const submission$ = (this.isEditMode && this.postId)
       ? this.postService.updatePost(this.postId, formData)
