@@ -3,10 +3,8 @@
   margin: 20px auto;
 }
 
-// Target the Material list item
 mat-list-item {
-  // Styles for all list items
-  height: auto !important; // Allow item to grow based on content
+  height: auto !important; 
   padding: 12px 0 !important;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -25,7 +23,6 @@ mat-list-item {
   }
 }
 
-// Dark Mode Styles
 .dark-mode {
   mat-list-item {
     &:hover {

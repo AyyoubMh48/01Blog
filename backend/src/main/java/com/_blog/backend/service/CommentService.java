@@ -55,7 +55,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         
-        return commentRepository.findAllByPostOrderByCreatedAtAsc(post)
+        return commentRepository.findAllByPostOrderByCreatedAtDesc(post)
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
@@ -69,7 +69,8 @@ public class CommentService {
         
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(comment.getAuthor().getId());
-        authorDto.setUsername(comment.getAuthor().getUsername());
+        authorDto.setUsername(comment.getAuthor().getOriginalUsername());
+        authorDto.setAvatarUrl(comment.getAuthor().getAvatarUrl());
         dto.setAuthor(authorDto);
         
         return dto;

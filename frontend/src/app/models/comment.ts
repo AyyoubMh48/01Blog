@@ -5,5 +5,6 @@ export interface Comment {
   author: {
     id: number;
     username: string;
+    avatarUrl?: string;
   };
 }

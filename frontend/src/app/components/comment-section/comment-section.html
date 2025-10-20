@@ -7,7 +7,14 @@
         <mat-label>Add a comment...</mat-label>
         <textarea matInput name="content" rows="3" ngModel required></textarea>
       </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid">Comment</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="commentForm.invalid"
+      >
+        Comment
+      </button>
     </form>
   </section>
   <div *ngIf="!isLoggedIn" class="login-prompt-sm">
@@ -15,14 +22,25 @@
   </div>
 
   <mat-list class="comment-list">
-    <div *ngIf="comments.length === 0" class="no-comments">No comments yet.</div>
+    <div *ngIf="comments.length === 0" class="no-comments">
+      No comments yet.
+    </div>
     <mat-list-item *ngFor="let comment of comments">
-      <mat-icon matListItemAvatar>account_circle</mat-icon>
-      <div matListItemTitle>{{ comment.author.username }}</div>
+      <img
+        matListItemAvatar
+        [src]="comment.author.avatarUrl"
+        alt="Author avatar"
+        class="comment-avatar"
+      />
+      <div matListItemTitle>
+        <a [routerLink]="['/block', comment.author.username]">{{
+          comment.author.username
+        }}</a>
+      </div>
       <div matListItemLine>
         <span>{{ comment.content }}</span>
       </div>
-      <div matListItemMeta>{{ comment.createdAt | date:'short' }}</div>
+      <div matListItemMeta>{{ comment.createdAt | date : "short" }}</div>
     </mat-list-item>
   </mat-list>
 </div>

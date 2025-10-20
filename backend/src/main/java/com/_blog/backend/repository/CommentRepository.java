@@ -11,7 +11,11 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // posts from oldest to newest
-    List<Comment> findAllByPostOrderByCreatedAtAsc(Post post);
+    //List<Comment> findAllByPostOrderByCreatedAtAsc(Post post);
+
+    //posts from  newest to oldest
+    List<Comment> findAllByPostOrderByCreatedAtDesc(Post post);
+
 
     void deleteAllByPost(Post post);
     long countByPost(Post post);
