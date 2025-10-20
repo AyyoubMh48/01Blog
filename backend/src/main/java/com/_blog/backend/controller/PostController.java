@@ -11,6 +11,10 @@ import java.security.Principal;
 import java.util.List;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.entity.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
@@ -51,17 +55,22 @@ public class PostController {
     }
 
     @GetMapping("/feed")
-    public ResponseEntity<List<PostResponseDto>> getPersonalizedFeed(Principal principal) {
-        List<PostResponseDto> feed = postService.getFeedForUser(principal.getName());
-        return ResponseEntity.ok(feed);
+    public ResponseEntity<Page<PostResponseDto>> getPersonalizedFeed(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,Principal principal) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<PostResponseDto> feedPage = postService.getFeedForUser(principal.getName(), pageable);
+        return ResponseEntity.ok(feedPage);
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts(Principal principal) {
-        String currentUserEmail = (principal != null) ? principal.getName() : null;
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,Principal principal) {
 
-        List<PostResponseDto> posts = postService.getAllPosts(currentUserEmail);
-        return ResponseEntity.ok(posts);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        String currentUserEmail = (principal != null) ? principal.getName() : null;
+        Page<PostResponseDto> postPage = postService.getAllPosts(currentUserEmail, pageable);
+        return ResponseEntity.ok(postPage);
     }
     
     @GetMapping("/{postId}")

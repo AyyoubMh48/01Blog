@@ -6,4 +6,5 @@ import lombok.Data;
 public class AuthorDto {
     private Long id;
     private String username;
+    private String avatarUrl;
 }

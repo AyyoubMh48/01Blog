@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { PostService } from '../../services/post';
+import { PostService,Page } from '../../services/post';
 import { Post } from '../../models/post';
 import { AuthService } from '../../services/auth';
 import { LikeService } from '../../services/like';
@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @Component({
   selector: 'app-feed',
@@ -24,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    InfiniteScrollModule
   ],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
@@ -36,6 +38,11 @@ export class Feed implements OnInit {
   previewFileType: 'image' | 'video' | null = null;
   expandedPostIds = new Set<number>();
   currentUsername: string | null = null;
+
+  currentPage = 0;
+  pageSize = 10; 
+  totalPages = 0;
+  isLoading = false;
 
   constructor(
     private postService: PostService,
@@ -51,22 +58,36 @@ export class Feed implements OnInit {
   }
 
   loadPosts(): void {
-    // if (this.isLoggedIn) {
-    //   this.postService.getFeed().subscribe((posts) => {
-    //     this.posts = posts.sort(
-    //       (a, b) =>
-    //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    //     );
-    //   });
-    // } else {
-      this.postService.getPublicPosts().subscribe((posts) => {
-        this.posts = posts.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      });
-   // }
+  if (this.isLoading || (this.totalPages > 0 && this.currentPage >= this.totalPages)) {
+    return;
   }
+  this.isLoading = true;
+
+  this.postService.getPublicPosts(this.currentPage, this.pageSize)
+    .subscribe((page: Page<Post>) => {
+      this.posts = [...this.posts, ...page.content];
+      this.totalPages = page.totalPages;
+      this.currentPage++; 
+      this.isLoading = false;
+    }, error => {
+      console.error("Failed to load posts:", error);
+      this.isLoading = false;
+    });
+}
+
+// This method is called by the infinite scroll directive
+  onScroll(): void {
+    console.log("Scrolled, loading next page...");
+    this.loadPosts();
+  }
+
+  // Helper method for previews
+  stripHtml(html: string): string {
+    if (!html) return '';
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
+
   deletePost(postId: number): void {
     if (confirm('Are you sure you want to delete this post?')) {
       this.postService.deletePost(postId).subscribe(() => {
@@ -75,8 +96,6 @@ export class Feed implements OnInit {
       });
     }
   }
-  
-
   
 
   toggleLike(post: Post): void {
@@ -103,9 +122,6 @@ export class Feed implements OnInit {
     post.commentCount++;
   }
 
-  stripHtml(html: string): string {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || "";
-  }
+ 
 
 }

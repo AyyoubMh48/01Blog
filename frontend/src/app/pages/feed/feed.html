@@ -1,4 +1,8 @@
-<div class="feed-container">
+<div class="feed-container" infiniteScroll
+  [infiniteScrollDistance]="2" 
+  [infiniteScrollThrottle]="300" 
+  (scrolled)="onScroll()">
+
   <h1 *ngIf="isLoggedIn">Your Personalized Feed</h1>
   <h1 *ngIf="!isLoggedIn">Public Feed</h1>
 
@@ -29,7 +33,11 @@
 
         <div class="post-card-main-content">
           <mat-card-header>
-            <div mat-card-avatar class="post-avatar"></div>
+            <div
+              mat-card-avatar
+              class="post-avatar"
+              [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'"
+            ></div>
             <mat-card-title>{{ post.author.username }}</mat-card-title>
             <mat-card-subtitle>{{
               post.createdAt | date : "MMM d"
@@ -60,4 +68,5 @@
       </mat-card>
     </a>
   </section>
+  <div *ngIf="isLoading">Loading more posts...</div>
 </div>

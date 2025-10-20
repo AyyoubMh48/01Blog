@@ -11,6 +11,7 @@ export interface Post {
   author: {
     id: number;
     username: string;
+    avatarUrl?: string;
   };
   mediaUrl?: string; 
   likeCount: number; 

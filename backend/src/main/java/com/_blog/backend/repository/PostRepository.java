@@ -2,6 +2,8 @@ package com._blog.backend.repository;
 
 import com._blog.backend.entity.Post;
 import com._blog.backend.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +13,6 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByAuthor(User author);
-    List<Post> findByAuthorInOrderByCreatedAtDesc(List<User> authors);
+    Page<Post> findByAuthorInOrderByCreatedAtDesc(List<User> authors, Pageable pageable);
+    Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

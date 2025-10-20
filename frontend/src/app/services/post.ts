@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Post } from '../models/post'; 
+
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number; // Current page number (0-indexed)
+  size: number;
+  // Add other Page properties if needed (last, first, etc.)
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +20,20 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  // Method to get all posts
-  getPublicPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.apiUrl);
-  }
-  //get the personalized feed for a logged-in user
-  getFeed(): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.apiUrl}/feed`);
+  getPublicPosts(page: number, size: number): Observable<Page<Post>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<Post>>(this.apiUrl, { params });
   }
 
-  // Method to create a new post
+  getFeed(page: number, size: number): Observable<Page<Post>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<Post>>(`${this.apiUrl}/feed`, { params });
+  }
+
   createPost(formData: FormData): Observable<Post> {
     return this.http.post<Post>(this.apiUrl, formData);
   }

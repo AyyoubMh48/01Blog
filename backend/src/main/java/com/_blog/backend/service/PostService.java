@@ -8,6 +8,7 @@ import com._blog.backend.dto.TagDto;
 import com._blog.backend.entity.Tag;
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
+import com._blog.backend.repository.MediaRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.SubscriptionRepository;
 import com._blog.backend.repository.TagRepository;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com._blog.backend.entity.Subscription;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,15 +47,18 @@ public class PostService {
     private SubscriptionRepository subscriptionRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private MediaRepository mediaRepository;
 
     @Transactional
-    public PostResponseDto createPost(String title,String content, MultipartFile file, String tags, String authorEmail) {
+    public PostResponseDto createPost(String title, String content, MultipartFile file, String tags,
+            String authorEmail) {
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + authorEmail));
-        
+
         String mediaUrl = null;
         if (file != null && !file.isEmpty()) {
-            mediaUrl = fileStorageService.storeFile(file,authorEmail);
+            mediaUrl = fileStorageService.storeFile(file, authorEmail);
         }
 
         Post newPost = new Post();
@@ -66,16 +73,14 @@ public class PostService {
         Post savedPost = postRepository.save(newPost);
         return mapToDto(savedPost, author);
     }
-    
+
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getAllPosts(String currentUserEmail) {
+    public Page<PostResponseDto> getAllPosts(String currentUserEmail, Pageable pageable) {
         User currentUser = (currentUserEmail != null) ? userRepository.findByEmail(currentUserEmail).orElse(null) : null;
-        return postRepository.findAll()
-                .stream()
-                .map(post -> mapToDto(post, currentUser))
-                .toList();
+        Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return postPage.map(post -> mapToDto(post, currentUser));
     }
-    
+
     @Transactional(readOnly = true)
     public PostResponseDto getPostById(Long postId, String userEmail) {
         User currentUser = (userEmail != null) ? userRepository.findByEmail(userEmail).orElse(null) : null;
@@ -83,8 +88,9 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         return mapToDto(post, currentUser);
     }
+
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getFeedForUser(String userEmail) {
+    public Page<PostResponseDto> getFeedForUser(String userEmail, Pageable pageable) {
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
 
@@ -92,18 +98,15 @@ public class PostService {
                 .stream()
                 .map(Subscription::getFollowing)
                 .collect(Collectors.toCollection(ArrayList::new));
-        
-        authorsToFetch.add(currentUser);
-        List<Post> posts = postRepository.findByAuthorInOrderByCreatedAtDesc(authorsToFetch);
 
-        return posts.stream()
-                .map(post -> mapToDto(post, currentUser))
-                .toList();
+        authorsToFetch.add(currentUser);
+        Page<Post> postPage = postRepository.findByAuthorInOrderByCreatedAtDesc(authorsToFetch, pageable);
+        return postPage.map(post -> mapToDto(post, currentUser));
     }
 
-    
     @Transactional
-    public PostResponseDto updatePost(Long postId,String title, String content, MultipartFile file,String tags, String userEmail) {
+    public PostResponseDto updatePost(Long postId, String title, String content, MultipartFile file, String tags,
+            String userEmail) {
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Post post = postRepository.findById(postId)
@@ -127,8 +130,6 @@ public class PostService {
         Post updatedPost = postRepository.save(post);
         return mapToDto(updatedPost, currentUser);
     }
-
-    
 
     @Transactional
     public void deletePost(Long postId, String userEmail) {
@@ -155,7 +156,8 @@ public class PostService {
         String[] tagNames = tagsString.split(",");
         for (String name : tagNames) {
             String trimmedName = name.trim().toLowerCase();
-            if (trimmedName.isEmpty()) continue;
+            if (trimmedName.isEmpty())
+                continue;
 
             Tag tag = tagRepository.findByName(trimmedName).orElseGet(() -> {
                 Tag newTag = new Tag();
@@ -166,7 +168,6 @@ public class PostService {
         }
         return tags;
     }
-    
 
     public PostResponseDto mapToDto(Post post, User currentUser) {
         PostResponseDto dto = new PostResponseDto();
@@ -179,11 +180,12 @@ public class PostService {
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(post.getAuthor().getId());
         authorDto.setUsername(post.getAuthor().getOriginalUsername());
+        authorDto.setAvatarUrl(post.getAuthor().getAvatarUrl());
         dto.setAuthor(authorDto);
-        
+
         dto.setLikeCount(likeRepository.countByPost(post));
         dto.setCommentCount(commentRepository.countByPost(post));
-        
+
         boolean isLiked = (currentUser != null) && likeRepository.findByPostAndUser(post, currentUser).isPresent();
         dto.setLikedByCurrentUser(isLiked);
 
@@ -195,7 +197,7 @@ public class PostService {
             return tagDto;
         }).collect(Collectors.toSet());
         dto.setTags(tagDtos);
-        
+
         return dto;
     }
 }

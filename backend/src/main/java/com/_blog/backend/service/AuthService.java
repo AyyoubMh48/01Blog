@@ -2,14 +2,12 @@ package com._blog.backend.service;
 
 import com._blog.backend.dto.LoginDto;
 import com._blog.backend.entity.User;
-import com._blog.backend.util.GravatarUtil;
 import com._blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +21,14 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-     @Autowired
+    @Autowired
     private AuthenticationManager authenticationManager; 
+
     @Autowired
     private JwtService jwtService;
+
+    @Value("${app.default-avatar-url}") 
+    private String defaultAvatarUrl;
 
     public void registerUser(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
@@ -39,9 +41,9 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        user.setRole("ROLE_USER");
+        user.setAvatarUrl(defaultAvatarUrl);
 
-        user.setAvatarUrl(GravatarUtil.generateUrl(user.getEmail()));
+        user.setRole("ROLE_USER");
 
         userRepository.save(user);
     }
