@@ -47,9 +47,12 @@ public class LikeService {
             newLike.setUser(user);
             newLike.setPost(post);
             likeRepository.save(newLike);
-        }
-        String message = user.getOriginalUsername() + " liked your post.";
-        notificationService.createNotification(post.getAuthor(), message, "/posts/" + post.getId());
+
+            String message = user.getOriginalUsername() + " liked your post.";
+            notificationService.createNotification(user,post.getAuthor(), message, "/post/" + post.getId());
     }
+
+        }
+        
     
 }

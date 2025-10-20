@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { Notification } from '../models/notification';
 
 @Injectable({
@@ -38,7 +38,17 @@ export class NotificationService {
   }
 
   markAsRead(notificationId: number) {
-    return this.http.post(`${this.apiUrl}/${notificationId}/read`, {});
+    return this.http.post(`${this.apiUrl}/${notificationId}/read`, {}).pipe(
+      tap(() => {
+        const updatedNotifications = this.notifications$.getValue().map(n => {
+          if (n.id === notificationId) {
+            return { ...n, read: true };
+          }
+          return n;
+        });
+        this.notifications$.next(updatedNotifications);
+      })
+    );
   }
 
   disconnect(): void {

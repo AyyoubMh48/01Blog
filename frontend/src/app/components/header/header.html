@@ -3,31 +3,31 @@
   <a mat-button routerLink="/admin" *ngIf="isAdmin">Admin</a>
   <a mat-button routerLink="/profile" *ngIf="isLoggedIn">My Profile</a>
   <span class="toolbar-spacer"></span>
-  <a mat-stroked-button routerLink="/post/new" *ngIf="isLoggedIn && !isOnCreatePostPage"  class="create-post-btn">
+  <a
+    mat-stroked-button
+    routerLink="/post/new"
+    *ngIf="isLoggedIn && !isOnCreatePostPage"
+    class="create-post-btn"
+  >
     Create Post
   </a>
 
   <span class="toolbar-spacer"></span>
 
   <div *ngIf="isLoggedIn" class="user-actions">
-    
-    <div class="notification-bell" (click)="showNotifications = !showNotifications">
-      <button mat-icon-button aria-label="Toggle notifications">
-        <mat-icon matBadge="{{ unreadCount > 0 ? unreadCount : null }}" matBadgeColor="warn">notifications</mat-icon>
-      </button>
-      
-      <div *ngIf="showNotifications" class="notification-dropdown">
-        <div *ngIf="notifications.length === 0" class="no-notifications">No notifications yet.</div>
-        <ul>
-          <li *ngFor="let notification of notifications" 
-              [class.unread]="!notification.read"
-              (click)="markAsRead(notification)">
-            {{ notification.message }}
-          </li>
-        </ul>
-      </div>
-    </div>
-    
+    <a
+      mat-icon-button
+      routerLink="/notifications"
+      class="notification-bell"
+      aria-label="View notifications"
+    >
+      <mat-icon
+        matBadge="{{ unreadCount > 0 ? unreadCount : null }}"
+        matBadgeColor="warn"
+        >notifications</mat-icon
+      >
+    </a>
+
     <button mat-button (click)="logout()">Logout</button>
   </div>
 

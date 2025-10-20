@@ -24,10 +24,10 @@ public class NotificationService {
     private UserRepository userRepository;
 
     // This method will be called by other services
-    public void createNotification(User recipient, String message, String link) {
+    public void createNotification(User actor,User recipient, String message, String link) {
         // Avoid notifying a user about their own actions
-        if (recipient.getEmail().equals(link)) { // A simple check if the link is the user's own profile for a follow
-             return;
+        if (actor.getId().equals(recipient.getId())) {
+                return;
         }
 
         Notification notification = new Notification();

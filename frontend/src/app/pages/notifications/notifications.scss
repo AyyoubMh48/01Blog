@@ -1,0 +1,45 @@
+.notifications-container {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+// Target the Material list item
+mat-list-item {
+  // Styles for all list items
+  height: auto !important; // Allow item to grow based on content
+  padding: 12px 0 !important;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0,0,0,0.04);
+  }
+
+  &.unread {
+    font-weight: 500;
+    
+    border-left: 4px solid var(--mat-primary-main-color);
+    padding-left: 12px !important;
+
+    background-color: rgba(0,0,0,0.02);
+  }
+}
+
+// Dark Mode Styles
+.dark-mode {
+  mat-list-item {
+    &:hover {
+      background-color: rgba(255,255,255,0.04);
+    }
+
+    &.unread {
+      background-color: rgba(255,255,255,0.03);
+    }
+  }
+}
+
+.no-notifications {
+  padding: 24px;
+  text-align: center;
+  color: #757575;
+}

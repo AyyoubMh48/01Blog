@@ -45,7 +45,7 @@ public class CommentService {
         Comment savedComment = commentRepository.save(newComment);
         
          String message = author.getOriginalUsername() + " commented on your post.";
-        notificationService.createNotification(post.getAuthor(), message, "/posts/" + post.getId());
+        notificationService.createNotification(author ,post.getAuthor(), message, "/post/" + post.getId());
 
         return mapToDto(savedComment);
     }

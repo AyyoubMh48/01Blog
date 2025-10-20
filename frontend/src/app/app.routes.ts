@@ -9,7 +9,8 @@ import { Profile } from './pages/profile/profile';
 import { Register } from './pages/register/register';
 import { adminGuard } from './guards/admin-guard';
 import { authGuard } from './guards/auth-guard';
-import { PostDetail } from './pages/post-detail/post-detail'; 
+import { PostDetail } from './pages/post-detail/post-detail';
+import { Notifications } from './pages/notifications/notifications';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -30,4 +31,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   { path: 'post/:postId', component: PostDetail },
+  { 
+    path: 'notifications', 
+    component: Notifications, 
+    canActivate: [authGuard],
+  },
 ];

@@ -27,7 +27,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAdmin = false;
   notifications: Notification[] = [];
   unreadCount = 0;
-  showNotifications = false;
   isOnCreatePostPage = false
   private routerSub!: Subscription;
   private notificationSub!: Subscription;
@@ -60,18 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  markAsRead(notification: Notification): void {
-    if (!notification.read) {
-      this.notificationService.markAsRead(notification.id).subscribe(() => {
-        notification.read = true;
-        this.unreadCount--;
-      });
-    }
-    if (notification.link) {
-      this.router.navigate([notification.link]);
-      this.showNotifications = false;
-    }
-  }
+  
   
   logout(): void {
     this.authService.logout();

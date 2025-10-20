@@ -43,7 +43,7 @@ public class SubscriptionService {
         subscriptionRepository.save(subscription);
 
         String message = follower.getOriginalUsername() + " started following you.";
-    notificationService.createNotification(following, message, "/block/" + follower.getOriginalUsername());
+    notificationService.createNotification(follower,following, message, "/block/" + follower.getOriginalUsername());
     }
 
     @Transactional

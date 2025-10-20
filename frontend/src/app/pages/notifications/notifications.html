@@ -1,0 +1,15 @@
+<div class="notifications-container">
+  <h2>Your Notifications</h2>
+  <mat-list>
+    <div *ngIf="notifications.length === 0" class="no-notifications">
+      You have no notifications yet.
+    </div>
+    <mat-list-item *ngFor="let notification of notifications" 
+                   [class.unread]="!notification.read"
+                   (click)="markAsRead(notification)">
+      <mat-icon matListItemIcon>notifications</mat-icon>
+      <div matListItemTitle>{{ notification.message }}</div>
+      <div matListItemLine>{{ notification.createdAt | date:'short' }}</div>
+    </mat-list-item>
+  </mat-list>
+</div>
