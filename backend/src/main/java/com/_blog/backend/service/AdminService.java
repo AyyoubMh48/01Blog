@@ -11,13 +11,18 @@ import com._blog.backend.entity.ReportStatus;
 import com._blog.backend.entity.User;
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
+import com._blog.backend.repository.MediaRepository;
+import com._blog.backend.repository.NotificationRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.ReportRepository;
+import com._blog.backend.repository.SubscriptionRepository;
 import com._blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com._blog.backend.entity.Media;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +44,15 @@ public class AdminService {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private MediaRepository mediaRepository;
+    @Autowired
+    private FileStorageService fileStorageService;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public List<ReportResponseDto> getOpenReports() {
         return reportRepository.findAllByStatus(ReportStatus.OPEN)
@@ -111,6 +125,47 @@ public class AdminService {
         analytics.setTotalPosts(postRepository.count());
         analytics.setOpenReports(reportRepository.findAllByStatus(ReportStatus.OPEN).size());
         return analytics;
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if ("ROLE_ADMIN".equals(user.getRole())) {
+            throw new AccessDeniedException("Cannot delete an administrator account.");
+        }
+
+
+        // Delete media files from Cloudinary and DB
+        List<Media> userMedia = mediaRepository.findAllByUploader(user);
+        for (Media media : userMedia) {
+            try {
+                fileStorageService.deleteFile(media.getPublicId());
+            } catch (Exception e) {
+                System.err.println("Error deleting Cloudinary file " + media.getPublicId() + ": " + e.getMessage());
+            }
+        }
+        mediaRepository.deleteAll(userMedia); 
+
+        List<Post> userPosts = postRepository.findAllByAuthor(user);
+        for (Post post : userPosts) {
+            commentRepository.deleteAllByPost(post);
+            likeRepository.deleteAllByPost(post);
+        }
+        postRepository.deleteAll(userPosts);
+
+        commentRepository.deleteAllByAuthor(user);
+
+        likeRepository.deleteAllByUser(user);
+
+        subscriptionRepository.deleteAllByUser(user); 
+
+        reportRepository.deleteAllByUser(user);
+
+        notificationRepository.deleteAllByRecipient(user);
+
+        userRepository.delete(user);
     }
 
     private UserDto mapToUserDto(User user) {

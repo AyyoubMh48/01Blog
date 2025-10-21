@@ -1,8 +1,9 @@
 package com._blog.backend.service;
 
-import com._blog.backend.repository.MediaRepository;
+import com._blog.backend.entity.Media;
 import com._blog.backend.entity.User;
 import com._blog.backend.repository.UserRepository;
+import com._blog.backend.repository.MediaRepository;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +23,8 @@ public class FileStorageService {
    
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MediaRepository mediaRepository;
 
 
     public String storeFile(MultipartFile file, String uploaderEmail) {
@@ -46,11 +49,29 @@ public class FileStorageService {
             }
 
             Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), options);
+            String url = (String) result.get("secure_url");
+            String publicId = (String) result.get("public_id");
 
-            return (String) result.get("secure_url");
+            Media media = new Media();
+            media.setPublicId(publicId);
+            media.setUrl(url);
+            media.setUploader(uploader);
+            mediaRepository.save(media);
+
+            return url;
 
         } catch (IOException e) {
             throw new RuntimeException("Could not store file. Please try again!", e);
+        }
+    }
+
+    public void deleteFile(String publicId) {
+        try {
+            System.out.println("Attempting to delete Cloudinary file with public_id: " + publicId); // Debug log
+            Map<?,?> result = cloudinary.uploader().destroy(publicId, Map.of());
+             System.out.println("Cloudinary delete result: " + result.toString()); // Debug log
+        } catch (IOException e) {
+             System.err.println("Error deleting file from Cloudinary: " + publicId + ", Error: " + e.getMessage()); // Log error
         }
     }
 }

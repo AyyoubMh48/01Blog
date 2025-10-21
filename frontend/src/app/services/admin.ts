@@ -41,4 +41,8 @@ export class AdminService {
   getAnalytics(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/analytics`);
   }
+  
+  deleteUser(userId: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/users/${userId}`);
+}
 }

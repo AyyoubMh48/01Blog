@@ -12,4 +12,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     // Finds all notifications for a given user, ordered from newest to oldest
     List<Notification> findByRecipientOrderByCreatedAtDesc(User recipient);
+    void deleteAllByRecipient(User recipient);
 }

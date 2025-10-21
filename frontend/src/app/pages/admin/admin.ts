@@ -88,4 +88,14 @@ export class Admin implements OnInit {
       this.reports = this.reports.filter((r) => r.id !== reportId);
     });
   }
+
+  deleteUser(userId: number): void {
+  if (confirm('WARNING: This will permanently delete the user and all their posts, comments, likes, etc. Are you absolutely sure?')) {
+    this.adminService.deleteUser(userId).subscribe(() => {
+      // Remove the user from the local array
+      this.users = this.users.filter(u => u.id !== userId);
+      alert('User deleted successfully.');
+    });
+  }
+}
 }
