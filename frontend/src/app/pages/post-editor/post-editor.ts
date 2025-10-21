@@ -256,8 +256,19 @@ export class PostEditor implements OnInit, OnDestroy {
   }
 
   onSubmit(form: NgForm): void {
+    const tagsString = form.value.tags || '';
+    const tagsArray: string[] = tagsString
+      .split(',')
+      .map((tag: string) => tag.trim())
+      .filter((tag: string) => tag !== '');
+
     if (form.invalid || !this.editorContent.trim()) {
       console.log('Form validation failed');
+      return;
+    }
+
+    if (tagsArray.length > 10) {
+      alert("You can add a maximum of 10 tags."); 
       return;
     }
 
