@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com._blog.backend.entity.Subscription;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
+import com._blog.backend.exception.ResourceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -85,7 +85,7 @@ public class PostService {
     public PostResponseDto getPostById(Long postId, String userEmail) {
         User currentUser = (userEmail != null) ? userRepository.findByEmail(userEmail).orElse(null) : null;
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with ID: " + postId));
         return mapToDto(post, currentUser);
     }
 

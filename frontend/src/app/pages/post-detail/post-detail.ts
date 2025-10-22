@@ -21,8 +21,8 @@ export class PostDetail implements OnInit {
   post: Post | null = null;
   isLoggedIn = false;
   currentUsername: string | null = null;
-  // We don't need a Set for one post, just a boolean
-  isCommentSectionExpanded = false; 
+  isCommentSectionExpanded = false;
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,17 +32,40 @@ export class PostDetail implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.currentUsername = this.authService.getCurrentUser()?.username || null;
+ngOnInit(): void {
+  this.isLoggedIn = this.authService.isLoggedIn();
+  this.currentUsername = this.authService.getCurrentUser()?.username || null;
 
-    const id = this.route.snapshot.paramMap.get('postId');
-    if (id) {
-      this.postService.getPost(+id).subscribe(postData => {
-        this.post = postData;
-      });
+  const idParam = this.route.snapshot.paramMap.get('postId');
+
+  if (idParam) {
+    const postId = +idParam; 
+
+    if (isNaN(postId)) {
+      this.errorMessage = "Invalid Post ID.";
+      this.post = null;
+      return; 
     }
+
+    this.postService.getPost(postId).subscribe({
+      next: (postData) => {
+        this.post = postData;
+        this.errorMessage = null;
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.errorMessage = "Post not found.";
+        } else {
+          this.errorMessage = "An error occurred fetching the post.";
+          console.error(err);
+        }
+        this.post = null;
+      }
+    });
+  } else {
+    this.errorMessage = "Post ID missing from URL.";
   }
+}
 
   toggleLike(post: Post): void {
     if (!this.isLoggedIn) {

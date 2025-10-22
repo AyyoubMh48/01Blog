@@ -21,7 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-block',
   standalone: true,
-  imports: [CommonModule,CommentSectionComponent,FormsModule,RouterLink, MatCardModule,
+  imports: [CommonModule,FormsModule,RouterLink, MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,

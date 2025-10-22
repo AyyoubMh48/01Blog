@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatListModule, MatIconModule],
+  imports: [CommonModule, MatListModule, MatIconModule],
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss'
 })

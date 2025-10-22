@@ -1,3 +1,6 @@
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>
 <div *ngIf="post" class="post-detail-container">
   <mat-card class="post-card">
     <mat-card-header>

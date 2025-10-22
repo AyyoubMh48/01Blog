@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from '../../services/post';
+import { AuthService } from '../../services/auth';
 import { Post } from '../../models/post';
 import { forkJoin } from 'rxjs';
 
@@ -127,7 +128,8 @@ export class PostEditor implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private postService: PostService
+    private postService: PostService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -135,12 +137,26 @@ export class PostEditor implements OnInit, OnDestroy {
     if (id) {
       this.isEditMode = true;
       this.postId = +id;
-      this.postService.getPost(this.postId).subscribe(postData => {
-        this.post = postData;
-        this.editorContent = this.post.content || '';
-        
-        if (this.post.tags) {
-          this.tagsString = this.post.tags.map(t => t.name).join(', ');
+      this.postService.getPost(this.postId).subscribe({
+        next: (postData) => {
+          this.post = postData;
+          const currentUser = this.authService.getCurrentUser();
+          if (!currentUser || postData.author.username !== currentUser.username) {
+            alert("You don't have permission to edit this post.");
+            this.router.navigate(['/feed']);
+            return; 
+          }
+          this.editorContent = this.post.content || '';
+        },
+        error: (err) => {
+          console.log("Full error object received:", err);
+          if (err.status === 404) {
+            alert("Post not found.");
+          } else {
+            alert("An error occurred fetching the post.");
+            console.error("Original error:", err);
+          }
+          this.router.navigate(['/feed']);
         }
       });
     } else {

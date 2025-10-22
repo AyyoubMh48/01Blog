@@ -15,10 +15,14 @@ import { Notifications } from './pages/notifications/notifications';
 export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
-  { path: 'feed', component: Feed },
-  { path: 'block/:username', component: Block },
-  { path: 'post/new', component: PostEditor },
-  { path: 'post/edit/:postId', component: PostEditor },
+  { path: 'feed', component: Feed, 
+    canActivate: [authGuard] },
+  { path: 'block/:username', component: Block , 
+    canActivate: [authGuard]},
+  { path: 'post/new', component: PostEditor, 
+    canActivate: [authGuard] },
+  { path: 'post/edit/:postId', component: PostEditor,
+    canActivate: [authGuard] },
   { path: '', redirectTo: '/feed', pathMatch: 'full' },
   {
     path: 'admin',

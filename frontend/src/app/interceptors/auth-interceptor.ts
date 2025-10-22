@@ -5,8 +5,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authToken = localStorage.getItem('authToken');
+  const router = inject(Router);
   const authService = inject(AuthService); 
+  const authToken = localStorage.getItem('authToken');
   
   let authReq = req;
   if (authToken) {
@@ -22,8 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (err.status === 403) {
         authService.logout();
       }
-      const error = err.error?.message || err.statusText;
-      return throwError(() => error);
+      return throwError(() => err);
     })
   );
 };

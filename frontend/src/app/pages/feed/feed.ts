@@ -63,7 +63,7 @@ export class Feed implements OnInit {
   }
   this.isLoading = true;
 
-  this.postService.getPublicPosts(this.currentPage, this.pageSize)
+  this.postService.getFeed(this.currentPage, this.pageSize)
     .subscribe((page: Page<Post>) => {
       this.posts = [...this.posts, ...page.content];
       this.totalPages = page.totalPages;
