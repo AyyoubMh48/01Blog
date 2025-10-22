@@ -97,11 +97,18 @@ public class PostService {
         List<User> authorsToFetch = subscriptionRepository.findAllByFollower(currentUser)
                 .stream()
                 .map(Subscription::getFollowing)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
 
-        authorsToFetch.add(currentUser);
         Page<Post> postPage = postRepository.findByAuthorInOrderByCreatedAtDesc(authorsToFetch, pageable);
         return postPage.map(post -> mapToDto(post, currentUser));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostResponseDto> getPostsByUser(String userEmail, Pageable pageable) {
+        User author = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+        Page<Post> postPage = postRepository.findAllByAuthorOrderByCreatedAtDesc(author,pageable);
+        return postPage.map(post -> mapToDto(post, author));
     }
 
     @Transactional

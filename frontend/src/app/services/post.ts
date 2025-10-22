@@ -54,4 +54,11 @@ export class PostService {
     return this.http.post('http://localhost:8080/api/media/upload', formData);
   }
 
+  getMyPosts(page: number, size: number): Observable<Page<Post>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<Post>>(`${this.apiUrl}/my-posts`, { params });
+  }
+
 }

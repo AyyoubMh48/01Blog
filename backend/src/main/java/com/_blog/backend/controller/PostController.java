@@ -79,5 +79,15 @@ public class PostController {
         PostResponseDto post = postService.getPostById(postId, currentUserEmail);
         return ResponseEntity.ok(post);
     }
+
+    @GetMapping("/my-posts")
+    public ResponseEntity<Page<PostResponseDto>> getMyPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Principal principal) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<PostResponseDto> postPage = postService.getPostsByUser(principal.getName(), pageable);
+        return ResponseEntity.ok(postPage);
+    }
     
 }

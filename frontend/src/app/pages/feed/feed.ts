@@ -12,7 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { Observable } from 'rxjs';
 
+type FeedFilter = 'following' | 'myPosts' | 'all';
 @Component({
   selector: 'app-feed',
   standalone: true,
@@ -38,7 +40,7 @@ export class Feed implements OnInit {
   previewFileType: 'image' | 'video' | null = null;
   expandedPostIds = new Set<number>();
   currentUsername: string | null = null;
-
+  activeFilter: FeedFilter = 'following';
   currentPage = 0;
   pageSize = 10; 
   totalPages = 0;
@@ -54,7 +56,21 @@ export class Feed implements OnInit {
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
     this.currentUsername = this.authService.getCurrentUser()?.username || null;
-    this.loadPosts();
+    this.activeFilter = this.isLoggedIn ? 'following' : 'all';
+    this.resetAndLoadPosts();
+  }
+
+  setFilter(filter: FeedFilter): void {
+    if (!this.isLoggedIn && filter !== 'all') return; 
+    this.activeFilter = filter;
+    this.resetAndLoadPosts();
+  }
+
+  private resetAndLoadPosts(): void {
+      this.posts = [];
+      this.currentPage = 0;
+      this.totalPages = 0;
+      this.loadPosts(); 
   }
 
   loadPosts(): void {
@@ -63,8 +79,23 @@ export class Feed implements OnInit {
   }
   this.isLoading = true;
 
-  this.postService.getFeed(this.currentPage, this.pageSize)
-    .subscribe((page: Page<Post>) => {
+  let apiCall: Observable<Page<Post>>;
+
+    switch(this.activeFilter) {
+      case 'following':
+        apiCall = this.postService.getFeed(this.currentPage, this.pageSize);
+        break;
+      case 'myPosts':
+        apiCall = this.postService.getMyPosts(this.currentPage, this.pageSize);
+        break;
+      case 'all':
+      default:
+        apiCall = this.postService.getPublicPosts(this.currentPage, this.pageSize);
+        break;
+    }
+
+  
+  apiCall.subscribe((page: Page<Post>) => {
       this.posts = [...this.posts, ...page.content];
       this.totalPages = page.totalPages;
       this.currentPage++; 

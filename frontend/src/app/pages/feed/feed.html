@@ -1,23 +1,45 @@
-<div class="feed-container" infiniteScroll
-  [infiniteScrollDistance]="2" 
-  [infiniteScrollThrottle]="300" 
-  (scrolled)="onScroll()">
-
-  <h1 *ngIf="isLoggedIn">Your Personalized Feed</h1>
+<div
+  class="feed-container"
+  infiniteScroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="300"
+  (scrolled)="onScroll()"
+>
   <h1 *ngIf="!isLoggedIn">Public Feed</h1>
 
-  <div *ngIf="!isLoggedIn" class="login-prompt">
-    <mat-card>
-      <mat-card-content>
-        <h3>Welcome to 01Blog!</h3>
-        <a mat-stroked-button color="primary" routerLink="/login">
-          Log in to create posts and see your personalized feed
-        </a>
-      </mat-card-content>
-    </mat-card>
+  <div *ngIf="isLoggedIn" class="feed-filters">
+    <button
+      mat-button
+      [class.active-filter]="activeFilter === 'following'"
+      (click)="setFilter('following')"
+    >
+      Following
+    </button>
+    <button
+      mat-button
+      [class.active-filter]="activeFilter === 'myPosts'"
+      (click)="setFilter('myPosts')"
+    >
+      My Posts
+    </button>
+    <button
+      mat-button
+      [class.active-filter]="activeFilter === 'all'"
+      (click)="setFilter('all')"
+    >
+      Explore All
+    </button>
   </div>
 
+  <h1 *ngIf="isLoggedIn && activeFilter === 'following'">
+    Your Feed (Following)
+  </h1>
+  <h1 *ngIf="isLoggedIn && activeFilter === 'myPosts'">My Posts</h1>
+  <h1 *ngIf="isLoggedIn && activeFilter === 'all'">Explore All Posts</h1>
   <section class="post-list">
+    <div *ngIf="posts.length === 0 && !isLoading" class="no-posts-message">
+      Nothing in this feed yet.
+    </div>
     <a
       *ngFor="let post of posts"
       [routerLink]="['/post', post.id]"
