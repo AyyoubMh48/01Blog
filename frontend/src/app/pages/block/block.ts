@@ -55,10 +55,13 @@ export class Block implements OnInit {
     const currentUser = this.authService.getCurrentUser(); 
 
     if (this.isLoggedIn && currentUser?.username === profileUsername) {
-      this.isOwnProfile = true;
+      //this.isOwnProfile = true;
+      this.router.navigate(['/profile']);
+      return;
     }
 
-
+    this.isOwnProfile = false;
+    
     if (profileUsername) {
       this.userService.getUserProfile(profileUsername).subscribe({
         next: (profile) => {

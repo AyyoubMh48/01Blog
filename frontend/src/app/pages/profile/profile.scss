@@ -78,3 +78,72 @@ mat-card-actions {
   background-color: #ffcdd2; 
   color: #b71c1c;
 }
+
+.profile-page-container {
+  max-width: 900px; // Or your preferred max width
+  margin: 20px auto;
+}
+
+.profile-header-card {
+  margin-bottom: 24px;
+  // Remove default card padding if needed
+  // mat-card-header { padding: 16px; }
+}
+
+.profile-avatar {
+  width: 60px; // Larger avatar in header
+  height: 60px;
+  background-size: cover;
+  background-position: center;
+}
+
+mat-tab-group {
+  margin-top: 24px;
+}
+
+.profile-posts {
+  padding-top: 24px; // Add space above post list
+}
+
+// Styles for the Edit Profile tab
+.edit-profile-section {
+  padding: 24px 0; // Add padding within the tab content
+}
+
+.profile-card {
+  margin-bottom: 24px;
+}
+
+.profile-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  
+  .profile-avatar { // Style for the smaller avatar in edit form
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.bio-form {
+  flex-grow: 1;
+}
+
+// Re-use post card styles (copy from feed.component.scss if not global)
+.post-card {
+    margin-bottom: 20px;
+    // ... all the styles for .post-card, img[mat-card-image], mat-card-actions, etc. ...
+}
+
+.success-message, .error-message { /* ... keep existing styles ... */ }
+
+.spacer { flex-grow: 1; } // Ensure spacer class is defined if needed

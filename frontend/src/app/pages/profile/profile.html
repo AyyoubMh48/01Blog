@@ -1,58 +1,82 @@
-<div class="form-container">
-  <div *ngIf="userProfile">
+<div class="profile-page-container" *ngIf="userProfile">
+  <mat-card class="profile-header-card">
+    <mat-card-header>
+       <div mat-card-avatar class="profile-avatar" [style.backgroundImage]="'url(' + userProfile.avatarUrl + ')'"></div>
+       <mat-card-title>{{ userProfile.username }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content *ngIf="userProfile.bio">
+       <p>{{ userProfile.bio }}</p>
+    </mat-card-content>
+  </mat-card>
 
-    <mat-card class="profile-card">
-      <mat-card-header>
-        <mat-card-title>Your Profile</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="profile-content">
-        <div class="avatar-section">
-          <img [src]="userProfile.avatarUrl" alt="Your Avatar" class="profile-avatar">
-          <button mat-stroked-button type="button" (click)="avatarInput.click()">
-            <mat-icon>photo_camera</mat-icon>
-            Change Avatar
-          </button>
-          <input hidden (change)="onAvatarSelected($event)" #avatarInput type="file" accept="image/*">
-          <mat-progress-bar *ngIf="isUploading" mode="indeterminate"></mat-progress-bar>
-        </div>
+  <mat-tab-group>
+    <mat-tab label="My Posts">
+      <section class="post-list profile-posts">
+        <div *ngIf="userProfile.posts?.length === 0">You haven't posted anything yet.</div>
         
-        <form #bioForm="ngForm" (ngSubmit)="onBioSubmit(bioForm)" class="bio-form">
-          <mat-form-field appearance="outline">
-            <mat-label>Your Bio</mat-label>
-            <textarea matInput name="bio" rows="4" [ngModel]="userProfile.bio"></textarea>
-          </mat-form-field>
-          <button mat-raised-button color="primary" type="submit">Save Bio</button>
-        </form>
-      </mat-card-content>
-    </mat-card>
+        <mat-card *ngFor="let post of userProfile?.posts" class="post-card">
+            <mat-card-header>
+              <mat-card-subtitle>{{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
+            </mat-card-header>
+            
+            <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
+            
+            <mat-card-content class="post-summary">
+              <h2><a [routerLink]="['/post', post.id]">{{ post.title }}</a></h2>
+              <p>{{ stripHtml(post.content) | slice:0:150 }}...</p>
+              <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
+                <span *ngFor="let tag of post.tags">#{{ tag.name }}</span>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions>
+              <button mat-icon-button (click)="toggleLike(post)" [color]="post.likedByCurrentUser ? 'warn' : ''"><mat-icon>favorite</mat-icon></button>
+                <span>{{ post.likeCount }}</span>
+                <button mat-icon-button (click)="toggleComments(post.id)"><mat-icon>comment</mat-icon></button>
+                <span>{{ post.commentCount }}</span>
+                <span class="spacer"></span>
+                <button mat-button [routerLink]="['/post/edit', post.id]">EDIT</button>
+                <button mat-button color="warn" (click)="deletePost(post.id)">DELETE</button>
+            </mat-card-actions>
 
-    <mat-card class="profile-card">
-      <mat-card-header>
-        <mat-card-title>Change Your Password</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form #passwordForm="ngForm" (ngSubmit)="onChangePasswordSubmit(passwordForm)">
-          <mat-form-field appearance="outline">
-            <mat-label>Current Password</mat-label>
-            <input matInput type="password" name="oldPassword" ngModel required>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>New Password</mat-label>
-            <input matInput type="password" name="newPassword" ngModel required>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Confirm New Password</mat-label>
-            <input matInput type="password" name="confirmPassword" ngModel required>
-          </mat-form-field>
-          <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">
-            Update Password
-          </button>
-        </form>
-      </mat-card-content>
-    </mat-card>
+            <app-comment-section *ngIf="expandedPostIds.has(post.id)" [postId]="post.id" (commentAdded)="onCommentAdded(post)"></app-comment-section>
+        </mat-card>
+      </section>
+    </mat-tab>
 
-    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <mat-tab label="Edit Profile">
+      <div class="edit-profile-section">
+        <mat-card class="profile-card">
+           <mat-card-header><mat-card-title>Update Profile</mat-card-title></mat-card-header>
+           <mat-card-content class="profile-content">
+             <div class="avatar-section">
+               <img [src]="userProfile.avatarUrl" alt="Your Avatar" class="profile-avatar">
+               <button mat-stroked-button type="button" (click)="avatarInput.click()">Change Avatar</button>
+               <input hidden (change)="onAvatarSelected($event)" #avatarInput type="file" accept="image/*">
+               <mat-progress-bar *ngIf="isUploading" mode="indeterminate"></mat-progress-bar>
+             </div>
+             <form #bioForm="ngForm" (ngSubmit)="onBioSubmit(bioForm)" class="bio-form">
+               <mat-form-field appearance="outline"><mat-label>Your Bio</mat-label><textarea matInput name="bio" rows="4" [ngModel]="userProfile.bio"></textarea></mat-form-field>
+               <button mat-raised-button color="primary" type="submit">Save Bio</button>
+             </form>
+           </mat-card-content>
+         </mat-card>
 
-  </div>
+        <mat-card class="profile-card">
+          <mat-card-header><mat-card-title>Change Password</mat-card-title></mat-card-header>
+          <mat-card-content>
+            <form #passwordForm="ngForm" (ngSubmit)="onChangePasswordSubmit(passwordForm)">
+                <mat-form-field appearance="outline"><mat-label>Current Password</mat-label><input matInput type="password" name="oldPassword" ngModel required></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>New Password</mat-label><input matInput type="password" name="newPassword" ngModel required></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Confirm New Password</mat-label><input matInput type="password" name="confirmPassword" ngModel required></mat-form-field>
+                <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">Update Password</button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+        
+        <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>
