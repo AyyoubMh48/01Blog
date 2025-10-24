@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router'; 
 import { PostService, Page } from '../../services/post'; 
+import { TagService } from '../../services/tag';
 import { Post } from '../../models/post';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button'; 
@@ -33,7 +34,7 @@ export class TagResults implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private postService: PostService
+    private tagService: TagService
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +64,7 @@ export class TagResults implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.postService.getPostsByTag(this.tagName, this.currentPage, this.pageSize)
+    this.tagService.getPostsByTag(this.tagName, this.currentPage, this.pageSize)
       .subscribe({
         next: (page: Page<Post>) => {
           this.posts = [...this.posts, ...page.content];

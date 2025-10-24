@@ -61,11 +61,5 @@ export class PostService {
     return this.http.get<Page<Post>>(`${this.apiUrl}/my-posts`, { params });
   }
 
-  getPostsByTag(tagName: string, page: number, size: number): Observable<Page<Post>> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    return this.http.get<Page<Post>>(`http://localhost:8080/api/tags/${tagName}/posts`, { params });
-  }
 
 }

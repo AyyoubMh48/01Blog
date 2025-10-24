@@ -6,6 +6,15 @@
   (scrolled)="onScroll()"
 >
   <h1 *ngIf="!isLoggedIn">Public Feed</h1>
+  
+  <div class="popular-tags-section" *ngIf="popularTags.length > 0">
+    <h4>Popular Tags</h4>
+    <div class="tag-list">
+      <a *ngFor="let tag of popularTags" [routerLink]="['/tag', tag.name]" class="tag-link">
+        #{{ tag.name }}
+      </a>
+    </div>
+  </div>
 
   <div *ngIf="isLoggedIn" class="feed-filters">
     <button

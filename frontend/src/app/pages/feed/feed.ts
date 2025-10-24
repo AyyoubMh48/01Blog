@@ -13,6 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { Observable } from 'rxjs';
+import { TagService } from '../../services/tag';
+import { Tag } from '../../models/post';
 
 type FeedFilter = 'following' | 'myPosts' | 'all';
 @Component({
@@ -27,7 +29,7 @@ type FeedFilter = 'following' | 'myPosts' | 'all';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
   ],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
@@ -45,12 +47,14 @@ export class Feed implements OnInit {
   pageSize = 10; 
   totalPages = 0;
   isLoading = false;
+  popularTags: Tag[] = [];
 
   constructor(
     private postService: PostService,
     private authService: AuthService,
     private likeService: LikeService,
-    private router: Router
+    private router: Router,
+    private tagService: TagService
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +62,7 @@ export class Feed implements OnInit {
     this.currentUsername = this.authService.getCurrentUser()?.username || null;
     this.activeFilter = this.isLoggedIn ? 'following' : 'all';
     this.resetAndLoadPosts();
+    this.loadPopularTags();
   }
 
   setFilter(filter: FeedFilter): void {
@@ -71,6 +76,11 @@ export class Feed implements OnInit {
       this.currentPage = 0;
       this.totalPages = 0;
       this.loadPosts(); 
+  }
+  loadPopularTags(): void {
+    this.tagService.getPopularTags().subscribe(tags => {
+      this.popularTags = tags;
+    });
   }
 
   loadPosts(): void {

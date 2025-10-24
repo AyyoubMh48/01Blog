@@ -1,16 +1,12 @@
 package com._blog.backend.controller;
 
-import com._blog.backend.dto.PostDto;
 import com._blog.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 import com._blog.backend.dto.PostResponseDto;
-import com._blog.backend.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -90,23 +86,6 @@ public class PostController {
         return ResponseEntity.ok(postPage);
     }
 
-    @RestController
-    @RequestMapping("/api/tags")
-    public class TagController {
-        @Autowired
-        private PostService postService;
-
-        @GetMapping("/{tagName}/posts")
-        public ResponseEntity<Page<PostResponseDto>> getPostsByTag(
-                @PathVariable String tagName,
-                @RequestParam(defaultValue = "0") int page,
-                @RequestParam(defaultValue = "10") int size,
-                Principal principal) {
-            Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-            String currentUserEmail = (principal != null) ? principal.getName() : null;
-            Page<PostResponseDto> postPage = postService.getPostsByTag(tagName, currentUserEmail, pageable);
-            return ResponseEntity.ok(postPage);
-        }
-    }
+   
     
 }

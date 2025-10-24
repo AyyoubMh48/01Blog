@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.Map; 
 
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateRequestDto profileDto, Principal principal) {
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody ProfileUpdateRequestDto profileDto, Principal principal) {
         userService.updateProfile(principal.getName(), profileDto);
         return ResponseEntity.ok(Map.of("message", "Profile updated successfully."));
     }

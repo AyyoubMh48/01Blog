@@ -204,13 +204,8 @@ public class PostService {
         }
         return tags;
     }
+
     
-    @Transactional(readOnly = true)
-    public Page<PostResponseDto> getPostsByTag(String tagName, String currentUserEmail, Pageable pageable) {
-        User currentUser = (currentUserEmail != null) ? userRepository.findByEmail(currentUserEmail).orElse(null) : null;
-        Page<Post> postPage = postRepository.findByTags_NameIgnoreCaseOrderByCreatedAtDesc(tagName, pageable);
-        return postPage.map(post -> mapToDto(post, currentUser));
-    }
 
     public PostResponseDto mapToDto(Post post, User currentUser) {
         PostResponseDto dto = new PostResponseDto();
