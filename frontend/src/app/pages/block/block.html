@@ -95,7 +95,9 @@
         <h2>{{ post.title }}</h2>
         <p>{{ stripHtml(post.content) | slice:0:150 }}...</p>
         <div class="post-tags" *ngIf="(post.tags?.length || 0) > 0">
-              <span *ngFor="let tag of post.tags ?? []">#{{ tag.name }}</span>
+              <a *ngFor="let tag of post.tags ?? []" [routerLink]="['/tag', tag.name]" class="tag-link">
+                #{{ tag.name }}
+              </a>
             </div>
       </mat-card-content>
       

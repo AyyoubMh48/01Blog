@@ -6,17 +6,36 @@
     <mat-card-header>
       <mat-card-title>{{ post.title }}</mat-card-title>
       <mat-card-subtitle>
-        Posted by <a [routerLink]="['/block', post.author.username]">{{ post.author.username }}</a> on {{ post.createdAt | date:'medium' }}
+        Posted by
+        <a [routerLink]="['/block', post.author.username]">{{
+          post.author.username
+        }}</a>
+        on {{ post.createdAt | date : "medium" }}
       </mat-card-subtitle>
     </mat-card-header>
     <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
-      <span *ngFor="let tag of post.tags">#{{ tag.name }}</span>
+      <a
+        *ngFor="let tag of post.tags ?? []"
+        [routerLink]="['/tag', tag.name]"
+        class="tag-link"
+      >
+        #{{ tag.name }}
+      </a>
     </div>
 
     <div *ngIf="post.mediaUrl" class="media-container">
-      <img *ngIf="!post.mediaUrl.includes('/video/')" mat-card-image [src]="post.mediaUrl" alt="Post media">
-      <video *ngIf="post.mediaUrl.includes('/video/')" class="post-video" controls>
-        <source [src]="post.mediaUrl">
+      <img
+        *ngIf="!post.mediaUrl.includes('/video/')"
+        mat-card-image
+        [src]="post.mediaUrl"
+        alt="Post media"
+      />
+      <video
+        *ngIf="post.mediaUrl.includes('/video/')"
+        class="post-video"
+        controls
+      >
+        <source [src]="post.mediaUrl" />
       </video>
     </div>
 
@@ -25,28 +44,41 @@
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-icon-button (click)="toggleLike(post)" [color]="post.likedByCurrentUser ? 'warn' : ''">
+      <button
+        mat-icon-button
+        (click)="toggleLike(post)"
+        [color]="post.likedByCurrentUser ? 'warn' : ''"
+      >
         <mat-icon>favorite</mat-icon>
       </button>
       <span>{{ post.likeCount }}</span>
 
-      <button mat-icon-button (click)="isCommentSectionExpanded = !isCommentSectionExpanded">
+      <button
+        mat-icon-button
+        (click)="isCommentSectionExpanded = !isCommentSectionExpanded"
+      >
         <mat-icon>comment</mat-icon>
       </button>
       <span>{{ post.commentCount }}</span>
 
       <span class="spacer"></span>
 
-      <div *ngIf="isLoggedIn && post.author.username === currentUsername" class="post-owner-actions">
+      <div
+        *ngIf="isLoggedIn && post.author.username === currentUsername"
+        class="post-owner-actions"
+      >
         <button mat-button [routerLink]="['/post/edit', post.id]">EDIT</button>
-        <button mat-button color="warn" (click)="deletePost(post.id)">DELETE</button>
+        <button mat-button color="warn" (click)="deletePost(post.id)">
+          DELETE
+        </button>
       </div>
     </mat-card-actions>
 
     <app-comment-section
       *ngIf="isCommentSectionExpanded"
       [postId]="post.id"
-      (commentAdded)="onCommentAdded(post)">
+      (commentAdded)="onCommentAdded(post)"
+    >
     </app-comment-section>
   </mat-card>
 </div>

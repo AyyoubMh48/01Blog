@@ -17,4 +17,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByAuthorOrderByCreatedAtDesc(User author,Pageable pageable);
     Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
     void deleteAllByAuthor(User author);
+    Page<Post> findByTags_NameIgnoreCaseOrderByCreatedAtDesc(String tagName, Pageable pageable);
 }

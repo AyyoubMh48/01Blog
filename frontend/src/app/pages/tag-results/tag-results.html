@@ -1,0 +1,43 @@
+<div class="tag-results-container"
+     infiniteScroll
+     [infiniteScrollDistance]="2"
+     [infiniteScrollThrottle]="300"
+     (scrolled)="onScroll()">
+
+  <h1 *ngIf="tagName">Posts tagged #{{ tagName }}</h1>
+  <h1 *ngIf="errorMessage">{{ errorMessage }}</h1>
+
+  <section class="post-list">
+    <div *ngIf="posts.length === 0 && !isLoading && !errorMessage" class="no-posts-message">
+      No posts found for this tag yet.
+    </div>
+
+    <a *ngFor="let post of posts" [routerLink]="['/post', post.id]" class="post-card-link">
+      <mat-card class="post-card">
+        <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
+        <div class="post-card-main-content">
+          <mat-card-header>
+            <div mat-card-avatar class="post-avatar" [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'"></div>
+            <mat-card-title>{{ post.author.username }}</mat-card-title>
+            <mat-card-subtitle>{{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="post-summary">
+            <h2>{{ post.title }}</h2>
+            <p>{{ stripHtml(post.content) | slice:0:150 }}...</p>
+             <div class="post-tags" *ngIf="post.tags.length > 0">
+               <a *ngFor="let tag of post.tags ?? []" [routerLink]="['/tag', tag.name]" class="tag-link">#{{ tag.name }}</a>
+             </div>
+          </mat-card-content>
+        </div>
+        <mat-card-actions class="stats">
+          <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
+          <span>{{ post.likeCount }}</span>
+          <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
+          <span>{{ post.commentCount }}</span>
+        </mat-card-actions>
+      </mat-card>
+    </a>
+  </section>
+
+  <div *ngIf="isLoading" class="loading-indicator">Loading more posts...</div>
+</div>

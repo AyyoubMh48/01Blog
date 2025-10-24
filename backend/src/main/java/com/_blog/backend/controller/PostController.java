@@ -89,5 +89,24 @@ public class PostController {
         Page<PostResponseDto> postPage = postService.getPostsByUser(principal.getName(), pageable);
         return ResponseEntity.ok(postPage);
     }
+
+    @RestController
+    @RequestMapping("/api/tags")
+    public class TagController {
+        @Autowired
+        private PostService postService;
+
+        @GetMapping("/{tagName}/posts")
+        public ResponseEntity<Page<PostResponseDto>> getPostsByTag(
+                @PathVariable String tagName,
+                @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "10") int size,
+                Principal principal) {
+            Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+            String currentUserEmail = (principal != null) ? principal.getName() : null;
+            Page<PostResponseDto> postPage = postService.getPostsByTag(tagName, currentUserEmail, pageable);
+            return ResponseEntity.ok(postPage);
+        }
+    }
     
 }

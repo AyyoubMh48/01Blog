@@ -11,6 +11,7 @@ import { adminGuard } from './guards/admin-guard';
 import { authGuard } from './guards/auth-guard';
 import { PostDetail } from './pages/post-detail/post-detail';
 import { Notifications } from './pages/notifications/notifications';
+import { TagResults } from './pages/tag-results/tag-results';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -40,4 +41,5 @@ export const routes: Routes = [
     component: Notifications, 
     canActivate: [authGuard],
   },
+  { path: 'tag/:tagName', component: TagResults },
 ];
