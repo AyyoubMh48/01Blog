@@ -1,0 +1,17 @@
+.app-footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px; 
+  font-size: 14px;
+  color: #757575; 
+  border-top: 1px solid rgba(0,0,0,0.1); 
+
+  p {
+    margin: 0;
+  }
+}
+
+.dark-mode .app-footer {
+  color: #bdbdbd;
+  border-top-color: rgba(255,255,255,0.1);
+}
