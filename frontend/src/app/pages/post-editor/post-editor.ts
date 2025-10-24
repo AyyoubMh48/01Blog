@@ -106,6 +106,7 @@ export class PostEditor implements OnInit, OnDestroy {
   post: Post | null = null;
   tagsString: string = '';
   isSubmitting = false;
+  errorMessage: string | null = null;
 
   // Store pending media files that will be uploaded on publish
   pendingMediaFiles: PendingMedia[] = [];
@@ -149,12 +150,11 @@ export class PostEditor implements OnInit, OnDestroy {
           this.editorContent = this.post.content || '';
         },
         error: (err) => {
-          console.log("Full error object received:", err);
           if (err.status === 404) {
             alert("Post not found.");
           } else {
             alert("An error occurred fetching the post.");
-            console.error("Original error:", err);
+            console.error("error:", err);
           }
           this.router.navigate(['/feed']);
         }
@@ -357,7 +357,7 @@ export class PostEditor implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('title', form.value.title);
     formData.append('content', this.editorContent);
-    formData.append('tags', this.tagsString);
+    formData.append('tags', form.value.tags || '');
 
     const submission$ = (this.isEditMode && this.postId)
       ? this.postService.updatePost(this.postId, formData)

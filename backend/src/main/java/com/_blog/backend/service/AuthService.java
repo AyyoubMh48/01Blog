@@ -31,11 +31,14 @@ public class AuthService {
     private String defaultAvatarUrl;
 
     public void registerUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists.");
+        String lowerCaseUsername = user.getUsername().toLowerCase();
+        if (userRepository.findByUsername(lowerCaseUsername).isPresent()) {
+            throw new RuntimeException("Username '" + lowerCaseUsername + "' is already taken.");
         }
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists.");
+
+        String lowerCaseEmail = user.getEmail().toLowerCase();
+        if (userRepository.findByEmail(lowerCaseEmail).isPresent()) {
+            throw new RuntimeException("Email '" + lowerCaseEmail + "' is already registered.");
         }
 
         String encodedPassword = passwordEncoder.encode(user.getPassword());

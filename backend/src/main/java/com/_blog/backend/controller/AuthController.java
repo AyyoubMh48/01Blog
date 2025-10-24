@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.HashMap; 
 import com._blog.backend.dto.LoginDto;
 import com._blog.backend.dto.JwtResponse;
+import jakarta.validation.Valid;
 // import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController //It means methods here return JSON responses (not HTML pages)
@@ -24,7 +25,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto registerDto) {
         User newUser = new User();
         newUser.setUsername(registerDto.getUsername());
         newUser.setEmail(registerDto.getEmail());
@@ -38,7 +39,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginDto loginDto) {
         String token = authService.login(loginDto);
         return ResponseEntity.ok(new JwtResponse(token));
     }

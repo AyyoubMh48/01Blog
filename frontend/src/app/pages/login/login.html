@@ -3,18 +3,20 @@
     <mat-card-header>
       <mat-card-title>Login to 01Blog</mat-card-title>
     </mat-card-header>
-
     <mat-card-content>
       <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-        
+
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput type="email" name="email" ngModel required email>
+          <input matInput type="email" name="email" ngModel required email #emailInput="ngModel">
+          <mat-error *ngIf="emailInput.errors?.['required']">Email is required.</mat-error>
+          <mat-error *ngIf="emailInput.errors?.['email']">Please enter a valid email.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput type="password" name="password" ngModel required>
+          <input matInput type="password" name="password" ngModel required #passwordInput="ngModel">
+           <mat-error *ngIf="passwordInput.errors?.['required']">Password is required.</mat-error>
         </mat-form-field>
 
         <div *ngIf="errorMessage" class="error-message">
@@ -24,9 +26,9 @@
         <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
           Login
         </button>
+
       </form>
     </mat-card-content>
-
     <mat-card-actions>
       <p>Don't have an account? <a routerLink="/register">Register here</a></p>
     </mat-card-actions>

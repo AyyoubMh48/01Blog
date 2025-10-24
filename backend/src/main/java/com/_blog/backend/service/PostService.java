@@ -53,6 +53,20 @@ public class PostService {
     @Transactional
     public PostResponseDto createPost(String title, String content, MultipartFile file, String tags,
             String authorEmail) {
+
+            if (title == null || title.trim().isEmpty()) {
+                throw new IllegalArgumentException("Post title cannot be empty.");
+            }
+            if (title.length() > 100) { 
+                throw new IllegalArgumentException("Post title cannot exceed 100 characters.");
+            }
+            if (content == null || content.trim().isEmpty()) {
+                throw new IllegalArgumentException("Post content cannot be empty.");
+            }
+            if (content.length() > 10000) { 
+                throw new IllegalArgumentException("Post content cannot exceed 10000 characters.");
+            }
+
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + authorEmail));
 
@@ -114,6 +128,21 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(Long postId, String title, String content, MultipartFile file, String tags,
             String userEmail) {
+
+
+            if (title == null || title.trim().isEmpty()) {
+                throw new IllegalArgumentException("Post title cannot be empty.");
+            }
+            if (title.length() > 100) { 
+                throw new IllegalArgumentException("Post title cannot exceed 100 characters.");
+            }
+            if (content == null || content.trim().isEmpty()) {
+                throw new IllegalArgumentException("Post content cannot be empty.");
+            }
+            if (content.length() > 10000) { 
+                throw new IllegalArgumentException("Post content cannot exceed 10000 characters.");
+            }
+
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Post post = postRepository.findById(postId)

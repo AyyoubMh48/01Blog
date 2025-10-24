@@ -25,7 +25,6 @@ export class Login {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
   ) {}
 
   onSubmit(loginForm: NgForm) {
@@ -40,7 +39,6 @@ export class Login {
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Login failed. Please check your credentials.';
-        this.cdr.detectChanges();
       }
     });
   }

@@ -8,24 +8,35 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Username</mat-label>
-          <input matInput name="username" ngModel required>
+          <input matInput name="username" ngModel required minlength="3" maxlength="20" #usernameInput="ngModel">
+          <mat-error *ngIf="usernameInput.errors?.['required']">Username is required.</mat-error>
+          <mat-error *ngIf="usernameInput.errors?.['minlength']">Username must be at least 3 characters.</mat-error>
+          <mat-error *ngIf="usernameInput.errors?.['maxlength']">Username cannot exceed 20 characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput type="email" name="email" ngModel required email>
+          <input matInput type="email" name="email" ngModel required email #emailInput="ngModel">
+           <mat-error *ngIf="emailInput.errors?.['required']">Email is required.</mat-error>
+           <mat-error *ngIf="emailInput.errors?.['email']">Please enter a valid email.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput type="password" name="password" ngModel required>
-        </mat-form-field>
+          <input matInput type="password" name="password" ngModel required minlength="8" #passwordInput="ngModel">
+           <mat-error *ngIf="passwordInput.errors?.['required']">Password is required.</mat-error>
+           <mat-error *ngIf="passwordInput.errors?.['minlength']">Password must be at least 8 characters.</mat-error>
+           </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Confirm Password</mat-label>
-          <input matInput type="password" name="confirmPassword" ngModel required>
-        </mat-form-field>
+          <input matInput type="password" name="confirmPassword" ngModel required #confirmPasswordInput="ngModel">
+           <mat-error *ngIf="confirmPasswordInput.errors?.['required']">Please confirm your password.</mat-error>
+           </mat-form-field>
 
+        <div *ngIf="passwordMismatch" class="error-message">
+          Passwords do not match.
+        </div>
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>

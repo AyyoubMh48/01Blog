@@ -2,7 +2,7 @@ import { Component , ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,16 +16,18 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatButtonModule],
   templateUrl: './register.html',
-  styleUrl: './register.scss'
+  styleUrls: ['./register.scss']
 })
 export class Register {
 
   errorMessage: string | null = null; 
+  passwordMismatch = false;
 
-  constructor(private authService: AuthService , private cdr: ChangeDetectorRef) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(registerForm: NgForm) {
     this.errorMessage = null;
+    this.passwordMismatch = false;
     //  console.log('Register form submitted!');
     if (registerForm.invalid) {
       return;
@@ -34,20 +36,20 @@ export class Register {
     const { password, confirmPassword } = registerForm.value;
     if (password !== confirmPassword) {
       console.error('Passwords do not match!');
+      this.passwordMismatch = true;
       return;
     }
 
-    // Call the service and subscribe to the response
     this.authService.register(registerForm.value).subscribe({
       next: (response) => {
         console.log('Registration successful!', response);
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         console.error('Full error object:', err);
 
         this.errorMessage = err.error?.message || 'An unknown error occurred.';
         console.error('Registration failed:', this.errorMessage);
-        this.cdr.detectChanges(); 
       }
     });
   }
