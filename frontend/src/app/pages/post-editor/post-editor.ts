@@ -141,6 +141,14 @@ export class PostEditor implements OnInit, OnDestroy {
       this.postService.getPost(this.postId).subscribe({
         next: (postData) => {
           this.post = postData;
+          this.editorContent = this.post.content || '';
+
+        if (this.post.tags && this.post.tags.length > 0) {
+          this.tagsString = this.post.tags.map(t => t.name).join(', ');
+        } else {
+          this.tagsString = '';
+        }
+
           const currentUser = this.authService.getCurrentUser();
           if (!currentUser || postData.author.username !== currentUser.username) {
             alert("You don't have permission to edit this post.");
@@ -162,6 +170,7 @@ export class PostEditor implements OnInit, OnDestroy {
     } else {
       this.isEditMode = false;
       this.post = { title: '' } as Post;
+      this.tagsString = '';
     }
   }
 
