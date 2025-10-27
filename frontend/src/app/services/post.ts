@@ -61,5 +61,8 @@ export class PostService {
     return this.http.get<Page<Post>>(`${this.apiUrl}/my-posts`, { params });
   }
 
+  getTrendingPosts(limit: number = 5): Observable<Post[]> { 
+    return this.http.get<Post[]>(`${this.apiUrl}/trending?limit=${limit}`);
+  }
 
 }

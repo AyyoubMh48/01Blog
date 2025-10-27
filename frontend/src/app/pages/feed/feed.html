@@ -6,6 +6,19 @@
   (scrolled)="onScroll()"
 >
   <h1 *ngIf="!isLoggedIn">Public Feed</h1>
+
+
+  <div class="trending-posts-section" *ngIf="trendingPosts.length > 0">
+    <h4>🔥 Trending Posts</h4>
+    <ul>
+      <li *ngFor="let trendPost of trendingPosts">
+        <a [routerLink]="['/post', trendPost.id]">{{ trendPost.title }}</a>
+        <div class="post-tags" *ngIf="trendPost.tags.length > 0">
+          <a *ngFor="let tag of trendPost.tags" [routerLink]="['/tag', tag.name]" class="tag-link">#{{ tag.name }}</a>
+        </div>
+      </li>
+    </ul>
+  </div>
   
   <div class="popular-tags-section" *ngIf="popularTags.length > 0">
     <h4>Popular Tags</h4>

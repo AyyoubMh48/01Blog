@@ -46,5 +46,9 @@ public class Post {
     )
     private Set<Tag> tags = new HashSet<>();
 
+    //  post can have many likes
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Like> likes = new HashSet<>();
+
     
 }

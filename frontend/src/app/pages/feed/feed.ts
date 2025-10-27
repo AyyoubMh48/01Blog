@@ -48,6 +48,7 @@ export class Feed implements OnInit {
   totalPages = 0;
   isLoading = false;
   popularTags: Tag[] = [];
+  trendingPosts: Post[] = [];
 
   constructor(
     private postService: PostService,
@@ -63,6 +64,7 @@ export class Feed implements OnInit {
     this.activeFilter = this.isLoggedIn ? 'following' : 'all';
     this.resetAndLoadPosts();
     this.loadPopularTags();
+    this.loadTrendingPosts();
   }
 
   setFilter(filter: FeedFilter): void {
@@ -80,6 +82,11 @@ export class Feed implements OnInit {
   loadPopularTags(): void {
     this.tagService.getPopularTags().subscribe(tags => {
       this.popularTags = tags;
+    });
+  }
+  loadTrendingPosts(): void {
+    this.postService.getTrendingPosts(5).subscribe(posts => { 
+      this.trendingPosts = posts;
     });
   }
 

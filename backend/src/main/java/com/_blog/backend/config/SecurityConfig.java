@@ -66,6 +66,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tags/popular").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tags/*/posts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/posts/trending").permitAll()
                 .requestMatchers("/api/media/upload").authenticated()
                 .anyRequest().authenticated()
             )

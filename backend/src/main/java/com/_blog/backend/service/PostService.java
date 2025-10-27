@@ -5,6 +5,7 @@ import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.entity.Post;
 import com._blog.backend.entity.User;
 import com._blog.backend.dto.TagDto;
+import com._blog.backend.dto.TrendingPostDto;
 import com._blog.backend.entity.Tag;
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
@@ -220,7 +221,24 @@ public class PostService {
         return tags;
     }
 
-    
+    @Transactional(readOnly = true)
+    public List<TrendingPostDto> getTrendingPosts(int limit) {
+        return postRepository.findTrendingPosts(limit).stream()
+                .map(post -> {
+                    TrendingPostDto dto = new TrendingPostDto();
+                    dto.setId(post.getId());
+                    dto.setTitle(post.getTitle());
+                    Set<TagDto> tagDtos = post.getTags().stream().map(tag -> {
+                        TagDto tagDto = new TagDto();
+                        tagDto.setId(tag.getId());
+                        tagDto.setName(tag.getName());
+                        return tagDto;
+                    }).collect(Collectors.toSet());
+                    dto.setTags(tagDtos);
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
     public PostResponseDto mapToDto(Post post, User currentUser) {
         PostResponseDto dto = new PostResponseDto();
