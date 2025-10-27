@@ -19,10 +19,12 @@ public class SubscriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
-    @Autowired //no need to create objects manually ->"userRepository = new UserRepositoryImpl();"
+    @Autowired 
     private UserRepository userRepository;
 
-    @Transactional // database transaction - all fine -> commit ,if an exception -> rollback
+    
+
+    @Transactional 
     public void followUser(String followerEmail, Long followingId) {
         User follower = userRepository.findByEmail(followerEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Follower not found"));
@@ -43,7 +45,7 @@ public class SubscriptionService {
         subscriptionRepository.save(subscription);
 
         String message = follower.getOriginalUsername() + " started following you.";
-    notificationService.createNotification(follower,following, message, "/block/" + follower.getOriginalUsername());
+        notificationService.createNotification(follower,following, message, "/block/" + follower.getOriginalUsername());
     }
 
     @Transactional

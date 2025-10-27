@@ -47,8 +47,9 @@ public class PostService {
     private SubscriptionRepository subscriptionRepository;
     @Autowired
     private TagRepository tagRepository;
+
     @Autowired
-    private MediaRepository mediaRepository;
+    private NotificationService notificationService;
 
     @Transactional
     public PostResponseDto createPost(String title, String content, MultipartFile file, String tags,
@@ -85,6 +86,15 @@ public class PostService {
         newPost.setTags(tagSet);
 
         Post savedPost = postRepository.save(newPost);
+
+        List<Subscription> subscriptions = subscriptionRepository.findAllByFollowing(author);
+
+        String message = author.getOriginalUsername() + " published a new post: " + savedPost.getTitle();
+        for (Subscription sub : subscriptions) {
+            User follower = sub.getFollower();
+            notificationService.createNotification(author, follower, message, "/post/" + savedPost.getId());
+        }
+
         return mapToDto(savedPost, author);
     }
 
