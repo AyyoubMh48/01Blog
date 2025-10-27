@@ -292,7 +292,7 @@ export class PostEditor implements OnInit, OnDestroy {
       return;
     }
 
-    if (tagsArray.length > 10) {
+    if (tagsArray.length > 4) {
       alert("You can add a maximum of 10 tags."); 
       return;
     }

@@ -118,7 +118,7 @@
                   matInput
                   name="bio"
                   rows="4"
-                  [ngModel]="userProfile?.bio"
+                  [ngModel]="userProfile.bio"
                   minlength="10"
                   maxlength="200"
                   #bioInput="ngModel"
@@ -152,33 +152,62 @@
               #passwordForm="ngForm"
               (ngSubmit)="onChangePasswordSubmit(passwordForm)"
             >
-              <mat-form-field appearance="outline"
-                ><mat-label>Current Password</mat-label
-                ><input
+              <mat-form-field appearance="outline">
+                <mat-label>Current Password</mat-label>
+                <input
                   matInput
                   type="password"
                   name="oldPassword"
                   ngModel
                   required
-              /></mat-form-field>
-              <mat-form-field appearance="outline"
-                ><mat-label>New Password</mat-label
-                ><input
+                />
+                <mat-error
+                  *ngIf="passwordForm.controls['oldPassword']?.errors?.['required'] && passwordForm.controls['oldPassword']?.touched"
+                  >Current password is required.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>New Password</mat-label>
+                <input
                   matInput
                   type="password"
                   name="newPassword"
                   ngModel
                   required
-              /></mat-form-field>
-              <mat-form-field appearance="outline"
-                ><mat-label>Confirm New Password</mat-label
-                ><input
+                  minlength="8"
+                  #newPasswordInput="ngModel"
+                />
+                <mat-error
+                  *ngIf="newPasswordInput.errors?.['required'] && newPasswordInput.touched"
+                  >New password is required.</mat-error
+                >
+                <mat-error
+                  *ngIf="newPasswordInput.errors?.['minlength'] && newPasswordInput.touched"
+                  >New password must be at least 8 characters.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Confirm New Password</mat-label>
+                <input
                   matInput
                   type="password"
                   name="confirmPassword"
                   ngModel
                   required
-              /></mat-form-field>
+                  #confirmPasswordInput="ngModel"
+                />
+                <mat-error
+                  *ngIf="confirmPasswordInput.errors?.['required'] && confirmPasswordInput.touched"
+                  >Please confirm your new password.</mat-error
+                >
+              </mat-form-field>
+
+              <div *ngIf="errorMessage" class="error-message">
+                {{ errorMessage }}
+              </div>
+
               <button
                 mat-raised-button
                 color="primary"

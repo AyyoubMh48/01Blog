@@ -200,6 +200,11 @@ public class PostService {
         }
 
         String[] tagNames = tagsString.split(",");
+
+        if (tagNames.length > 4) {
+            throw new IllegalArgumentException("You can add a maximum of 4 tags.");
+        }
+
         for (String name : tagNames) {
             String trimmedName = name.trim().toLowerCase();
             if (trimmedName.isEmpty())
