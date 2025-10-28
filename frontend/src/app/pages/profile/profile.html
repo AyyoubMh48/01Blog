@@ -1,229 +1,107 @@
 <div class="profile-page-container" *ngIf="userProfile">
+
   <mat-card class="profile-header-card">
-    <mat-card-header>
-      <div
-        mat-card-avatar
-        class="profile-avatar"
-        [style.backgroundImage]="'url(' + userProfile.avatarUrl + ')'"
-      ></div>
-      <mat-card-title>{{ userProfile.username }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content *ngIf="userProfile.bio">
-      <p>{{ userProfile.bio }}</p>
-    </mat-card-content>
+    <mat-card-content class="profile-header">
+      <div class="profile-avatar-wrapper">
+        <img [src]="userProfile.avatarUrl" alt="{{ userProfile.username }}'s avatar" class="profile-avatar">
+        <button mat-icon-button class="change-avatar-btn" (click)="avatarInput.click()" aria-label="Change avatar">
+          <mat-icon>photo_camera</mat-icon>
+        </button>
+        <input hidden (change)="onAvatarSelected($event)" #avatarInput type="file" accept="image/*">
+      </div>
+      <div class="profile-info">
+        <h1>{{ userProfile.username }}</h1>
+        <p *ngIf="userProfile.bio" class="profile-bio">{{ userProfile.bio }}</p>
+        <p *ngIf="!userProfile.bio" class="profile-bio placeholder">Add a bio in settings...</p>
+      </div>
+       </mat-card-content>
+     <mat-progress-bar *ngIf="isUploading" mode="indeterminate" class="avatar-upload-progress"></mat-progress-bar>
   </mat-card>
 
-  <mat-tab-group>
+  <mat-tab-group animationDuration="0ms" class="profile-tabs">
     <mat-tab label="My Posts">
       <section class="post-list profile-posts">
-        <div *ngIf="userProfile.posts?.length === 0">
-          You haven't posted anything yet.
+        <div *ngIf="userProfile.posts?.length === 0" class="no-posts-message">
+          You haven't posted anything yet. Create your first post!
         </div>
 
-        <mat-card *ngFor="let post of userProfile?.posts" class="post-card">
-          <mat-card-header>
-            <mat-card-subtitle>{{
-              post.createdAt | date : "MMM d"
-            }}</mat-card-subtitle>
-          </mat-card-header>
-
-          <img
-            mat-card-image
-            *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')"
-            [src]="post.mediaUrl"
-            alt="Post media"
-          />
-
-          <mat-card-content class="post-summary">
-            <h2>
-              <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
-            </h2>
-            <p>{{ stripHtml(post.content) | slice : 0 : 150 }}...</p>
-            <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
-              <span *ngFor="let tag of post.tags">#{{ tag.name }}</span>
+        <a *ngFor="let post of userProfile?.posts" [routerLink]="['/post', post.id]" class="post-card-link">
+          <mat-card class="post-card devto-style">
+            <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
+            <div class="post-card-main-content">
+              <mat-card-header>
+                <mat-card-subtitle>Posted on {{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content class="post-summary">
+                <h2>{{ post.title }}</h2>
+                <div class="post-tags" *ngIf="post.tags.length > 0">
+                  <a *ngFor="let tag of post.tags" [routerLink]="['/tag', tag.name]" class="tag-link summary" (click)="$event.stopPropagation()">#{{ tag.name }}</a>
+                </div>
+              </mat-card-content>
             </div>
-          </mat-card-content>
-
-          <mat-card-actions>
-            <button
-              mat-icon-button
-              (click)="toggleLike(post)"
-              [color]="post.likedByCurrentUser ? 'warn' : ''"
-            >
-              <mat-icon>favorite</mat-icon>
-            </button>
-            <span>{{ post.likeCount }}</span>
-            <button mat-icon-button (click)="toggleComments(post.id)">
-              <mat-icon>comment</mat-icon>
-            </button>
-            <span>{{ post.commentCount }}</span>
-            <span class="spacer"></span>
-            <button mat-button [routerLink]="['/post/edit', post.id]">
-              EDIT
-            </button>
-            <button mat-button color="warn" (click)="deletePost(post.id)">
-              DELETE
-            </button>
-          </mat-card-actions>
-
-          <app-comment-section
-            *ngIf="expandedPostIds.has(post.id)"
-            [postId]="post.id"
-            (commentAdded)="onCommentAdded(post)"
-          ></app-comment-section>
-        </mat-card>
+            <mat-card-actions class="stats">
+              <div class="action-item">
+                <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
+                <span>{{ post.likeCount }}</span>
+              </div>
+              <div class="action-item">
+                <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
+                <span>{{ post.commentCount }} Comments</span>
+              </div>
+               <span class="spacer"></span>
+               <button mat-button [routerLink]="['/post/edit', post.id]" (click)="$event.stopPropagation();$event.preventDefault();">Edit</button>
+               <button mat-button color="warn" (click)="deletePost(post.id); $event.preventDefault(); $event.stopPropagation()">Delete</button>
+            </mat-card-actions>
+          </mat-card>
+        </a>
       </section>
     </mat-tab>
 
-    <mat-tab label="Edit Profile">
+    <mat-tab label="Settings">
       <div class="edit-profile-section">
-        <mat-card class="profile-card">
-          <mat-card-header
-            ><mat-card-title>Update Profile</mat-card-title></mat-card-header
-          >
-          <mat-card-content class="profile-content">
-            <div class="avatar-section">
-              <img
-                [src]="userProfile.avatarUrl"
-                alt="Your Avatar"
-                class="profile-avatar"
-              />
-              <button
-                mat-stroked-button
-                type="button"
-                (click)="avatarInput.click()"
-              >
-                Change Avatar
-              </button>
-              <input
-                hidden
-                (change)="onAvatarSelected($event)"
-                #avatarInput
-                type="file"
-                accept="image/*"
-              />
-              <mat-progress-bar
-                *ngIf="isUploading"
-                mode="indeterminate"
-              ></mat-progress-bar>
-            </div>
-            <form
-              #bioForm="ngForm"
-              (ngSubmit)="onBioSubmit(bioForm)"
-              class="bio-form"
-            >
+        <mat-card class="settings-card">
+          <mat-card-header><mat-card-title>Update Bio</mat-card-title></mat-card-header>
+          <mat-card-content>
+            <form #bioForm="ngForm" (ngSubmit)="onBioSubmit(bioForm)" class="settings-form">
               <mat-form-field appearance="outline">
                 <mat-label>Your Bio</mat-label>
-                <textarea
-                  matInput
-                  name="bio"
-                  rows="4"
-                  [ngModel]="userProfile.bio"
-                  minlength="10"
-                  maxlength="200"
-                  #bioInput="ngModel"
-                >
-                </textarea>
-                <mat-error *ngIf="bioInput.errors?.['minlength']"
-                  >Bio must be at least 10 characters.</mat-error
-                >
-                <mat-error *ngIf="bioInput.errors?.['maxlength']"
-                  >Bio cannot exceed 200 characters.</mat-error
-                >
+                <textarea matInput name="bio" rows="4" [ngModel]="userProfile.bio" minlength="10" maxlength="200" #bioInput="ngModel"></textarea>
+                <mat-hint align="end">{{ bioInput.value?.length || 0 }} / 200</mat-hint>
+                <mat-error *ngIf="bioInput.errors?.['minlength']">Bio must be at least 10 characters.</mat-error>
+                <mat-error *ngIf="bioInput.errors?.['maxlength']">Bio cannot exceed 200 characters.</mat-error>
               </mat-form-field>
-              <button
-                mat-raised-button
-                color="primary"
-                type="submit"
-                [disabled]="bioForm.invalid"
-              >
-                Save Bio
-              </button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="bioForm.invalid || bioForm.pristine">Save Bio</button>
             </form>
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="profile-card">
-          <mat-card-header
-            ><mat-card-title>Change Password</mat-card-title></mat-card-header
-          >
+        <mat-card class="settings-card">
+          <mat-card-header><mat-card-title>Change Password</mat-card-title></mat-card-header>
           <mat-card-content>
-            <form
-              #passwordForm="ngForm"
-              (ngSubmit)="onChangePasswordSubmit(passwordForm)"
-            >
+            <form #passwordForm="ngForm" (ngSubmit)="onChangePasswordSubmit(passwordForm)" class="settings-form">
               <mat-form-field appearance="outline">
                 <mat-label>Current Password</mat-label>
-                <input
-                  matInput
-                  type="password"
-                  name="oldPassword"
-                  ngModel
-                  required
-                />
-                <mat-error
-                  *ngIf="passwordForm.controls['oldPassword']?.errors?.['required'] && passwordForm.controls['oldPassword']?.touched"
-                  >Current password is required.</mat-error
-                >
+                <input matInput type="password" name="oldPassword" ngModel required />
+                <mat-error *ngIf="passwordForm.controls['oldPassword']?.errors?.['required'] && passwordForm.controls['oldPassword']?.touched">Current password is required.</mat-error>
               </mat-form-field>
-
               <mat-form-field appearance="outline">
                 <mat-label>New Password</mat-label>
-                <input
-                  matInput
-                  type="password"
-                  name="newPassword"
-                  ngModel
-                  required
-                  minlength="8"
-                  #newPasswordInput="ngModel"
-                />
-                <mat-error
-                  *ngIf="newPasswordInput.errors?.['required'] && newPasswordInput.touched"
-                  >New password is required.</mat-error
-                >
-                <mat-error
-                  *ngIf="newPasswordInput.errors?.['minlength'] && newPasswordInput.touched"
-                  >New password must be at least 8 characters.</mat-error
-                >
+                <input matInput type="password" name="newPassword" ngModel required minlength="8" #newPasswordInput="ngModel" />
+                <mat-error *ngIf="newPasswordInput.errors?.['required'] && newPasswordInput.touched">New password is required.</mat-error>
+                <mat-error *ngIf="newPasswordInput.errors?.['minlength'] && newPasswordInput.touched">New password must be at least 8 characters.</mat-error>
               </mat-form-field>
-
               <mat-form-field appearance="outline">
                 <mat-label>Confirm New Password</mat-label>
-                <input
-                  matInput
-                  type="password"
-                  name="confirmPassword"
-                  ngModel
-                  required
-                  #confirmPasswordInput="ngModel"
-                />
-                <mat-error
-                  *ngIf="confirmPasswordInput.errors?.['required'] && confirmPasswordInput.touched"
-                  >Please confirm your new password.</mat-error
-                >
+                <input matInput type="password" name="confirmPassword" ngModel required #confirmPasswordInput="ngModel" />
+                <mat-error *ngIf="confirmPasswordInput.errors?.['required'] && confirmPasswordInput.touched">Please confirm your new password.</mat-error>
               </mat-form-field>
-
-              <div *ngIf="errorMessage" class="error-message">
-                {{ errorMessage }}
-              </div>
-
-              <button
-                mat-raised-button
-                color="primary"
-                type="submit"
-                [disabled]="passwordForm.invalid"
-              >
-                Update Password
-              </button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid || passwordForm.pristine">Update Password</button>
             </form>
           </mat-card-content>
         </mat-card>
 
-        <div *ngIf="successMessage" class="success-message">
-          {{ successMessage }}
-        </div>
-        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+        <div *ngIf="successMessage" class="form-message success">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="form-message error">{{ errorMessage }}</div>
       </div>
     </mat-tab>
   </mat-tab-group>
