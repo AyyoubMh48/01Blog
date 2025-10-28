@@ -1,15 +1,30 @@
 <div class="notifications-container">
-  <h2>Your Notifications</h2>
-  <mat-list>
-    <div *ngIf="notifications.length === 0" class="no-notifications">
-      You have no notifications yet.
-    </div>
-    <mat-list-item *ngFor="let notification of notifications" 
-                   [class.unread]="!notification.read"
-                   (click)="markAsRead(notification)">
-      <mat-icon matListItemIcon>notifications</mat-icon>
-      <div matListItemTitle>{{ notification.message }}</div>
-      <div matListItemLine>{{ notification.createdAt | date:'short' }}</div>
-    </mat-list-item>
-  </mat-list>
+  <h2>Notifications</h2>
+
+  <mat-card class="notifications-card">
+    <mat-list>
+      <div *ngIf="notifications.length === 0" class="no-notifications">
+        <mat-icon class="empty-icon">notifications_off</mat-icon>
+        <span>You have no notifications yet.</span>
+      </div>
+
+      <mat-list-item *ngFor="let notification of notifications"
+                     [class.unread]="!notification.read"
+                     (click)="markAsRead(notification)"
+                     class="notification-item">
+        
+        <mat-icon matListItemIcon class="notification-icon">
+          <ng-container [ngSwitch]="true">
+            <ng-container *ngSwitchCase="notification.message.includes('liked')">favorite</ng-container>
+            <ng-container *ngSwitchCase="notification.message.includes('commented')">comment</ng-container>
+            <ng-container *ngSwitchCase="notification.message.includes('following')">person_add</ng-container>
+            <ng-container *ngSwitchDefault>notifications</ng-container>
+          </ng-container>
+        </mat-icon>
+        
+        <div matListItemTitle class="notification-message">{{ notification.message }}</div>
+        <div matListItemLine class="notification-date">{{ notification.createdAt | date:'medium' }}</div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
 </div>

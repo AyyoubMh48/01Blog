@@ -1,84 +1,60 @@
+<div class="post-detail-container" *ngIf="!post && !errorMessage">
+  <div class="loading-indicator">Loading post...</div>
+</div>
 <div *ngIf="errorMessage" class="error-message">
   {{ errorMessage }}
 </div>
-<div *ngIf="post" class="post-detail-container">
-  <mat-card class="post-card">
-    <mat-card-header>
-      <mat-card-title>{{ post.title }}</mat-card-title>
-      <mat-card-subtitle>
-        Posted by
-        <a [routerLink]="['/block', post.author.username]">{{
-          post.author.username
-        }}</a>
-        on {{ post.createdAt | date : "medium" }}
-      </mat-card-subtitle>
+
+<div *ngIf="post" class="post-detail-layout">
+  <mat-card class="post-card devto-style">
+    <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media" class="post-cover-image">
+    <video *ngIf="post.mediaUrl && post.mediaUrl.includes('/video/')" class="post-video" controls>
+      <source [src]="post.mediaUrl">
+    </video>
+
+    <mat-card-header class="post-header">
+      <div mat-card-avatar class="post-avatar" [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'"></div>
+      <mat-card-title>
+        <a [routerLink]="['/block', post.author.username]">{{ post.author.username }}</a>
+      </mat-card-title>
+      <mat-card-subtitle>Posted on {{ post.createdAt | date:'longDate' }}</mat-card-subtitle>
     </mat-card-header>
-    <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
-      <a
-        *ngFor="let tag of post.tags ?? []"
-        [routerLink]="['/tag', tag.name]"
-        class="tag-link"
-      >
-        #{{ tag.name }}
-      </a>
-    </div>
 
-    <div *ngIf="post.mediaUrl" class="media-container">
-      <img
-        *ngIf="!post.mediaUrl.includes('/video/')"
-        mat-card-image
-        [src]="post.mediaUrl"
-        alt="Post media"
-      />
-      <video
-        *ngIf="post.mediaUrl.includes('/video/')"
-        class="post-video"
-        controls
-      >
-        <source [src]="post.mediaUrl" />
-      </video>
-    </div>
+    <mat-card-content class="post-content-area">
+      <h1 class="post-title">{{ post.title }}</h1>
+      
+      <div class="post-tags" *ngIf="post.tags.length > 0">
+        <a *ngFor="let tag of post.tags" [routerLink]="['/tag', tag.name]" class="tag-link">#{{ tag.name }}</a>
+      </div>
 
-    <mat-card-content>
       <div class="post-full-content" [innerHTML]="post.content"></div>
     </mat-card-content>
 
-    <mat-card-actions>
-      <button
-        mat-icon-button
-        (click)="toggleLike(post)"
-        [color]="post.likedByCurrentUser ? 'warn' : ''"
-      >
-        <mat-icon>favorite</mat-icon>
-      </button>
-      <span>{{ post.likeCount }}</span>
-
-      <button
-        mat-icon-button
-        (click)="isCommentSectionExpanded = !isCommentSectionExpanded"
-      >
-        <mat-icon>comment</mat-icon>
-      </button>
-      <span>{{ post.commentCount }}</span>
+    <mat-card-actions class="stats">
+      <div class="action-item">
+        <button mat-icon-button (click)="toggleLike(post)" [color]="post.likedByCurrentUser ? 'warn' : ''">
+          <mat-icon>{{ post.likedByCurrentUser ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+        <span class="stat-count">{{ post.likeCount }}</span>
+      </div>
+      <div class="action-item">
+        <button mat-icon-button (click)="isCommentSectionExpanded = !isCommentSectionExpanded">
+          <mat-icon>chat_bubble_outline</mat-icon>
+        </button>
+        <span class="stat-count">{{ post.commentCount }} Comments</span>
+      </div>
 
       <span class="spacer"></span>
 
-      <div
-        *ngIf="isLoggedIn && post.author.username === currentUsername"
-        class="post-owner-actions"
-      >
+      <div *ngIf="isLoggedIn && post.author.username === currentUsername" class="post-owner-actions">
         <button mat-button [routerLink]="['/post/edit', post.id]">EDIT</button>
-        <button mat-button color="warn" (click)="deletePost(post.id)">
-          DELETE
-        </button>
+        <button mat-button color="warn" (click)="deletePost(post.id)">DELETE</button>
       </div>
     </mat-card-actions>
+  </mat-card>
 
-    <app-comment-section
-      *ngIf="isCommentSectionExpanded"
-      [postId]="post.id"
-      (commentAdded)="onCommentAdded(post)"
-    >
+  <mat-card class="comments-card" *ngIf="isCommentSectionExpanded">
+    <app-comment-section [postId]="post.id" (commentAdded)="onCommentAdded(post)">
     </app-comment-section>
   </mat-card>
 </div>

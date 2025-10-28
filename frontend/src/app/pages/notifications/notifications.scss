@@ -1,28 +1,76 @@
 .notifications-container {
   max-width: 800px;
   margin: 20px auto;
+  padding: 0 16px;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
 }
 
-mat-list-item {
-  height: auto !important; 
-  padding: 12px 0 !important;
+.notifications-card {
+  border: 1px solid var(--mat-divider-color);
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  padding: 0 !important; // Remove card padding, let the list handle it
+}
+
+.notification-item {
+  height: auto !important;
+  min-height: 72px; // Give some space
+  padding: 16px 24px !important; // Use card-style padding
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: rgba(0,0,0,0.04);
+    background-color: rgba(0, 0, 0, 0.04);
   }
 
-  &.unread {
+  // Style for the icon
+  .notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mat-primary-main-color);
+  }
+
+  .notification-message {
     font-weight: 500;
+    white-space: normal; // Allow message to wrap
+    line-height: 1.4;
+  }
+
+  .notification-date {
+    font-size: 0.85em;
+    color: #757575; // Muted color for the date
+  }
+
+  // Unread state
+  &.unread {
+    // CHANGED: Use a distinct light gray background for unread items
+    background-color: #f7f7f7; 
     
     border-left: 4px solid var(--mat-primary-main-color);
-    padding-left: 12px !important;
+    padding-left: 12px !important; // Adjust padding to account for border
 
-    background-color: rgba(0,0,0,0.02);
+    .notification-message {
+      font-weight: 700; // Make text bolder
+    }
+
+    .notification-icon {
+      color: var(--mat-primary-main-color);
+    }
+
+    &:hover {
+       // Make the hover slightly darker than the unread background
+       background-color: #eeeeee; 
+    }
   }
 }
 
+// Dark Mode Styles
 .dark-mode {
   mat-list-item {
     &:hover {
@@ -30,13 +78,35 @@ mat-list-item {
     }
 
     &.unread {
-      background-color: rgba(255,255,255,0.03);
+      // CHANGED: Use a distinct dark gray background
+      background-color: #2a2a2a; 
+      border-left-color: var(--mat-primary-light-color);
+
+      .notification-icon {
+         color: var(--mat-primary-light-color);
+      }
+
+      &:hover {
+        background-color: #3a3a3a;
+      }
     }
   }
 }
 
 .no-notifications {
-  padding: 24px;
+  padding: 48px 24px;
   text-align: center;
   color: #757575;
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  
+  .empty-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+  }
 }

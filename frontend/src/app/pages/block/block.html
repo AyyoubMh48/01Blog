@@ -1,114 +1,93 @@
-<div class="block-container">
-  <div *ngIf="!userProfile && !errorMessage">Loading profile...</div>
-  <div *ngIf="errorMessage">{{ errorMessage }}</div>
+<div class="block-page-container" *ngIf="!userProfile && !errorMessage">
+  <div class="loading-indicator">Loading profile...</div>
+</div>
+<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-  <div *ngIf="userProfile">
-    <mat-card class="profile-header-card">
-      <div class="profile-header">
-        <div mat-card-avatar class="profile-avatar" [style.backgroundImage]="'url(' + userProfile.avatarUrl + ')'"></div>
-        <h2>{{ userProfile.username }}'s Block</h2>
-        <span class="spacer"></span>
-        <div class="profile-actions">
-          <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
-            <button
-              *ngIf="!userProfile.followedByCurrentUser"
-              mat-raised-button
-              color="primary"
-              (click)="follow()"
-            >
-              Follow
-            </button>
-            <button
-              *ngIf="userProfile.followedByCurrentUser"
-              mat-stroked-button
-              (click)="unfollow()"
-            >
-              Unfollow
-            </button>
-          </div>
-          <button
-            *ngIf="isLoggedIn && !isOwnProfile"
-            mat-button
-            color="warn"
-            (click)="showReportForm = !showReportForm"
-          >
-            Report
+<div *ngIf="userProfile" class="block-page-layout">
+  
+  <mat-card class="profile-header-card">
+    <mat-card-content class="profile-header">
+      <div class="profile-avatar-wrapper">
+        <img [src]="userProfile.avatarUrl" alt="{{ userProfile.username }}'s avatar" class="profile-avatar">
+      </div>
+      
+      <div class="profile-info">
+        <h1>{{ userProfile.username }}</h1>
+        <p *ngIf="userProfile.bio" class="profile-bio">{{ userProfile.bio }}</p>
+      </div>
+
+      <div class="profile-actions">
+        <div *ngIf="isLoggedIn && !isOwnProfile" class="follow-buttons">
+          <button *ngIf="!userProfile.followedByCurrentUser" mat-raised-button color="primary" (click)="follow()">
+            Follow
+          </button>
+          <button *ngIf="userProfile.followedByCurrentUser" mat-stroked-button (click)="unfollow()">
+            Unfollow
           </button>
         </div>
+        <button *ngIf="isLoggedIn && !isOwnProfile" mat-button color="warn" (click)="showReportForm = !showReportForm">
+          Report
+        </button>
       </div>
-    </mat-card>
-    <mat-card *ngIf="userProfile.bio" class="bio-card">
-      <mat-card-content>
-        <p>{{ userProfile.bio }}</p>
-      </mat-card-content>
-    </mat-card>
+    </mat-card-content>
+  </mat-card>
 
-    <mat-card *ngIf="showReportForm" class="report-form">
-      <mat-card-header
-        ><mat-card-title
-          >Report {{ userProfile.username }}</mat-card-title
-        ></mat-card-header
-      >
-      <mat-card-content>
-        <form #reportForm="ngForm" (ngSubmit)="onReportSubmit(reportForm)">
-          <mat-form-field appearance="outline">
-            <mat-label>Please provide a reason...</mat-label>
-            <textarea
-              matInput
-              name="reason"
-              rows="4"
-              ngModel
-              required
-            ></textarea>
-          </mat-form-field>
-          <div class="form-actions">
-            <button type="button" mat-button (click)="showReportForm = false">
-              Cancel
-            </button>
-            <button
-              type="submit"
-              mat-raised-button
-              color="warn"
-              [disabled]="reportForm.invalid"
-            >
-              Submit Report
-            </button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+  <mat-card *ngIf="showReportForm" class="report-form-card">
+    <mat-card-header>
+      <mat-card-title>Report {{ userProfile.username }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form #reportForm="ngForm" (ngSubmit)="onReportSubmit(reportForm)">
+        <mat-form-field appearance="outline">
+          <mat-label>Please provide a reason...</mat-label>
+          <textarea matInput name="reason" rows="4" ngModel required></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button type="button" mat-button (click)="showReportForm = false">Cancel</button>
+          <button type="submit" mat-raised-button color="warn" [disabled]="reportForm.invalid">
+            Submit Report
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
-    <section class="post-list">
-  <h3>Posts</h3>
-  <div *ngIf="userProfile.posts?.length === 0">This user hasn't posted anything yet.</div>
+  <section class="post-list">
+    <h3>Posts by {{ userProfile.username }}</h3>
+    <div *ngIf="userProfile.posts?.length === 0" class="no-posts-message">
+      This user hasn't posted anything yet.
+    </div>
 
-  <a *ngFor="let post of userProfile?.posts" [routerLink]="['/post', post.id]" class="post-card-link">
-    <mat-card class="post-card">
-      
-      <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
-      
-      <mat-card-header>
-        <mat-card-subtitle>{{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
-      </mat-card-header>
-      
-      <mat-card-content class="post-summary">
-        <h2>{{ post.title }}</h2>
-        <p>{{ stripHtml(post.content) | slice:0:150 }}...</p>
-        <div class="post-tags" *ngIf="(post.tags?.length || 0) > 0">
-              <a *ngFor="let tag of post.tags ?? []" [routerLink]="['/tag', tag.name]" class="tag-link">
-                #{{ tag.name }}
-              </a>
+    <a *ngFor="let post of userProfile?.posts" [routerLink]="['/post', post.id]" class="post-card-link">
+      <mat-card class="post-card devto-style">
+        <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
+        
+        <div class="post-card-main-content">
+          <mat-card-header>
+            <div mat-card-avatar class="post-avatar" [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'"></div>
+            <mat-card-title>{{ post.author.username }}</mat-card-title>
+            <mat-card-subtitle>{{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content class="post-summary">
+            <h2>{{ post.title }}</h2>
+            <div class="post-tags" *ngIf="post.tags.length > 0">
+              <a *ngFor="let tag of post.tags" [routerLink]="['/tag', tag.name]" class="tag-link summary">#{{ tag.name }}</a>
             </div>
-      </mat-card-content>
-      
-      <mat-card-actions class="stats">
-        <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
-        <span>{{ post.likeCount }}</span>
-        <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
-        <span>{{ post.commentCount }}</span>
-      </mat-card-actions>
-    </mat-card>
-  </a>
-</section>
-  </div>
+            </mat-card-content>
+        </div>
+        
+        <mat-card-actions class="stats">
+          <div class="action-item">
+            <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
+            <span>{{ post.likeCount }}</span>
+          </div>
+          <div class="action-item">
+            <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
+            <span>{{ post.commentCount }} Comments</span>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </a>
+  </section>
 </div>

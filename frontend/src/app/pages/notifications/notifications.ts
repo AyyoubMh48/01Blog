@@ -8,11 +8,12 @@ import { Notification } from '../../models/notification';
 // Material Imports
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatIconModule],
+  imports: [CommonModule, MatListModule, MatIconModule,MatCardModule],
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss'
 })
