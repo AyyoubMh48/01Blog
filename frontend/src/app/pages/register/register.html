@@ -1,54 +1,64 @@
 <div class="form-container">
-  <mat-card>
+  <mat-card class="register-card">
     <mat-card-header>
-      <mat-card-title>Create an Account on 01Blog</mat-card-title>
+      <mat-card-title>Create your account</mat-card-title>
+      <mat-card-subtitle>Join the 01Blog community</mat-card-subtitle>
     </mat-card-header>
+
     <mat-card-content>
       <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
 
         <mat-form-field appearance="outline">
           <mat-label>Username</mat-label>
           <input matInput name="username" ngModel required minlength="3" maxlength="20" #usernameInput="ngModel">
-          <mat-error *ngIf="usernameInput.errors?.['required']">Username is required.</mat-error>
-          <mat-error *ngIf="usernameInput.errors?.['minlength']">Username must be at least 3 characters.</mat-error>
-          <mat-error *ngIf="usernameInput.errors?.['maxlength']">Username cannot exceed 20 characters.</mat-error>
+          <mat-icon matPrefix>account_circle</mat-icon>
+          <mat-error *ngIf="usernameInput.touched && usernameInput.errors?.['required']">Username is required.</mat-error>
+          <mat-error *ngIf="usernameInput.touched && usernameInput.errors?.['minlength']">Username must be at least 3 characters.</mat-error>
+          <mat-error *ngIf="usernameInput.touched && usernameInput.errors?.['maxlength']">Username cannot exceed 20 characters.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input matInput type="email" name="email" ngModel required email #emailInput="ngModel">
-           <mat-error *ngIf="emailInput.errors?.['required']">Email is required.</mat-error>
-           <mat-error *ngIf="emailInput.errors?.['email']">Please enter a valid email.</mat-error>
+          <mat-icon matPrefix>email</mat-icon>
+           <mat-error *ngIf="emailInput.touched && emailInput.errors?.['required']">Email is required.</mat-error>
+           <mat-error *ngIf="emailInput.touched && emailInput.errors?.['email']">Please enter a valid email.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
           <input matInput type="password" name="password" ngModel required minlength="8" #passwordInput="ngModel">
-           <mat-error *ngIf="passwordInput.errors?.['required']">Password is required.</mat-error>
-           <mat-error *ngIf="passwordInput.errors?.['minlength']">Password must be at least 8 characters.</mat-error>
-           </mat-form-field>
+          <mat-icon matPrefix>lock</mat-icon>
+           <mat-error *ngIf="passwordInput.touched && passwordInput.errors?.['required']">Password is required.</mat-error>
+           <mat-error *ngIf="passwordInput.touched && passwordInput.errors?.['minlength']">Password must be at least 8 characters.</mat-error>
+        </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Confirm Password</mat-label>
           <input matInput type="password" name="confirmPassword" ngModel required #confirmPasswordInput="ngModel">
-           <mat-error *ngIf="confirmPasswordInput.errors?.['required']">Please confirm your password.</mat-error>
-           </mat-form-field>
+          <mat-icon matPrefix>lock_reset</mat-icon>
+           <mat-error *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors?.['required']">Please confirm your password.</mat-error>
+        </mat-form-field>
 
         <div *ngIf="passwordMismatch" class="error-message">
-          Passwords do not match.
+          <mat-icon>error_outline</mat-icon>
+          <span>Passwords do not match.</span>
         </div>
         <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
         </div>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
-          Register
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid" class="register-button">
+          Create Account
         </button>
 
       </form>
     </mat-card-content>
-    <mat-card-actions>
-      <p>Already have an account? <a routerLink="/login">Login here</a></p>
+
+    <mat-card-actions class="card-footer">
+      <span>Already have an account?</span>
+      <a mat-button color="primary" routerLink="/login">Log in</a>
     </mat-card-actions>
   </mat-card>
 </div>

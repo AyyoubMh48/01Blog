@@ -1,29 +1,90 @@
+// Uses the global .form-container from styles.scss for centering
+
+.login-card {
+  max-width: 450px; // Slightly wider card
+  width: 100%;
+  padding: 24px; // Add padding inside the card
+  border-radius: 16px !important; // More rounded corners
+  border: 1px solid var(--mat-divider-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; // Softer shadow
+}
+.dark-mode .login-card {
+   box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
 
 mat-card-header {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
+  text-align: center;
+  padding-bottom: 24px;
+  margin-bottom: 0; // Remove default bottom margin
+}
+
+mat-card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+mat-card-subtitle {
+  font-size: 1rem;
+  color: #757575;
+}
+.dark-mode mat-card-subtitle {
+  color: #bdbdbd;
 }
 
 form {
   display: flex;
   flex-direction: column;
+  gap: 16px; // Space between form fields
+}
+
+// Add icon prefix styling
+mat-form-field {
+  width: 100%; // Ensure form fields take full width
+
+  mat-icon[matPrefix] {
+    margin-right: 8px;
+    color: #757575; // Muted icon color
+  }
+}
+.dark-mode mat-form-field mat-icon[matPrefix] {
+  color: #bdbdbd;
 }
 
 .error-message {
-  color: #f44336; 
-  text-align: center;
-  font-size: 14px;
-  padding: 8px 0;
+  color: var(--mat-warn-main-color); // Use theme's warn color
+  background-color: rgba(var(--mat-warn-rgb), 0.1); // Light background tint
+  border: 1px solid rgba(var(--mat-warn-rgb), 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px; // Space icon and text
+  margin-top: 8px; // Space above the login button
 }
 
-mat-card-actions {
+.login-button {
+  padding: 12px 0 !important; // Taller button
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  margin-top: 16px; // More space above button
+}
+
+.card-footer {
   display: flex;
   justify-content: center;
-  padding: 16px 0 8px;
+  align-items: center; // Vertically align text and button
+  padding: 24px 0 8px; // More padding top
+  gap: 8px; // Space between text and button
 
-  p {
-    margin: 0;
+  span {
     font-size: 14px;
+    color: #757575;
   }
+}
+.dark-mode .card-footer span {
+  color: #bdbdbd;
 }

@@ -9,7 +9,7 @@
           accept="image/*,video/*"
           hidden
         />
-
+        
         <mat-form-field appearance="outline" class="title-field">
           <mat-label>New post title here...</mat-label>
           <input 
@@ -17,32 +17,37 @@
             name="title" 
             [ngModel]="post?.title" 
             required 
-            maxlength="100" 
-            #titleInput="ngModel"> 
-          <mat-error *ngIf="titleInput.errors?.['required']">Title is required.</mat-error>
-          <mat-error *ngIf="titleInput.errors?.['maxlength']">Title cannot exceed 100 characters.</mat-error>
+            maxlength="150" 
+            #titleInput="ngModel">
+           <mat-error *ngIf="titleInput.touched && titleInput.errors?.['required']">Title is required.</mat-error>
+           <mat-error *ngIf="titleInput.touched && titleInput.errors?.['maxlength']">Title cannot exceed 150 characters.</mat-error>
         </mat-form-field>
-
+        
         <mat-form-field appearance="outline" class="tags-field">
           <mat-label>Add up to 4 tags (comma-separated)</mat-label>
-          <input matInput name="tags" [(ngModel)]="tagsString" />
-           </mat-form-field>
+          <input 
+            matInput 
+            name="tags" 
+            [(ngModel)]="tagsString"
+            #tagsInput="ngModel">
+        </mat-form-field>
 
         <div class="quill-editor-container">
           <quill-editor
+            #editor
             [(ngModel)]="editorContent"
             name="editorContent"
             [modules]="quillModules"
             (onEditorCreated)="editorCreated($event)"
             placeholder="Write your post content here..."
             [required]="true"
-            [maxLength]="10000" 
-            #editorInput="ngModel"> 
+            [maxLength]="10000"
+            #editorInput="ngModel">
           </quill-editor>
-          <mat-error *ngIf="postForm.submitted && !editorContent.trim()">Content cannot be empty.</mat-error>
-           <mat-error *ngIf="editorInput.errors?.['maxlength']">Content cannot exceed 10000 characters.</mat-error>
+          <mat-error *ngIf="postForm.submitted && !editorContent?.trim()">Content cannot be empty.</mat-error>
+          <mat-error *ngIf="editorInput.touched && editorInput.errors?.['maxlength']">Content cannot exceed 10000 characters.</mat-error>
         </div>
-
+        
         <div *ngIf="errorMessage" class="error-message">
            {{ errorMessage }}
          </div>
@@ -52,8 +57,8 @@
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="postForm.invalid || !editorContent.trim() || isSubmitting"
-          >
+            [disabled]="postForm.invalid || !editorContent?.trim() || isSubmitting"
+            class="publish-button">
             <span *ngIf="isSubmitting">Saving...</span>
             <span *ngIf="!isSubmitting">{{ isEditMode ? "Save Changes" : "Publish" }}</span>
           </button>
