@@ -22,7 +22,7 @@ public class JwtService {
     private String secretKey;
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject); // Subject is the email
+        return extractClaim(token, Claims::getSubject); 
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -34,7 +34,6 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getOriginalUsername());
         claims.put("role", user.getRole());
-        // The subject is correctly set to the user's unique email
         return createToken(claims, user.getEmail());
     }
 

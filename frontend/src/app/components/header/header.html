@@ -1,38 +1,62 @@
 <mat-toolbar class="main-toolbar">
-  <a mat-button routerLink="/feed">01Blog</a>
-  <a mat-button routerLink="/admin" *ngIf="isAdmin">Admin</a>
-  <a mat-button routerLink="/profile" *ngIf="isLoggedIn">My Profile</a>
-  <span class="toolbar-spacer"></span>
-  <a
-    mat-stroked-button
-    routerLink="/post/new"
-    *ngIf="isLoggedIn && !isOnCreatePostPage"
-    class="create-post-btn"
-  >
-    Create Post
-  </a>
+  <div class="toolbar-content-wrapper">
 
-  <span class="toolbar-spacer"></span>
+    <div class="toolbar-section left">
+      <a mat-button routerLink="/feed" class="brand-logo">01Blog</a>
+      </div>
 
-  <div *ngIf="isLoggedIn" class="user-actions">
-    <a
-      mat-icon-button
-      routerLink="/notifications"
-      class="notification-bell"
-      aria-label="View notifications"
-    >
-      <mat-icon
-        matBadge="{{ unreadCount > 0 ? unreadCount : null }}"
-        matBadgeColor="warn"
-        >notifications</mat-icon
-      >
-    </a>
+    <span class="toolbar-spacer"></span>
 
-    <button mat-button (click)="logout()">Logout</button>
-  </div>
+    <div class="toolbar-section center">
+      <a mat-stroked-button
+         routerLink="/post/new"
+         *ngIf="isLoggedIn && !isOnCreatePostPage"
+         class="create-post-btn">
+        Create Post
+      </a>
+    </div>
 
-  <div *ngIf="!isLoggedIn">
-    <a mat-button routerLink="/login">Login</a>
-    <a mat-stroked-button color="accent" routerLink="/register">Register</a>
+    <span class="toolbar-spacer"></span>
+
+    <div class="toolbar-section right">
+      <ng-container *ngIf="isLoggedIn && currentUser">
+        <button mat-icon-button (click)="themeService.toggleTheme()" aria-label="Toggle theme">
+          <mat-icon>{{ themeService.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+
+        <a mat-icon-button routerLink="/notifications" aria-label="View notifications">
+          <mat-icon matBadge="{{ unreadCount > 0 ? unreadCount : null }}" matBadgeColor="warn">notifications</mat-icon>
+        </a>
+
+        <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="profile-menu-btn">
+          <img [src]="userAvatarUrl || 'https://www.gravatar.com/avatar/?d=mp'" alt="User Avatar" class="header-avatar">
+        </button>
+        <mat-menu #profileMenu="matMenu" xPosition="before">
+          <div class="profile-menu-header">
+            Signed in as <br><strong>{{ currentUser.username }}</strong>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/profile">
+            <mat-icon>account_circle</mat-icon>
+            <span>My Profile</span>
+          </button>
+          <button mat-menu-item routerLink="/admin" *ngIf="isAdmin">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin Dashboard</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Sign Out</span>
+          </button>
+        </mat-menu>
+      </ng-container>
+
+      <ng-container *ngIf="!isLoggedIn">
+        <a mat-button routerLink="/login">Log in</a>
+        <a mat-raised-button color="primary" routerLink="/register">Create account</a>
+      </ng-container>
+    </div>
+
   </div>
 </mat-toolbar>

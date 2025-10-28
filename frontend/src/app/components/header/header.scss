@@ -1,72 +1,73 @@
-:host {
-  max-width: 900px;
-  margin: 0 auto;
-  display: block;
-}
+// Remove the :host rule. The toolbar should be full-width.
 
 .main-toolbar {
-  background: transparent;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; // Center the wrapper div
+  padding: 0 16px; // Standard padding
+  background: var(--mat-app-background-color);
+  color: var(--mat-app-text-color);
+  border-bottom: 1px solid var(--mat-divider-color);
+  height: 56px;
+}
+
+// This wrapper constrains the content and matches your feed's width
+.toolbar-content-wrapper {
+  display: flex;
   align-items: center;
+  width: 100%;
+  max-width: 1280px; // Match the max-width from your feed page
 }
 
-.toolbar-spacer {
-  flex-grow: 1;
-}
-
-.user-actions {
+.toolbar-section {
   display: flex;
   align-items: center;
   gap: 8px;
+
+  &.center {
+    flex-shrink: 0; // Prevent the center button from shrinking
+  }
 }
 
-.notification-bell {
-  position: relative;
+.toolbar-spacer {
+  flex-grow: 1; // Pushes left/center/right sections apart
 }
 
-.notification-dropdown {
-  position: absolute;
-  top: 55px;
-  right: 10px;
-  width: 350px;
-  max-height: 400px;
-  overflow-y: auto;
-  z-index: 1000;
-  border-radius: 4px;
-  
-  background-color: var(--mat-app-background-color);
-  color: var(--mat-app-text-color);
-  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
-  
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+.brand-logo {
+  font-weight: bold;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: inherit;
+}
 
-  li {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--mat-divider-color);
-    cursor: pointer;
-    font-size: 14px;
-    
-    &:hover {
-      background: rgba(0,0,0,0.04);
-      .dark-mode & {
-        background: rgba(255,255,255,0.04);
-      }
-    }
+.create-post-btn {
+  // Styles for the create button (e.g., border color)
+}
 
-    &.unread {
-      font-weight: bold;
-      background: var(--mat-toolbar-standard-background-color);
-    }
-  }
-  
-  .no-notifications {
-    padding: 20px;
-    text-align: center;
-    color: var(--mat-disabled-text-color);
+.header-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-menu-btn {
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+}
+
+// Menu dropdown styles
+.profile-menu-header {
+  padding: 12px 16px;
+  font-size: 0.9em;
+  color: var(--mat-secondary-text-color);
+}
+button[mat-menu-item] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  mat-icon {
+    margin-right: 8px;
   }
 }

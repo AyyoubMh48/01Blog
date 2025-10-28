@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Observable } from 'rxjs';
 import { TagService } from '../../services/tag';
 import { Tag } from '../../models/post';
@@ -30,6 +31,7 @@ type FeedFilter = 'following' | 'myPosts' | 'all';
     MatFormFieldModule,
     MatInputModule,
     InfiniteScrollModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
