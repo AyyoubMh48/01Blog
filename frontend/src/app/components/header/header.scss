@@ -74,6 +74,16 @@ app-header {
     background: #2d2d2d !important;
   }
 }
+/* Ensure logo text follows theme */
+body.dark-mode app-header .brand-logo,
+body.dark-mode app-header .brand-logo .logo-text {
+  color: #ffffff !important;
+}
+
+body:not(.dark-mode) app-header .brand-logo,
+body:not(.dark-mode) app-header .brand-logo .logo-text {
+  color: #000000 !important;
+}
 
 // === CREATE POST BUTTON ===
 .create-post-btn {
@@ -99,14 +109,17 @@ app-header {
     color: white !important;
   }
 }
-
 // === ICON BUTTONS ===
-.icon-btn {
+app-header .icon-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 40px !important;
   height: 40px !important;
   border-radius: 8px !important;
   color: #090909 !important;
-  transition: all 0.2s ease !important;
+  transition: background 0.2s ease !important;
+  padding: 0 !important;
 
   mat-icon {
     color: #090909 !important;
@@ -114,6 +127,7 @@ app-header {
 
   &:hover {
     background: #f3f4f6 !important;
+    transform: none !important; 
   }
 
   &.notification-btn {
@@ -126,7 +140,7 @@ app-header {
   }
 }
 
-:host-context(.dark-mode) .icon-btn {
+.dark-mode app-header .icon-btn {
   color: #f5f5f5 !important;
 
   mat-icon {
@@ -413,4 +427,18 @@ app-header {
     animation: none !important;
     transition: none !important;
   }
+}
+
+
+/* Force light and dark explicitly for header */
+body:not(.dark-mode) app-header .main-toolbar {
+  background: #ffffff !important;
+  color: #090909 !important;
+  border-bottom-color: #e5e7eb !important;
+}
+
+body.dark-mode app-header .main-toolbar {
+  background: #1a1a1a !important;
+  color: #f5f5f5 !important;
+  border-bottom-color: #2d2d2d !important;
 }
