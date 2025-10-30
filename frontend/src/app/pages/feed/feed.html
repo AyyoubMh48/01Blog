@@ -5,81 +5,107 @@
   [fromRoot]="true" 
   [infiniteScrollDistance]="2"
   [infiniteScrollThrottle]="300"
-  (scrolled)="onScroll()">
+  (scrolled)="onScroll()"
+  role="main"
+  aria-label="Blog Feed">
   
-  <!-- Enhanced Sidebar with Glassmorphism -->
-  <aside class="sidebar-column">
-    <!-- Trending Posts Card -->
-    <mat-card class="sidebar-card trending-card" *ngIf="trendingPosts.length > 0">
-      <mat-card-header>
-        <mat-card-title>
-          <span class="emoji-icon">🔥</span>
-          <span class="title-text">Trending Now</span>
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <ul class="trending-list">
-          <li *ngFor="let trendPost of trendingPosts; let i = index" class="trending-item" [style.animation-delay.ms]="i * 50">
-            <a [routerLink]="['/post', trendPost.id]" class="trending-link">
+  <!-- Enhanced Sidebar -->
+<aside class="sidebar-column" role="complementary" aria-label="Sidebar content">
+  <!-- Trending Posts Card -->
+  <mat-card class="sidebar-card trending-card" *ngIf="trendingPosts.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        <span class="emoji-icon" aria-hidden="true">🔥</span>
+        <span class="title-text">Trending Now</span>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul class="trending-list" role="list">
+        <li *ngFor="let trendPost of trendingPosts; let i = index" 
+            class="trending-item" 
+            [style.animation-delay.ms]="i * 50"
+            role="listitem">
+          <a [routerLink]="['/post', trendPost.id]" 
+             class="trending-link"
+             [attr.aria-label]="'Read trending post: ' + trendPost.title">
+            <div class="trending-content">
               <span class="trending-title">{{ trendPost.title }}</span>
-              <div class="post-tags" *ngIf="trendPost.tags.length > 0">
-                <a *ngFor="let tag of trendPost.tags.slice(0, 3)" 
+              <div class="post-tags" *ngIf="trendPost.tags && trendPost.tags.length > 0">
+                <a *ngFor="let tag of trendPost.tags.slice(0, 2)" 
                    [routerLink]="['/tag', tag.name]" 
                    class="tag-link tag-link-small"
-                   (click)="$event.stopPropagation()">
+                   (click)="$event.stopPropagation()"
+                   [attr.aria-label]="'View posts tagged ' + tag.name">
                   #{{ tag.name }}
                 </a>
+                <span *ngIf="trendPost.tags.length > 2" class="tag-more-small">
+                  +{{ trendPost.tags.length - 2 }}
+                </span>
               </div>
-            </a>
-          </li>
-        </ul>
-      </mat-card-content>
-    </mat-card>
-
-    <!-- Popular Tags Card -->
-    <mat-card class="sidebar-card tags-card" *ngIf="popularTags.length > 0">
-      <mat-card-header>
-        <mat-card-title>
-          <span class="emoji-icon">🏷️</span>
-          <span class="title-text">Popular Topics</span>
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="tag-cloud">
-          <a *ngFor="let tag of popularTags; let i = index" 
-             [routerLink]="['/tag', tag.name]" 
-             class="tag-link tag-bubble"
-             [style.animation-delay.ms]="i * 30">
-            #{{ tag.name }}
+            </div>
+            <mat-icon class="arrow-icon" aria-hidden="true">arrow_forward</mat-icon>
           </a>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </aside>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Popular Tags Card -->
+  <mat-card class="sidebar-card tags-card" *ngIf="popularTags.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        <span class="emoji-icon" aria-hidden="true">🏷️</span>
+        <span class="title-text">Popular Topics</span>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="tag-cloud" role="list">
+        <a *ngFor="let tag of popularTags; let i = index" 
+           [routerLink]="['/tag', tag.name]" 
+           class="tag-link tag-bubble"
+           [style.animation-delay.ms]="i * 30"
+           [attr.aria-label]="'View posts tagged ' + tag.name"
+           role="listitem">
+          #{{ tag.name }}
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</aside>
+
 
   <!-- Main Feed Column -->
-  <div class="main-feed-column">
+  <div class="main-feed-column" role="feed" aria-label="Blog posts">
     <!-- Enhanced Filter Tabs -->
-    <div *ngIf="isLoggedIn" class="feed-filters">
+    <div *ngIf="isLoggedIn" class="feed-filters" role="tablist" aria-label="Feed filters">
       <div class="filter-tabs">
         <button mat-button
           class="filter-tab"
           [class.active-filter]="activeFilter === 'following'"
-          (click)="setFilter('following')">
+          (click)="setFilter('following')"
+          role="tab"
+          [attr.aria-selected]="activeFilter === 'following'"
+          aria-controls="posts-panel">
           <mat-icon class="filter-icon">people</mat-icon>
           <span>Following</span>
         </button>
         <button mat-button
           class="filter-tab"
           [class.active-filter]="activeFilter === 'myPosts'"
-          (click)="setFilter('myPosts')">
+          (click)="setFilter('myPosts')"
+          role="tab"
+          [attr.aria-selected]="activeFilter === 'myPosts'"
+          aria-controls="posts-panel">
           <mat-icon class="filter-icon">article</mat-icon>
           <span>My Posts</span>
         </button>
         <button mat-button
           class="filter-tab"
           [class.active-filter]="activeFilter === 'all'"
-          (click)="setFilter('all')">
+          (click)="setFilter('all')"
+          role="tab"
+          [attr.aria-selected]="activeFilter === 'all'"
+          aria-controls="posts-panel">
           <mat-icon class="filter-icon">explore</mat-icon>
           <span>Explore</span>
         </button>
@@ -89,104 +115,140 @@
 
     <!-- Enhanced Login Prompt -->
     <div *ngIf="!isLoggedIn" class="login-prompt">
-      <mat-card class="welcome-card">
+      <mat-card class="welcome-card glass-morphic">
+        <div class="floating-particles">
+          <span class="particle" *ngFor="let i of [1,2,3,4,5]"></span>
+        </div>
         <mat-card-content>
           <div class="welcome-content">
-            <div class="welcome-icon">✨</div>
+            <div class="welcome-icon-wrapper">
+              <div class="welcome-icon">✨</div>
+              <div class="icon-rings">
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+              </div>
+            </div>
             <h3 class="welcome-title">Welcome to 01Blog!</h3>
             <p class="welcome-subtitle">Join our community to create posts and personalize your feed</p>
-            <a mat-raised-button color="primary" routerLink="/login" class="login-btn">
+            <a mat-raised-button color="primary" routerLink="/login" class="login-btn cta-button">
               <mat-icon>login</mat-icon>
               <span>Get Started</span>
+              <span class="btn-shine"></span>
             </a>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
 
-    <!-- Post List with Stagger Animation -->
-    <div class="post-list">
+    <!-- Post List with Advanced Stagger Animation -->
+    <div class="post-list" id="posts-panel" role="tabpanel">
       <div *ngIf="posts.length === 0 && !isLoading" class="no-posts-message">
         <div class="empty-state">
-          <mat-icon class="empty-icon">inbox</mat-icon>
+          <div class="empty-icon-wrapper">
+            <mat-icon class="empty-icon">inbox</mat-icon>
+            <div class="empty-icon-bg"></div>
+          </div>
           <p class="empty-text">No posts yet in this feed</p>
           <p class="empty-subtext">Check back later or explore other topics</p>
         </div>
       </div>
 
       <!-- Enhanced Post Cards -->
-      <a *ngFor="let post of posts; let i = index" 
-         [routerLink]="['/post', post.id]" 
-         class="post-card-link"
-         [style.animation-delay.ms]="i * 60">
-        <mat-card class="post-card devto-style">
-          <!-- Media Section -->
-          <div class="post-media-wrapper" *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')">
-            <img mat-card-image 
-                 [src]="post.mediaUrl" 
-                 alt="Post media"
-                 class="post-media-image"
-                 loading="lazy">
-            <div class="media-overlay"></div>
-          </div>
-
-          <!-- Content Section -->
-          <div class="post-card-main-content">
-            <mat-card-header class="post-header">
-              <div mat-card-avatar 
-                   class="post-avatar" 
-                   [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'">
+      <article *ngFor="let post of posts; let i = index" 
+               class="post-card-wrapper"
+               [style.animation-delay.ms]="i * 60">
+        <a [routerLink]="['/post', post.id]" 
+           class="post-card-link"
+           [attr.aria-label]="'Read post: ' + post.title">
+          <mat-card class="post-card devto-style">
+            <div class="card-shine"></div>
+            
+            <!-- Media Section -->
+            <div class="post-media-wrapper" *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')">
+              <img mat-card-image 
+                   [src]="post.mediaUrl" 
+                   [alt]="'Cover image for ' + post.title"
+                   class="post-media-image"
+                   loading="lazy">
+              <div class="media-overlay">
+                <div class="media-gradient"></div>
               </div>
-              <div class="author-info">
-                <mat-card-title class="author-name">{{ post.author.username }}</mat-card-title>
-                <mat-card-subtitle class="post-date">
-                  <mat-icon class="date-icon">schedule</mat-icon>
-                  {{ post.createdAt | date:'MMM d, y' }}
-                </mat-card-subtitle>
-              </div>
-            </mat-card-header>
-
-            <mat-card-content class="post-summary">
-              <h2 class="post-title">{{ post.title }}</h2>
-              <div class="post-tags" *ngIf="post.tags.length > 0">
-                <a *ngFor="let tag of post.tags.slice(0, 4)" 
-                   [routerLink]="['/tag', tag.name]" 
-                   class="tag-link tag-pill"
-                   (click)="$event.stopPropagation()">
-                  #{{ tag.name }}
-                </a>
-                <span *ngIf="post.tags.length > 4" class="tag-more">+{{ post.tags.length - 4 }}</span>
-              </div>
-            </mat-card-content>
-          </div>
-
-          <!-- Enhanced Stats Section -->
-          <mat-card-actions class="stats">
-            <div class="stat-item">
-              <button mat-icon-button disabled class="stat-btn">
-                <mat-icon>favorite_border</mat-icon>
-              </button>
-              <span class="stat-count">{{ post.likeCount | number }}</span>
             </div>
-            <div class="stat-item">
-              <button mat-icon-button disabled class="stat-btn">
-                <mat-icon>chat_bubble_outline</mat-icon>
-              </button>
-              <span class="stat-count">{{ post.commentCount | number }}</span>
+
+            <!-- Content Section -->
+            <div class="post-card-main-content">
+              <mat-card-header class="post-header">
+                <div mat-card-avatar 
+                     class="post-avatar" 
+                     [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'"
+                     [attr.aria-label]="post.author.username + ' avatar'">
+                  <div class="avatar-ring"></div>
+                </div>
+                <div class="author-info">
+                  <mat-card-title class="author-name">
+                    {{ post.author.username }}
+                  </mat-card-title>
+                  <mat-card-subtitle class="post-date">
+                    <mat-icon class="date-icon">schedule</mat-icon>
+                    {{ post.createdAt | date:'MMM d, y' }}
+                  </mat-card-subtitle>
+                </div>
+              </mat-card-header>
+
+              <mat-card-content class="post-summary">
+                <h2 class="post-title">{{ post.title }}</h2>
+                <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
+                  <a *ngFor="let tag of post.tags.slice(0, 4)" 
+                     [routerLink]="['/tag', tag.name]" 
+                     class="tag-link tag-pill"
+                     (click)="$event.stopPropagation()"
+                     [attr.aria-label]="'View posts tagged ' + tag.name">
+                    #{{ tag.name }}
+                  </a>
+                  <span *ngIf="post.tags.length > 4" class="tag-more">
+                    +{{ post.tags.length - 4 }}
+                  </span>
+                </div>
+              </mat-card-content>
             </div>
-            <div class="stat-spacer"></div>
-            <button mat-icon-button class="share-btn" (click)="$event.preventDefault(); $event.stopPropagation()">
-              <mat-icon>share</mat-icon>
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </a>
+
+            <!-- Enhanced Stats Section -->
+            <mat-card-actions class="stats">
+              <div class="stat-item">
+                <button mat-icon-button 
+                        class="stat-btn like-btn"
+                        [class.liked]="post.likedByCurrentUser"
+                        (click)="$event.preventDefault(); $event.stopPropagation(); toggleLike(post)"
+                        [attr.aria-label]="post.likedByCurrentUser ? 'Unlike post' : 'Like post'">
+                  <mat-icon>{{ post.likedByCurrentUser ? 'favorite' : 'favorite_border' }}</mat-icon>
+                </button>
+                <span class="stat-count" [class.active]="post.likedByCurrentUser">{{ post.likeCount | number }}</span>
+              </div>
+              <div class="stat-item">
+                <button mat-icon-button class="stat-btn comment-btn" disabled>
+                  <mat-icon>chat_bubble_outline</mat-icon>
+                </button>
+                <span class="stat-count">{{ post.commentCount | number }}</span>
+              </div>
+              <div class="stat-spacer"></div>
+              <button mat-icon-button 
+                      class="share-btn"
+                      (click)="$event.preventDefault(); $event.stopPropagation(); sharePost(post)"
+                      [attr.aria-label]="'Share post: ' + post.title">
+                <mat-icon>share</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </a>
+      </article>
     </div>
 
     <!-- Enhanced Loading Indicator -->
-    <div *ngIf="isLoading" class="loading-indicator">
+    <div *ngIf="isLoading" class="loading-indicator" role="status" aria-live="polite">
       <div class="loading-spinner">
         <mat-spinner diameter="40"></mat-spinner>
+        <div class="spinner-glow"></div>
       </div>
       <p class="loading-text">Discovering more amazing content...</p>
     </div>

@@ -27,7 +27,8 @@ import { CommentSectionComponent } from '../../components/comment-section/commen
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,RouterLink,
-    MatButtonModule,MatIconModule, MatProgressBarModule,MatTabsModule, CommentSectionComponent
+    MatButtonModule,MatIconModule, MatProgressBarModule,MatTabsModule, 
+    //CommentSectionComponent
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'

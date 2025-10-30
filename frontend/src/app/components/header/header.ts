@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../services/notification';
 import { Notification } from '../../models/notification';
@@ -25,7 +25,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatIconModule,
     MatBadgeModule,MatMenuModule,MatDividerModule],
   templateUrl: './header.html',
-  styleUrl: './header.scss'
+  styleUrl: './header.scss',
+  encapsulation: ViewEncapsulation.None 
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   isLoggedIn = false;

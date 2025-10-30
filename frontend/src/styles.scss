@@ -1,5 +1,3 @@
-
-
 html, body { 
   height: 100%; 
 }
@@ -7,11 +5,28 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #ffffff;
+  color: #090909;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.dark-mode body {
-  background-color: #1a1a1a;
+// Dark mode
+body.dark-mode {
+  background-color: #0d0d0d;
   color: #f5f5f5;
+}
+
+// Remove or modify main-content width restriction
+app-feed {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  
+  .main-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }
 
 .main-content {
@@ -46,4 +61,87 @@ body {
   .dark-mode & {
     border-bottom-color: rgba(255, 255, 255, 0.1);
   }
+}
+
+// Dark mode Material menu fix
+.dark-mode {
+  // Menu panels
+  .mat-mdc-menu-panel {
+    background: #1a1a1a !important;
+  }
+
+  // Menu items
+  .mat-mdc-menu-item {
+    color: #f5f5f5 !important;
+
+    .mdc-list-item__primary-text {
+      color: #f5f5f5 !important;
+    }
+
+    // Icons in menu
+    .mat-icon {
+      color: #9ca3af !important;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+  }
+
+  // Dividers
+  .mat-divider {
+    border-top-color: rgba(255, 255, 255, 0.12) !important;
+  }
+}
+
+// === GLOBAL DARK MODE MENU FIX ===
+body.dark-mode {
+  // All Material menus
+  .mat-mdc-menu-panel {
+    background: #1a1a1a !important;
+  }
+
+  // All menu items
+  .mat-mdc-menu-item {
+    color: #f5f5f5 !important;
+
+    // Primary text
+    .mdc-list-item__primary-text,
+    .mat-mdc-menu-item-text {
+      color: #f5f5f5 !important;
+    }
+
+    // Icons
+    .mat-icon,
+    mat-icon {
+      color: #9ca3af !important;
+    }
+
+    // Spans
+    span {
+      color: #f5f5f5 !important;
+    }
+
+    // Hover
+    &:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+  }
+
+  // Dividers in menus
+  .mat-mdc-menu-content .mat-divider {
+    border-top-color: rgba(255, 255, 255, 0.12) !important;
+  }
+}
+// === NUCLEAR FIX FOR DARK MODE MENUS ===
+.dark-mode .mat-mdc-menu-item,
+body.dark-mode .mat-mdc-menu-item,
+.dark-mode .mat-mdc-menu-item *,
+body.dark-mode .mat-mdc-menu-item * {
+  color: #f5f5f5 !important;
+}
+
+.dark-mode .mat-mdc-menu-item .mat-icon,
+body.dark-mode .mat-mdc-menu-item .mat-icon {
+  color: #9ca3af !important;
 }

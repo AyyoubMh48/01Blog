@@ -57,7 +57,7 @@
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="postForm.invalid || !editorContent?.trim() || isSubmitting"
+            [disabled]="postForm.invalid || !editorContent.trim() || isSubmitting"
             class="publish-button">
             <span *ngIf="isSubmitting">Saving...</span>
             <span *ngIf="!isSubmitting">{{ isEditMode ? "Save Changes" : "Publish" }}</span>

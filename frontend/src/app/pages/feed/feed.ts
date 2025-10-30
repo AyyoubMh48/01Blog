@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { TagService } from '../../services/tag';
 import { Tag } from '../../models/post';
@@ -31,7 +32,8 @@ type FeedFilter = 'following' | 'myPosts' | 'all';
     MatFormFieldModule,
     MatInputModule,
     InfiniteScrollModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
@@ -57,7 +59,8 @@ export class Feed implements OnInit {
     private authService: AuthService,
     private likeService: LikeService,
     private router: Router,
-    private tagService: TagService
+    private tagService: TagService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -172,6 +175,22 @@ export class Feed implements OnInit {
     post.commentCount++;
   }
 
+  async sharePost(post: Post): Promise<void> {
+    const postUrl = `${window.location.origin}/post/${post.id}`;
+    
+    try {
+      await navigator.clipboard.writeText(postUrl);
+      this.snackBar.open('Link copied! ✓', 'Close', {
+        duration: 2000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+    } catch (error) {
+      this.snackBar.open('Failed to copy', 'Close', {
+        duration: 2000,
+      });
+    }
+  }
  
 
 }
