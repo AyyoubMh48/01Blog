@@ -1,69 +1,128 @@
-<div class="form-container">
-  <mat-card class="post-editor-card">
-    <mat-card-content *ngIf="!isEditMode || (isEditMode && post)">
-      <form #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
-        <input
-          type="file"
-          id="editor-media-input"
-          (change)="handleEditorMediaUpload($event)"
-          accept="image/*,video/*"
-          hidden
-        />
-        
-        <mat-form-field appearance="outline" class="title-field">
-          <mat-label>New post title here...</mat-label>
-          <input 
-            matInput 
-            name="title" 
-            [ngModel]="post?.title" 
-            required 
-            maxlength="150" 
-            #titleInput="ngModel">
-           <mat-error *ngIf="titleInput.touched && titleInput.errors?.['required']">Title is required.</mat-error>
-           <mat-error *ngIf="titleInput.touched && titleInput.errors?.['maxlength']">Title cannot exceed 150 characters.</mat-error>
-        </mat-form-field>
-        
-        <mat-form-field appearance="outline" class="tags-field">
-          <mat-label>Add up to 4 tags (comma-separated)</mat-label>
-          <input 
-            matInput 
-            name="tags" 
-            [(ngModel)]="tagsString"
-            #tagsInput="ngModel">
-        </mat-form-field>
+<div class="editor-wrapper">
+  <!-- Editor Header -->
+  <div class="editor-header">
+    <div class="editor-header-content">
+      <h1 class="editor-title">
+        <mat-icon>edit_note</mat-icon>
+        {{ isEditMode ? 'Edit Post' : 'Create Post' }}
+      </h1>
+      <div class="editor-status">
+        <span class="char-count">{{ editorContent?.length || 0 }} / 10,000</span>
+      </div>
+    </div>
+  </div>
 
-        <div class="quill-editor-container">
-          <quill-editor
-            #editor
-            [(ngModel)]="editorContent"
-            name="editorContent"
-            [modules]="quillModules"
-            (onEditorCreated)="editorCreated($event)"
-            placeholder="Write your post content here..."
-            [required]="true"
-            [maxLength]="10000"
-            #editorInput="ngModel">
-          </quill-editor>
-          <mat-error *ngIf="postForm.submitted && !editorContent?.trim()">Content cannot be empty.</mat-error>
-          <mat-error *ngIf="editorInput.touched && editorInput.errors?.['maxlength']">Content cannot exceed 10000 characters.</mat-error>
-        </div>
-        
-        <div *ngIf="errorMessage" class="error-message">
-           {{ errorMessage }}
-         </div>
+  <!-- Main Editor -->
+  <div class="form-container">
+    <mat-card class="post-editor-card">
+      <mat-card-content *ngIf="!isEditMode || (isEditMode && post)">
+        <form #postForm="ngForm" (ngSubmit)="onSubmit(postForm)" class="editor-form">
+          <!-- Hidden Media Input -->
+          <input
+            type="file"
+            id="editor-media-input"
+            (change)="handleEditorMediaUpload($event)"
+            accept="image/*,video/*"
+            hidden
+          />
 
-        <div class="form-actions">
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="postForm.invalid || !editorContent.trim() || isSubmitting"
-            class="publish-button">
-            <span *ngIf="isSubmitting">Saving...</span>
-            <span *ngIf="!isSubmitting">{{ isEditMode ? "Save Changes" : "Publish" }}</span>
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+          <!-- Title Input -->
+          <div class="form-group title-group">
+            <textarea
+              class="title-input"
+              name="title"
+              [ngModel]="post?.title"
+              required
+              maxlength="150"
+              #titleInput="ngModel"
+              placeholder="Write an awesome title..."
+              rows="1"
+              aria-label="Post title"
+              aria-required="true">
+            </textarea>
+            <div class="error-hint" *ngIf="titleInput.touched && titleInput.errors?.['required']">
+              <mat-icon>info</mat-icon>
+              <span>Title is required</span>
+            </div>
+          </div>
+
+
+          <!-- Tags Input -->
+          <div class="form-group tags-group">
+            <div class="tags-input-wrapper">
+              <mat-icon class="tags-icon">local_offer</mat-icon>
+              <input
+                class="tags-input"
+                name="tags"
+                [(ngModel)]="tagsString"
+                #tagsInput="ngModel"
+                placeholder="Add up to 4 tags (comma-separated)"
+                maxlength="100"
+                aria-label="Post tags">
+            </div>
+            <div class="tags-preview" *ngIf="tagsString">
+              <span class="tag-badge" *ngFor="let tag of tagsString.split(',').slice(0, 4)">
+                #{{ tag.trim() }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="form-divider"></div>
+
+          <!-- Quill Editor -->
+          <div class="editor-section">
+            <quill-editor
+              #editor
+              [(ngModel)]="editorContent"
+              name="editorContent"
+              [modules]="quillModules"
+              (onEditorCreated)="editorCreated($event)"
+              placeholder="Tell your story..."
+              [required]="true"
+              [maxLength]="10000"
+              #editorInput="ngModel"
+              class="quill-editor"
+              aria-label="Post content">
+            </quill-editor>
+          </div>
+
+
+          <!-- Validation Errors -->
+          <div *ngIf="postForm.submitted && (!editorContent || !editorContent.trim())" class="error-box">
+            <mat-icon>error_outline</mat-icon>
+            <span>Content cannot be empty</span>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-box error-alert">
+            <mat-icon>warning</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="postForm.invalid || !editorContent || !editorContent.trim() || isSubmitting"
+              class="btn-publish">
+              <mat-icon *ngIf="!isSubmitting">{{ isEditMode ? 'save' : 'publish' }}</mat-icon>
+              <span *ngIf="isSubmitting" class="spinner-text">Publishing...</span>
+              <span *ngIf="!isSubmitting">{{ isEditMode ? 'Save Changes' : 'Publish Post' }}</span>
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              routerLink="/feed"
+              [disabled]="isSubmitting"
+              class="btn-cancel">
+              <mat-icon>close</mat-icon>
+              <span>Cancel</span>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

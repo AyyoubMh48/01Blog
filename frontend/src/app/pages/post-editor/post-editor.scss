@@ -1,180 +1,905 @@
-// --- Main Layout ---
-.form-container {
-  // Use a wider max-width for the editor page, overriding the global .main-content
-  max-width: 1024px; // You can increase this if you want it wider
-  margin: 20px auto;
-  padding: 0 16px;
+// === DESIGN TOKENS ===
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
+  --error: #ef4444;
+  --success: #10b981;
+
+  --bg-white: #ffffff;
+  --bg-light: #f9fafb;
+  --bg-lighter: #f3f4f6;
+  --border-light: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
+
+body.dark-mode {
+  --bg-white: #1a1a1a;
+  --bg-light: #0f0f0f;
+  --bg-lighter: #0a0a0a;
+  --border-light: #2d2d2d;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+}
+
+// ===========================
+// WRAPPER
+// ===========================
+
+.editor-wrapper {
+  min-height: 100vh;
+  background: var(--bg-light);
+}
+
+// === HEADER ===
+.editor-header {
+  background: var(--bg-white);
+  border-bottom: 2px solid var(--border-light);
+  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.editor-header-content {
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editor-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.8px;
+
+  mat-icon {
+    font-size: 32px;
+    color: var(--primary);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+    gap: 8px;
+
+    mat-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+.char-count {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  background: var(--bg-lighter);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+// ===========================
+// FORM CONTAINER - FULL WIDTH
+// ===========================
+
+.form-container {
+  width: 100%;
+  padding: 40px;
+  margin: 0;
+
+  @media (max-width: 1024px) {
+    padding: 32px 24px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
+}
+
+// ===========================
+// EDITOR CARD - FULL WIDTH
+// ===========================
 
 .post-editor-card {
-  width: 100%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-  border: 1px solid var(--mat-divider-color) !important;
-  border-radius: 16px !important;
-  padding: 12px;
-
-  @media (min-width: 768px) {
-    padding: 24px;
-  }
-}
-
-// --- Form Fields (dev.to style) ---
-.title-field, .tags-field {
-  width: 100%;
-  
-  ::ng-deep {
-    .mat-mdc-text-field-wrapper {
-      background-color: transparent !important;
-    }
-    .mdc-notched-outline {
-      border: none !important;
-    }
-    .mat-mdc-form-field-focus-overlay {
-      background-color: transparent;
-    }
-  }
-}
-
-.title-field ::ng-deep .mat-mdc-form-field-infix {
-  input {
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1.2;
-    color: var(--mat-app-text-color);
-  }
-  .mat-mdc-floating-label {
-    font-weight: 800 !important;
-    font-size: 2rem !important;
-    color: #a3a3a3 !important;
-  }
-}
-
-.tags-field {
-  margin-top: -16px;
-  margin-bottom: 16px;
-  ::ng-deep .mat-mdc-form-field-infix {
-    input {
-      font-size: 1rem;
-      font-weight: 400;
-      color: var(--mat-app-text-color);
-    }
-    .mat-mdc-floating-label {
-      font-size: 1rem !important;
-      color: #a3a3a3 !important;
-    }
-  }
-}
-
-// --- Quill Editor (dev.to style) ---
-.quill-editor-container {
-  border-radius: 8px;
+  background: var(--bg-white) !important;
+  border: 2px solid var(--border-light) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-md) !important;
+  padding: 0 !important;
   overflow: hidden;
-  
+  transition: all 0.3s ease !important;
+  width: 100% !important;
+  max-width: 100% !important;
+
+  &:hover {
+    box-shadow: var(--shadow-lg) !important;
+    border-color: var(--primary) !important;
+  }
+
+  mat-card-content {
+    padding: 0 !important;
+  }
+}
+
+// ===========================
+// FORM
+// ===========================
+
+.editor-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-group {
+  padding: 0;
+  border-bottom: 1px solid var(--border-light);
+  width: 100%;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+// === TITLE GROUP ===
+.title-group {
+  padding: 60px 80px 24px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.02) 100%);
+  width: 90%;
+
+  @media (max-width: 1024px) {
+    padding: 50px 60px 20px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 40px 32px 16px;
+  }
+}
+
+.title-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--text-primary);
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  padding: 0;
+  margin: 0;
+  letter-spacing: -1.5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  overflow: hidden;
+  min-height: auto;
+  max-height: 200px;
+  overflow-y: auto;
+
+  &::placeholder {
+    color: #d1d5db;
+  }
+
+  @media (max-width: 1024px) {
+    font-size: 2.8rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    max-height: 150px;
+  }
+}
+
+body.dark-mode .title-input::placeholder {
+  color: #525252;
+}
+
+.error-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--error);
+  font-weight: 600;
+
+  mat-icon {
+    font-size: 16px;
+  }
+}
+
+
+// === TAGS GROUP ===
+.tags-group {
+  padding: 24px 80px;
+  background: rgba(59, 130, 246, 0.02);
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    padding: 20px 60px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px 32px;
+  }
+}
+
+.tags-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tags-icon {
+  color: var(--primary);
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.tags-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  background: transparent;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+  font-weight: 500;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+.tags-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--primary);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  }
+}
+
+body.dark-mode .tag-badge {
+  background: var(--primary-light);
+  color: #111827;
+}
+
+// ===========================
+// DIVIDER
+// ===========================
+
+.form-divider {
+  height: 1px;
+  background: var(--border-light);
+}
+
+// ===========================
+// EDITOR SECTION - FIXED HEIGHT WITH INTERNAL SCROLL
+// ===========================
+
+.editor-section {
+  height: 600px !important;
+  min-height: 600px !important;
+  max-height: 600px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--bg-white);
+  width: 100%;
+  overflow: hidden !important;
+
   ::ng-deep {
+    // === TOOLBAR - FIXED AT TOP ===
     .ql-toolbar.ql-snow {
-      border: 1px solid var(--mat-divider-color);
-      border-radius: 8px 8px 0 0;
-      background: #fafafa;
-      padding: 12px 16px;
+      border: none !important;
+      border-bottom: 2px solid var(--border-light) !important;
+      background: var(--bg-lighter) !important;
+      padding: 16px 80px !important;
+      flex-shrink: 0 !important;
+      display: flex !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 10 !important;
+
+      @media (max-width: 1024px) {
+        padding: 12px 60px !important;
+      }
+
+      @media (max-width: 768px) {
+        padding: 10px 32px !important;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
 
       .ql-formats {
-        margin-right: 12px;
+        display: flex !important;
+        align-items: center !important;
+        margin-right: 20px !important;
+        gap: 8px !important;
+
         button {
-          width: 32px; height: 32px; padding: 4px;
-          transition: background-color 0.2s ease;
-          &:hover { background-color: #e5e7eb; border-radius: 6px; }
+          width: 36px !important;
+          height: 36px !important;
+          border: 1px solid transparent !important;
+          border-radius: 6px !important;
+          background: transparent !important;
+          cursor: pointer !important;
+          transition: all 0.2s ease !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          svg {
+            width: 18px !important;
+            height: 18px !important;
+            stroke: var(--text-secondary) !important;
+            fill: var(--text-secondary) !important;
+          }
+
+          &:hover {
+            background: rgba(59, 130, 246, 0.1) !important;
+            border-color: var(--primary) !important;
+
+            svg {
+              stroke: var(--primary) !important;
+              fill: var(--primary) !important;
+            }
+          }
+
           &.ql-active {
-            background-color: #3b49df; border-radius: 6px;
-            .ql-stroke, .ql-fill { stroke: white; fill: white; }
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+
+            svg {
+              stroke: white !important;
+              fill: white !important;
+            }
           }
         }
       }
     }
-    
+
+    // === CONTAINER - MUST BE CONTAINED ===
     .ql-container.ql-snow {
-      border: 1px solid var(--mat-divider-color);
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      
-      .ql-editor {
-        min-height: 500px;
-        padding: 32px;
-        font-size: 1.125rem;
-        line-height: 1.75;
-        color: #171717;
-        
-        // --- FIX FOR TEXT WRAPPING ---
-        white-space: pre-wrap;
-        overflow-wrap: break-word;
-        word-break: break-word;
-        // --- END FIX ---
-        
-        &.ql-blank::before {
-          color: #a3a3a3;
-          font-style: normal;
-        }
-        
-        // All content styles
-        p, h1, h2, h3, ul, ol, blockquote, pre, code, a, img, video, .ql-video {
-          overflow-wrap: break-word;
-          word-break: break-word;
-        }
-        
-        img, video, .ql-video {
-          max-width: 100% !important;
-          height: auto !important;
-          display: block !important;
-          margin: 2rem auto !important;
-          border-radius: 8px !important;
-        }
-        
-        // ... (other styles like blockquote, pre, etc. from your previous file)
+      border: none !important;
+      flex: 1 1 auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      min-height: 0 !important;
+      max-height: 100% !important;
+      position: relative !important;
+    }
+
+    // === EDITOR MAIN - SCROLLABLE AREA ONLY HERE ===
+    .ql-editor {
+      flex: 1 1 auto !important;
+      padding: 40px 80px 60px 80px !important;
+      font-size: 1.125rem !important;
+      line-height: 1.8 !important;
+      color: var(--text-primary) !important;
+      background: transparent !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      white-space: pre-wrap !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+      word-break: break-word !important;
+      min-height: 0 !important;
+      max-height: 100% !important;
+      position: relative !important;
+
+      @media (max-width: 1024px) {
+        padding: 32px 60px !important;
+        font-size: 1.0625rem !important;
       }
+
+      @media (max-width: 768px) {
+        padding: 24px 32px !important;
+        font-size: 1rem !important;
+      }
+
+      &.ql-blank::before {
+        color: #b3b3b3 !important;
+        font-style: normal !important;
+        font-size: 1.125rem !important;
+        left: 80px !important;
+        right: 80px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+
+        @media (max-width: 1024px) {
+          left: 60px !important;
+          right: 60px !important;
+        }
+
+        @media (max-width: 768px) {
+          left: 32px !important;
+          right: 32px !important;
+        }
+      }
+
+      // === TYPOGRAPHY ===
+      h1 {
+        font-size: 2.5rem !important;
+        font-weight: 800 !important;
+        margin: 1.6em 0 0.6em !important;
+        color: var(--text-primary) !important;
+        line-height: 1.1 !important;
+
+        @media (max-width: 768px) {
+          font-size: 2rem !important;
+        }
+      }
+
+      h2 {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        margin: 1.4em 0 0.5em !important;
+        color: var(--text-primary) !important;
+        line-height: 1.2 !important;
+
+        @media (max-width: 768px) {
+          font-size: 1.5rem !important;
+        }
+      }
+
+      h3 {
+        font-size: 1.6rem !important;
+        font-weight: 700 !important;
+        margin: 1.2em 0 0.4em !important;
+        color: var(--text-primary) !important;
+
+        @media (max-width: 768px) {
+          font-size: 1.25rem !important;
+        }
+      }
+
+      h4 {
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
+        margin: 1em 0 0.3em !important;
+      }
+
+      h5, h6 {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        margin: 0.8em 0 0.3em !important;
+      }
+
+      p {
+        margin-bottom: 1.4em !important;
+        color: var(--text-primary) !important;
+      }
+
+      // === LISTS ===
+      ul {
+        list-style: disc !important;
+        padding-left: 2.5em !important;
+        margin: 1.3em 0 !important;
+
+        li {
+          margin-bottom: 0.7em !important;
+          color: var(--text-primary) !important;
+        }
+      }
+
+      ol {
+        list-style: decimal !important;
+        padding-left: 2.5em !important;
+        margin: 1.3em 0 !important;
+
+        li {
+          margin-bottom: 0.7em !important;
+          color: var(--text-primary) !important;
+        }
+      }
+
+      // === CODE ===
+      pre {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        border-radius: 8px !important;
+        padding: 24px !important;
+        margin: 1.6em 0 !important;
+        overflow-x: auto !important;
+        border-left: 4px solid var(--primary) !important;
+        line-height: 1.6 !important;
+        font-size: 0.95rem !important;
+      }
+
+      code {
+        background: var(--bg-lighter) !important;
+        color: var(--primary) !important;
+        padding: 4px 8px !important;
+        border-radius: 4px !important;
+        font-family: 'Monaco', 'Courier New', monospace !important;
+        font-size: 0.9em !important;
+        font-weight: 600 !important;
+      }
+
+      pre code {
+        background: transparent !important;
+        color: #e2e8f0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+      }
+
+      // === BLOCKQUOTE ===
+      blockquote {
+        border-left: 4px solid var(--primary) !important;
+        padding: 16px 24px !important;
+        margin: 1.6em 0 !important;
+        color: var(--text-secondary) !important;
+        font-style: italic !important;
+        background: rgba(59, 130, 246, 0.05) !important;
+        border-radius: 4px !important;
+      }
+
+      // === LINKS ===
+      a {
+        color: var(--primary) !important;
+        text-decoration: underline !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+
+        &:hover {
+          opacity: 0.8 !important;
+          text-decoration: none !important;
+        }
+      }
+
+      // === MEDIA - CONSTRAINED SIZE ===
+      img, video {
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: 500px !important;
+        margin: 2em auto !important;
+        border-radius: 8px !important;
+        display: block !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+        object-fit: contain !important;
+      }
+
+      // === HR ===
+      hr {
+        border: none !important;
+        border-top: 2px solid var(--border-light) !important;
+        margin: 2.5em 0 !important;
+      }
+
+      // === STRONG/BOLD ===
+      strong {
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+      }
+
+      // === EMPHASIS ===
+      em {
+        font-style: italic !important;
+        color: var(--text-primary) !important;
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    height: 500px !important;
+    min-height: 500px !important;
+    max-height: 500px !important;
+  }
+
+  @media (max-width: 768px) {
+    height: 450px !important;
+    min-height: 450px !important;
+    max-height: 450px !important;
+  }
+}
+
+// === DARK MODE EDITOR ===
+body.dark-mode .editor-section ::ng-deep {
+  .ql-toolbar.ql-snow {
+    background: var(--bg-lighter) !important;
+    border-bottom-color: var(--border-light) !important;
+
+    .ql-formats button svg {
+      stroke: var(--text-muted) !important;
+      fill: var(--text-muted) !important;
+    }
+
+    .ql-formats button:hover {
+      background: rgba(96, 165, 250, 0.1) !important;
+
+      svg {
+        stroke: var(--primary-light) !important;
+        fill: var(--primary-light) !important;
+      }
+    }
+
+    .ql-formats button.ql-active {
+      background: var(--primary-light) !important;
+
+      svg {
+        stroke: #111827 !important;
+        fill: #111827 !important;
+      }
+    }
+  }
+
+  .ql-editor {
+    color: var(--text-primary) !important;
+
+    h1, h2, h3, h4, h5, h6, p, li {
+      color: var(--text-primary) !important;
+    }
+
+    blockquote {
+      color: var(--text-muted) !important;
+      background: rgba(96, 165, 250, 0.05) !important;
+      border-left-color: var(--primary-light) !important;
+    }
+
+    a {
+      color: var(--primary-light) !important;
+    }
+
+    pre {
+      background: #1e293b !important;
+    }
+
+    code {
+      color: var(--primary-light) !important;
+      background: rgba(96, 165, 250, 0.15) !important;
     }
   }
 }
 
-// --- Dark Mode ---
-.dark-mode {
-  .post-editor-card { background: #1a1a1a; border-color: #2d2d2d; }
-  .title-field, .tags-field {
-    ::ng-deep .mat-mdc-form-field-infix {
-      input, .mat-mdc-floating-label { color: #f5f5f5 !important; }
+// ===========================
+// SCROLLBAR STYLING - ALWAYS VISIBLE
+// ===========================
+
+.editor-section ::ng-deep .ql-editor {
+  // For Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-lighter);
+    border-left: 1px solid var(--border-light);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 0;
+    border: 3px solid var(--bg-lighter);
+
+    &:hover {
+      background: var(--primary-dark);
+    }
+
+    &:active {
+      background: var(--primary-dark);
     }
   }
-  ::ng-deep {
-    .quill-editor-container {
-      .ql-toolbar.ql-snow {
-        background: #0f0f0f; border-color: #2d2d2d;
-        .ql-stroke, .ql-fill, .ql-picker-label { color: #d4d4d4; }
-        button:hover { background-color: #2d2d2d; }
-        button.ql-active { background-color: #3b49df; .ql-stroke, .ql-fill { stroke: white; fill: white; } }
-      }
-      .ql-container.ql-snow .ql-editor {
-        color: #e5e5e5;
-        &.ql-blank::before { color: #737373; }
-        // ... (other dark mode content styles) ...
-      }
+
+  // For Firefox
+  scrollbar-width: auto;
+  scrollbar-color: var(--primary) var(--bg-lighter);
+}
+
+.title-input {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--text-muted);
     }
   }
 }
 
-// --- Form Actions ---
+
+// ===========================
+// ERROR BOXES
+// ===========================
+
+.error-box {
+  padding: 16px 80px;
+  margin: 0;
+  background: #fef2f2;
+  color: var(--error);
+  border-left: 4px solid var(--error);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+
+  mat-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 1024px) {
+    padding: 16px 60px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 12px 32px;
+    font-size: 0.875rem;
+  }
+}
+
+body.dark-mode .error-box {
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+}
+
+// ===========================
+// FORM ACTIONS - ALWAYS AT BOTTOM
+// ===========================
+
 .form-actions {
   display: flex;
-  justify-content: flex-start;
-  gap: 12px;
-  margin-top: 24px;
-  
-  .publish-button {
-    font-weight: 600;
-    text-transform: none;
-    font-size: 1rem;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+  gap: 16px;
+  padding: 32px 80px;
+  background: var(--bg-lighter);
+  border-top: 2px solid var(--border-light);
+  border-radius: 0 0 12px 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    padding: 28px 60px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px 32px;
   }
 }
 
-// --- Error Messages ---
-.error-message { color: var(--mat-warn-main-color); margin-top: 16px; font-weight: 500; }
-mat-error { font-weight: 500; }
+.btn-publish {
+  font-weight: 800 !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  padding: 14px 40px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+
+  mat-icon {
+    font-size: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5) !important;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-cancel {
+  font-weight: 700 !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  padding: 12px 32px !important;
+  border-radius: 8px !important;
+  border: 2px solid var(--border-light) !important;
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  transition: all 0.2s ease !important;
+
+  mat-icon {
+    font-size: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--text-secondary) !important;
+    background: var(--bg-light) !important;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+// ===========================
+// SPINNER ANIMATION
+// ===========================
+
+.spinner-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ===========================
+// RESPONSIVE FIXES
+// ===========================
+
+@media (max-width: 1024px) {
+  .form-container {
+    padding: 32px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 20px 16px;
+  }
+
+  .editor-title {
+    font-size: 1.25rem;
+  }
+
+  .char-count {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}

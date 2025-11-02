@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy,ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router,RouterLink } from '@angular/router';
 import { PostService } from '../../services/post';
 import { AuthService } from '../../services/auth';
 import { Post } from '../../models/post';
@@ -89,6 +89,7 @@ interface PendingMedia {
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
