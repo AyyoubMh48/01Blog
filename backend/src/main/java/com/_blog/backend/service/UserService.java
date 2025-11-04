@@ -5,6 +5,7 @@ import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.ProfileUpdateRequestDto;
 import com._blog.backend.dto.UserProfileDto;
 import com._blog.backend.entity.Post;
+import com._blog.backend.entity.PostStatus;
 import com._blog.backend.entity.User;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.SubscriptionRepository;
@@ -42,8 +43,6 @@ public class UserService {
     
     @Transactional(readOnly = true) 
     public UserProfileDto getUserProfile(String username, String currentUsername) {
-       //  System.out.println("--- [DEBUG] Fetching profile for: " + username);
-    //System.out.println("--- [DEBUG] Current logged-in user (email): " + currentUsername);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
@@ -52,8 +51,6 @@ public class UserService {
 
         boolean isFollowing = false;
         if (currentUser != null) {
-          //   System.out.println("--- [DEBUG] Profile User ID: " + user.getId());
-          //  System.out.println("--- [DEBUG] Current User (Follower) ID: " + currentUser.getId());
         isFollowing = subscriptionRepository.existsByFollower_IdAndFollowing_Id(currentUser.getId(), user.getId());
                   //  System.out.println("--- [DEBUG] Database check: Is Following? " + isFollowing);
         }
@@ -61,6 +58,7 @@ public class UserService {
         List<Post> userPosts = postRepository.findAllByAuthor(user);
         
         List<PostResponseDto> postDtos = userPosts.stream()
+                .filter(post -> post.getStatus() == PostStatus.PUBLISHED) 
                 .map(post -> postService.mapToDto(post, currentUser))
                 .collect(Collectors.toList());
 

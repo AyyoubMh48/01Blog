@@ -3,6 +3,7 @@ package com._blog.backend.service;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.TagDto;
 import com._blog.backend.entity.Post;
+import com._blog.backend.entity.PostStatus;
 import com._blog.backend.entity.User;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.TagRepository;
@@ -32,7 +33,7 @@ public class TagService {
     @Transactional(readOnly = true)
     public Page<PostResponseDto> getPostsByTag(String tagName, String currentUserEmail, Pageable pageable) {
         User currentUser = (currentUserEmail != null) ? userRepository.findByEmail(currentUserEmail).orElse(null) : null;
-        Page<Post> postPage = postRepository.findByTags_NameIgnoreCaseOrderByCreatedAtDesc(tagName, pageable);
+    Page<Post> postPage = postRepository.findByTags_NameIgnoreCaseAndStatusOrderByCreatedAtDesc(tagName, PostStatus.PUBLISHED, pageable);
         return postPage.map(post -> postService.mapToDto(post, currentUser));
     }
 

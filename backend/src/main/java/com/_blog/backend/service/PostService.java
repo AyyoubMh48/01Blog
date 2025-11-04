@@ -3,6 +3,7 @@ package com._blog.backend.service;
 import com._blog.backend.dto.AuthorDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.entity.Post;
+import com._blog.backend.entity.PostStatus; 
 import com._blog.backend.entity.User;
 import com._blog.backend.dto.TagDto;
 import com._blog.backend.dto.TrendingPostDto;
@@ -102,7 +103,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<PostResponseDto> getAllPosts(String currentUserEmail, Pageable pageable) {
         User currentUser = (currentUserEmail != null) ? userRepository.findByEmail(currentUserEmail).orElse(null) : null;
-        Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        Page<Post> postPage = postRepository.findAllByStatusOrderByCreatedAtDesc(PostStatus.PUBLISHED, pageable);
         return postPage.map(post -> mapToDto(post, currentUser));
     }
 
@@ -110,7 +111,15 @@ public class PostService {
     public PostResponseDto getPostById(Long postId, String userEmail) {
         User currentUser = (userEmail != null) ? userRepository.findByEmail(userEmail).orElse(null) : null;
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found with ID: " + postId));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+
+        // Security Check: Only show non-published posts to admins or the author
+        if (post.getStatus() != PostStatus.PUBLISHED) {
+            if (currentUser == null || (!currentUser.getRole().equals("ROLE_ADMIN") && !post.getAuthor().getId().equals(currentUser.getId()))) {
+                throw new ResourceNotFoundException("Post not found"); // Hide it
+            }
+        }
+        
         return mapToDto(post, currentUser);
     }
 
@@ -124,7 +133,7 @@ public class PostService {
                 .map(Subscription::getFollowing)
                 .collect(Collectors.toList());
 
-        Page<Post> postPage = postRepository.findByAuthorInOrderByCreatedAtDesc(authorsToFetch, pageable);
+        Page<Post> postPage = postRepository.findByAuthorInAndStatusOrderByCreatedAtDesc(authorsToFetch, PostStatus.PUBLISHED, pageable);
         return postPage.map(post -> mapToDto(post, currentUser));
     }
 
@@ -247,6 +256,7 @@ public class PostService {
         dto.setContent(post.getContent());
         dto.setMediaUrl(post.getMediaUrl());
         dto.setCreatedAt(post.getCreatedAt());
+        dto.setStatus(post.getStatus());
 
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(post.getAuthor().getId());
@@ -268,6 +278,7 @@ public class PostService {
             return tagDto;
         }).collect(Collectors.toSet());
         dto.setTags(tagDtos);
+
 
         return dto;
     }

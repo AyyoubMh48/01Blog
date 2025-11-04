@@ -33,9 +33,15 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false) // create user_id and store if of the user who create the post
     private User author;
 
+    @Enumerated(EnumType.STRING) // This stores the enum as a string ("PUBLISHED") in the DB
+    @Column(nullable = false)
+    private PostStatus status;
+
+
     @PrePersist // auto set createdAt  = now() when insert new post
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        this.status = PostStatus.PUBLISHED;
     }
 
     @ManyToMany(fetch = FetchType.EAGER)

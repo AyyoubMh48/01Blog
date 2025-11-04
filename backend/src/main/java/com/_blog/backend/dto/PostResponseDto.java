@@ -4,6 +4,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com._blog.backend.entity.PostStatus;
+
 @Data
 public class PostResponseDto {
     private Long id;
@@ -16,4 +18,5 @@ public class PostResponseDto {
     private boolean likedByCurrentUser;
     private long commentCount;
     private Set<TagDto> tags;
+    private PostStatus status;
 }

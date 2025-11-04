@@ -6,9 +6,11 @@ import com._blog.backend.dto.AuthorDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.ReportResponseDto;
 import com._blog.backend.entity.Post;
+import com._blog.backend.entity.PostStatus;
 import com._blog.backend.entity.Report;
 import com._blog.backend.entity.ReportStatus;
 import com._blog.backend.entity.User;
+import com._blog.backend.exception.ResourceNotFoundException;
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
 import com._blog.backend.repository.MediaRepository;
@@ -102,6 +104,23 @@ public class AdminService {
 
         // Finally, delete the post itself
         postRepository.delete(post);
+    }
+
+    @Transactional
+    public void hidePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+        post.setStatus(PostStatus.HIDDEN_BY_ADMIN);
+        postRepository.save(post);
+    }
+
+    // to re-publish a post
+    @Transactional
+    public void publishPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+        post.setStatus(PostStatus.PUBLISHED);
+        postRepository.save(post);
     }
 
     @Transactional
