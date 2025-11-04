@@ -65,4 +65,6 @@ export class PostService {
     return this.http.get<Post[]>(`${this.apiUrl}/trending?limit=${limit}`);
   }
 
+
+
 }

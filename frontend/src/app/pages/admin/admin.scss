@@ -23,4 +23,13 @@
   table {
     width: 100%;
   }
+  .status-published {
+  color: green;
+  font-weight: bold;
+}
+
+.status-hidden {
+  color: orange;
+  font-style: italic;
+}
 }

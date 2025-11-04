@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../services/admin';
 import { RouterLink } from '@angular/router';
+import { Post, PostStatus } from '../../models/post';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -23,8 +24,10 @@ import { MatButtonModule } from '@angular/material/button';
 export class Admin implements OnInit {
   reports: any[] = [];
   users: any[] = [];
-  posts: any[] = [];
+  posts: Post[] = [];
   analytics: any = {};
+
+  PostStatus = PostStatus;
 
   reportColumns: string[] = [
     'id',
@@ -35,7 +38,7 @@ export class Admin implements OnInit {
     'actions',
   ];
   userColumns: string[] = ['id', 'username', 'email', 'role', 'status'];
-  postColumns: string[] = ['id', 'content', 'author', 'createdAt', 'actions'];
+  postColumns: string[] = ['id', 'content', 'author','status', 'createdAt', 'actions'];
 
   constructor(private adminService: AdminService) {}
 
@@ -90,12 +93,31 @@ export class Admin implements OnInit {
   }
 
   deleteUser(userId: number): void {
-  if (confirm('WARNING: This will permanently delete the user and all their posts, comments, likes, etc. Are you absolutely sure?')) {
-    this.adminService.deleteUser(userId).subscribe(() => {
-      // Remove the user from the local array
-      this.users = this.users.filter(u => u.id !== userId);
-      alert('User deleted successfully.');
+    if (confirm('WARNING: This will permanently delete the user and all their posts, comments, likes, etc. Are you absolutely sure?')) {
+      this.adminService.deleteUser(userId).subscribe(() => {
+        // Remove the user from the local array
+        this.users = this.users.filter(u => u.id !== userId);
+        alert('User deleted successfully.');
+      });
+    }
+  }
+
+  onHide(postToUpdate: Post): void {
+    this.adminService.hidePost(postToUpdate.id).subscribe({
+      next: () => {
+        postToUpdate.status = PostStatus.HIDDEN_BY_ADMIN;
+      },
+      error: (err) => console.error('Failed to hide post', err)
     });
   }
-}
+
+ 
+  onPublish(postToUpdate: Post): void {
+    this.adminService.publishPost(postToUpdate.id).subscribe({
+      next: () => {
+        postToUpdate.status = PostStatus.PUBLISHED;
+      },
+      error: (err) => console.error('Failed to publish post', err)
+    });
+  }
 }

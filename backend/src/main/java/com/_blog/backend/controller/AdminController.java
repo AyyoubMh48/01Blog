@@ -80,14 +80,14 @@ public class AdminController {
         return ResponseEntity.ok(Map.of("message", "User and all associated data deleted successfully."));
     }
 
-    @PostMapping("/posts/{postId}/hide")
+    @PutMapping("/posts/{postId}/hide")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> hidePost(@PathVariable Long postId) {
         adminService.hidePost(postId);
         return ResponseEntity.ok(Map.of("message", "Post has been hidden."));
     }
 
-    @PostMapping("/posts/{postId}/publish")
+    @PutMapping("/posts/{postId}/publish")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> publishPost(@PathVariable Long postId) {
         adminService.publishPost(postId);
