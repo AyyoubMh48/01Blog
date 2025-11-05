@@ -1,43 +1,124 @@
-<div class="form-container">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>Welcome back!</mat-card-title>
-      <mat-card-subtitle>Login to your 01Blog account</mat-card-subtitle>
-    </mat-card-header>
-
-    <mat-card-content>
-      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" name="email" ngModel required email #emailInput="ngModel">
-          <mat-icon matPrefix>email</mat-icon>
-          <mat-error *ngIf="emailInput.touched && emailInput.errors?.['required']">Email is required.</mat-error>
-          <mat-error *ngIf="emailInput.touched && emailInput.errors?.['email']">Please enter a valid email.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" name="password" ngModel required #passwordInput="ngModel">
-          <mat-icon matPrefix>lock</mat-icon>
-           <mat-error *ngIf="passwordInput.touched && passwordInput.errors?.['required']">Password is required.</mat-error>
-        </mat-form-field>
-
-        <div *ngIf="errorMessage" class="error-message">
-          <mat-icon>error_outline</mat-icon>
-          <span>{{ errorMessage }}</span>
+<div class="login-wrapper">
+  <!-- Left Side - Branding (Desktop Only) -->
+  <div class="login-branding">
+    <div class="branding-content">
+      <div class="branding-logo">
+        <mat-icon>article</mat-icon>
+      </div>
+      <h1 class="branding-title">01Blog</h1>
+      <p class="branding-subtitle">Share your stories, connect with readers</p>
+      
+      <div class="branding-features">
+        <div class="feature">
+          <mat-icon>edit</mat-icon>
+          <span>Write & Share</span>
         </div>
+        <div class="feature">
+          <mat-icon>favorite</mat-icon>
+          <span>Engage & Connect</span>
+        </div>
+        <div class="feature">
+          <mat-icon>trending_up</mat-icon>
+          <span>Grow Your Audience</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" class="login-button">
-          Log in
-        </button>
+  <!-- Right Side - Login Form -->
+  <div class="login-container">
+    <mat-card class="login-card">
+      <!-- Header -->
+      <div class="login-header">
+        <h1 class="login-title">Welcome Back!</h1>
+        <p class="login-subtitle">Log in to your 01Blog account</p>
+      </div>
 
-      </form>
-    </mat-card-content>
+      <!-- Form -->
+      <mat-card-content>
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="login-form">
+          
+          <!-- Email Field -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Email Address</mat-label>
+              <input 
+                matInput 
+                type="email" 
+                name="email" 
+                ngModel 
+                required 
+                email
+                #emailInput="ngModel"
+                autocomplete="email">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error *ngIf="emailInput.touched && emailInput.errors?.['required']">
+                Email is required.
+              </mat-error>
+              <mat-error *ngIf="emailInput.touched && emailInput.errors?.['email']">
+                Please enter a valid email.
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-    <mat-card-actions class="card-footer">
-      <span>Don't have an account?</span>
-      <a mat-button color="primary" routerLink="/register">Create account</a>
-    </mat-card-actions>
-  </mat-card>
+          <!-- Password Field -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Password</mat-label>
+              <input 
+                matInput 
+                [type]="showPassword ? 'text' : 'password'" 
+                name="password" 
+                ngModel 
+                required
+                #passwordInput="ngModel"
+                autocomplete="current-password">
+              <mat-icon matPrefix>lock</mat-icon>
+              <button 
+                mat-icon-button 
+                matSuffix 
+                (click)="togglePasswordVisibility()" 
+                type="button"
+                class="password-toggle">
+                <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error *ngIf="passwordInput.touched && passwordInput.errors?.['required']">
+                Password is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="errorMessage" class="error-box">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="loginForm.invalid || isLoading"
+            class="login-button">
+            <mat-icon *ngIf="!isLoading">login</mat-icon>
+            <span *ngIf="!isLoading">Log In</span>
+            <span *ngIf="isLoading" class="spinner">
+              <mat-spinner diameter="20"></mat-spinner>
+              Logging in...
+            </span>
+          </button>
+
+        </form>
+      </mat-card-content>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <span>Don't have an account?</span>
+        <a mat-button color="primary" routerLink="/register" class="signup-link">
+          Create Account
+        </a>
+      </div>
+    </mat-card>
+  </div>
 </div>
