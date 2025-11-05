@@ -7,6 +7,8 @@ import { Post, PostStatus } from '../../models/post';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-admin',
@@ -17,6 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatCardModule,
     MatTableModule,
     MatButtonModule,
+    MatIconModule,
+    MatTabsModule
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
@@ -28,17 +32,18 @@ export class Admin implements OnInit {
   analytics: any = {};
 
   PostStatus = PostStatus;
+  selectedTabIndex = 0; 
 
-  reportColumns: string[] = [
-    'id',
-    'reason',
-    'reporter',
-    'reportedUser',
-    'date',
-    'actions',
-  ];
-  userColumns: string[] = ['id', 'username', 'email', 'role', 'status'];
-  postColumns: string[] = ['id', 'content', 'author','status', 'createdAt', 'actions'];
+  // reportColumns: string[] = [
+  //   'id',
+  //   'reason',
+  //   'reporter',
+  //   'reportedUser',
+  //   'date',
+  //   'actions',
+  // ];
+  // userColumns: string[] = ['id', 'username', 'email', 'role', 'status'];
+  // postColumns: string[] = ['id', 'content', 'author','status', 'createdAt', 'actions'];
 
   constructor(private adminService: AdminService) {}
 

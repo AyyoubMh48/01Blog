@@ -6,9 +6,14 @@
   --error: #ef4444;
   --success: #10b981;
 
-  --bg-white: #ffffff;
-  --bg-light: #f9fafb;
-  --bg-lighter: #f3f4f6;
+  // Page background (outer)
+  --bg-page: #e5e7eb;
+  
+  // Editor card background (inner)
+  --bg-editor-card: #ffffff;
+  --bg-editor-light: #f9fafb;
+  --bg-editor-lighter: #f3f4f6;
+  
   --border-light: #e5e7eb;
   --text-primary: #111827;
   --text-secondary: #6b7280;
@@ -20,9 +25,14 @@
 }
 
 body.dark-mode {
-  --bg-white: #1a1a1a;
-  --bg-light: #0f0f0f;
-  --bg-lighter: #0a0a0a;
+  // Page background (outer) - darker
+  --bg-page: #000000;
+  
+  // Editor card background (inner) - lighter than page
+  --bg-editor-card: #1a1a1a;
+  --bg-editor-light: #0f0f0f;
+  --bg-editor-lighter: #0a0a0a;
+  
   --border-light: #2d2d2d;
   --text-primary: #f9fafb;
   --text-secondary: #d1d5db;
@@ -30,17 +40,18 @@ body.dark-mode {
 }
 
 // ===========================
-// WRAPPER
+// WRAPPER - PAGE BACKGROUND
 // ===========================
 
 .editor-wrapper {
   min-height: 100vh;
-  background: var(--bg-light);
+  background: var(--bg-page); // Outer page background
+  overflow: hidden; // Prevent page scroll
 }
 
 // === HEADER ===
 .editor-header {
-  background: var(--bg-white);
+  background: var(--bg-editor-card);
   border-bottom: 2px solid var(--border-light);
   padding: 24px 0;
   position: sticky;
@@ -86,19 +97,43 @@ body.dark-mode {
   font-weight: 700;
   color: var(--text-secondary);
   padding: 8px 16px;
-  background: var(--bg-lighter);
+  background: var(--bg-editor-lighter);
   border-radius: 8px;
   border: 1px solid var(--border-light);
 }
 
 // ===========================
-// FORM CONTAINER - FULL WIDTH
+// FORM CONTAINER - WITH SCROLL
 // ===========================
 
 .form-container {
-  width: 100%;
+  height: calc(100vh - 90px); // Full height minus header
+  overflow-y: auto; // Enable scroll here
+  overflow-x: hidden;
   padding: 40px;
   margin: 0;
+
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-page);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 6px;
+    border: 2px solid var(--bg-page);
+
+    &:hover {
+      background: var(--text-muted);
+    }
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-light) var(--bg-page);
 
   @media (max-width: 1024px) {
     padding: 32px 24px;
@@ -110,22 +145,22 @@ body.dark-mode {
 }
 
 // ===========================
-// EDITOR CARD - FULL WIDTH
+// EDITOR CARD - SEPARATE BACKGROUND
 // ===========================
 
 .post-editor-card {
-  background: var(--bg-white) !important;
+  background: var(--bg-editor-card) !important; // Clear separation
   border: 2px solid var(--border-light) !important;
-  border-radius: 12px !important;
-  box-shadow: var(--shadow-md) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-lg) !important;
   padding: 0 !important;
   overflow: hidden;
   transition: all 0.3s ease !important;
-  width: 100% !important;
-  max-width: 100% !important;
+  max-width: 1200px;
+  margin: 0 auto;
 
   &:hover {
-    box-shadow: var(--shadow-lg) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
     border-color: var(--primary) !important;
   }
 
@@ -157,8 +192,7 @@ body.dark-mode {
 // === TITLE GROUP ===
 .title-group {
   padding: 60px 80px 24px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.02) 100%);
-  width: 90%;
+  background: var(--bg-editor-light);
 
   @media (max-width: 1024px) {
     padding: 50px 60px 20px;
@@ -224,11 +258,10 @@ body.dark-mode .title-input::placeholder {
   }
 }
 
-
 // === TAGS GROUP ===
 .tags-group {
   padding: 24px 80px;
-  background: rgba(59, 130, 246, 0.02);
+  background: var(--bg-editor-lighter);
   width: 100%;
 
   @media (max-width: 1024px) {
@@ -281,7 +314,7 @@ body.dark-mode .title-input::placeholder {
   align-items: center;
   padding: 8px 16px;
   background: var(--primary);
-  color:var(--text-primary);
+  color: white;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 700;
@@ -309,25 +342,23 @@ body.dark-mode .tag-badge {
 }
 
 // ===========================
-// EDITOR SECTION - FIXED HEIGHT WITH INTERNAL SCROLL
+// EDITOR SECTION - NO SCROLL (SCROLL IS IN .form-container)
 // ===========================
 
 .editor-section {
-  height: 600px !important;
-  min-height: 600px !important;
-  max-height: 600px !important;
+  min-height: 500px;
   display: flex !important;
   flex-direction: column !important;
-  background: var(--bg-white);
+  background: var(--bg-editor-card);
   width: 100%;
-  overflow: hidden !important;
+  overflow: visible !important; // Changed from hidden
 
   ::ng-deep {
-    // === TOOLBAR - FIXED AT TOP ===
+    // === TOOLBAR ===
     .ql-toolbar.ql-snow {
       border: none !important;
       border-bottom: 2px solid var(--border-light) !important;
-      background: var(--bg-lighter) !important;
+      background: var(--bg-editor-lighter) !important;
       padding: 16px 80px !important;
       flex-shrink: 0 !important;
       display: flex !important;
@@ -393,19 +424,16 @@ body.dark-mode .tag-badge {
       }
     }
 
-    // === CONTAINER - MUST BE CONTAINED ===
+    // === CONTAINER ===
     .ql-container.ql-snow {
       border: none !important;
       flex: 1 1 auto !important;
       display: flex !important;
       flex-direction: column !important;
-      overflow: hidden !important;
-      min-height: 0 !important;
-      max-height: 100% !important;
-      position: relative !important;
+      overflow: visible !important; // Changed
     }
 
-    // === EDITOR MAIN - SCROLLABLE AREA ONLY HERE ===
+    // === EDITOR - NO SCROLL HERE
     .ql-editor {
       flex: 1 1 auto !important;
       padding: 40px 80px 60px 80px !important;
@@ -413,15 +441,11 @@ body.dark-mode .tag-badge {
       line-height: 1.8 !important;
       color: var(--text-primary) !important;
       background: transparent !important;
-      overflow-y: auto !important;
-      overflow-x: hidden !important;
+      overflow: visible !important; // Changed - scroll handled by parent
       white-space: pre-wrap !important;
       word-wrap: break-word !important;
       overflow-wrap: break-word !important;
       word-break: break-word !important;
-      min-height: 0 !important;
-      max-height: 100% !important;
-      position: relative !important;
 
       @media (max-width: 1024px) {
         padding: 32px 60px !important;
@@ -439,9 +463,6 @@ body.dark-mode .tag-badge {
         font-size: 1.125rem !important;
         left: 80px !important;
         right: 80px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
 
         @media (max-width: 1024px) {
           left: 60px !important;
@@ -507,7 +528,6 @@ body.dark-mode .tag-badge {
         color: var(--text-primary) !important;
       }
 
-      // === LISTS ===
       ul {
         list-style: disc !important;
         padding-left: 2.5em !important;
@@ -530,7 +550,6 @@ body.dark-mode .tag-badge {
         }
       }
 
-      // === CODE ===
       pre {
         background: #1e293b !important;
         color: #e2e8f0 !important;
@@ -544,7 +563,7 @@ body.dark-mode .tag-badge {
       }
 
       code {
-        background: var(--bg-lighter) !important;
+        background: var(--bg-editor-lighter) !important;
         color: var(--primary) !important;
         padding: 4px 8px !important;
         border-radius: 4px !important;
@@ -560,7 +579,6 @@ body.dark-mode .tag-badge {
         border-radius: 0 !important;
       }
 
-      // === BLOCKQUOTE ===
       blockquote {
         border-left: 4px solid var(--primary) !important;
         padding: 16px 24px !important;
@@ -571,7 +589,6 @@ body.dark-mode .tag-badge {
         border-radius: 4px !important;
       }
 
-      // === LINKS ===
       a {
         color: var(--primary) !important;
         text-decoration: underline !important;
@@ -584,7 +601,6 @@ body.dark-mode .tag-badge {
         }
       }
 
-      // === MEDIA - CONSTRAINED SIZE ===
       img, video {
         max-width: 100% !important;
         height: auto !important;
@@ -596,20 +612,17 @@ body.dark-mode .tag-badge {
         object-fit: contain !important;
       }
 
-      // === HR ===
       hr {
         border: none !important;
         border-top: 2px solid var(--border-light) !important;
         margin: 2.5em 0 !important;
       }
 
-      // === STRONG/BOLD ===
       strong {
         font-weight: 700 !important;
         color: var(--text-primary) !important;
       }
 
-      // === EMPHASIS ===
       em {
         font-style: italic !important;
         color: var(--text-primary) !important;
@@ -618,22 +631,18 @@ body.dark-mode .tag-badge {
   }
 
   @media (max-width: 1024px) {
-    height: 500px !important;
-    min-height: 500px !important;
-    max-height: 500px !important;
+    min-height: 450px;
   }
 
   @media (max-width: 768px) {
-    height: 450px !important;
-    min-height: 450px !important;
-    max-height: 450px !important;
+    min-height: 400px;
   }
 }
 
 // === DARK MODE EDITOR ===
 body.dark-mode .editor-section ::ng-deep {
   .ql-toolbar.ql-snow {
-    background: var(--bg-lighter) !important;
+    background: var(--bg-editor-lighter) !important;
     border-bottom-color: var(--border-light) !important;
 
     .ql-formats button svg {
@@ -689,60 +698,6 @@ body.dark-mode .editor-section ::ng-deep {
 }
 
 // ===========================
-// SCROLLBAR STYLING - ALWAYS VISIBLE
-// ===========================
-
-.editor-section ::ng-deep .ql-editor {
-  // For Webkit browsers (Chrome, Safari, Edge)
-  &::-webkit-scrollbar {
-    width: 14px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: var(--bg-lighter);
-    border-left: 1px solid var(--border-light);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 0;
-    border: 3px solid var(--bg-lighter);
-
-    &:hover {
-      background: var(--primary-dark);
-    }
-
-    &:active {
-      background: var(--primary-dark);
-    }
-  }
-
-  // For Firefox
-  scrollbar-width: auto;
-  scrollbar-color: var(--primary) var(--bg-lighter);
-}
-
-.title-input {
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--border-light);
-    border-radius: 4px;
-
-    &:hover {
-      background: var(--text-muted);
-    }
-  }
-}
-
-
-// ===========================
 // ERROR BOXES
 // ===========================
 
@@ -780,16 +735,16 @@ body.dark-mode .error-box {
 }
 
 // ===========================
-// FORM ACTIONS - ALWAYS AT BOTTOM
+// FORM ACTIONS
 // ===========================
 
 .form-actions {
   display: flex;
   gap: 16px;
   padding: 32px 80px;
-  background: var(--bg-lighter);
+  background: var(--bg-editor-lighter);
   border-top: 2px solid var(--border-light);
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 16px 16px;
   align-items: center;
   flex-wrap: wrap;
   flex-shrink: 0;
@@ -847,7 +802,7 @@ body.dark-mode .error-box {
 
   &:hover:not(:disabled) {
     border-color: var(--text-secondary) !important;
-    background: var(--bg-light) !important;
+    background: var(--bg-editor-light) !important;
   }
 
   &:disabled {
@@ -877,29 +832,4 @@ body.dark-mode .error-box {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-// ===========================
-// RESPONSIVE FIXES
-// ===========================
-
-@media (max-width: 1024px) {
-  .form-container {
-    padding: 32px 24px;
-  }
-}
-
-@media (max-width: 768px) {
-  .form-container {
-    padding: 20px 16px;
-  }
-
-  .editor-title {
-    font-size: 1.25rem;
-  }
-
-  .char-count {
-    font-size: 0.8rem;
-    padding: 6px 12px;
-  }
 }

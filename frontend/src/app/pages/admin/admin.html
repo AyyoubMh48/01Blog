@@ -1,216 +1,273 @@
 <div class="admin-dashboard">
-  <h2>Admin Dashboard</h2>
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="dashboard-title">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Admin Dashboard
+      </h1>
+      <p class="dashboard-subtitle">Manage users, posts, and reports</p>
+    </div>
+  </div>
 
+  <!-- Analytics Cards -->
   <section class="analytics-section">
-    <mat-card class="stat-card">
-      <mat-card-header
-        ><mat-card-title>Total Users</mat-card-title></mat-card-header
-      >
-      <mat-card-content
-        ><p>{{ analytics.totalUsers }}</p></mat-card-content
-      >
-    </mat-card>
-    <mat-card class="stat-card">
-      <mat-card-header
-        ><mat-card-title>Total Posts</mat-card-title></mat-card-header
-      >
-      <mat-card-content
-        ><p>{{ analytics.totalPosts }}</p></mat-card-content
-      >
-    </mat-card>
-    <mat-card class="stat-card">
-      <mat-card-header
-        ><mat-card-title>Open Reports</mat-card-title></mat-card-header
-      >
-      <mat-card-content
-        ><p>{{ analytics.openReports }}</p></mat-card-content
-      >
-    </mat-card>
+    <div class="stat-card">
+      <div class="stat-icon users">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-value">{{ analytics.totalUsers }}</p>
+        <p class="stat-label">Total Users</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon posts">
+        <mat-icon>article</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-value">{{ analytics.totalPosts }}</p>
+        <p class="stat-label">Total Posts</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon reports">
+        <mat-icon>report_problem</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-value">{{ analytics.openReports }}</p>
+        <p class="stat-label">Open Reports</p>
+      </div>
+    </div>
   </section>
 
-  <h3>Open User Reports</h3>
-  <table mat-table [dataSource]="reports" class="mat-elevation-z8">
-    <ng-container matColumnDef="id"
-      ><th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let r">{{ r.id }}</td></ng-container
-    >
-    <ng-container matColumnDef="reason"
-      ><th mat-header-cell *matHeaderCellDef>Reason</th>
-      <td mat-cell *matCellDef="let r">{{ r.reason }}</td></ng-container
-    >
-    <ng-container matColumnDef="reporter">
-      <th mat-header-cell *matHeaderCellDef>Reporter</th>
-      <td mat-cell *matCellDef="let r">
-        <a [routerLink]="['/block', r.reporter.username]">{{
-          r.reporter.username
-        }}</a>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="reportedUser">
-      <th mat-header-cell *matHeaderCellDef>Reported User</th>
-      <td mat-cell *matCellDef="let r">
-        <a [routerLink]="['/block', r.reportedUser.username]">{{
-          r.reportedUser.username
-        }}</a>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="date"
-      ><th mat-header-cell *matHeaderCellDef>Date</th>
-      <td mat-cell *matCellDef="let r">
-        {{ r.createdAt | date : "short" }}
-      </td></ng-container
-    >
-    <ng-container matColumnDef="actions"
-      ><th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let r">
-        <button
-          mat-button
-          color="primary"
-          (click)="resolveReport(r.id, 'RESOLVE')"
-        >
-          Resolve</button
-        ><button
-          mat-button
-          color="accent"
-          (click)="resolveReport(r.id, 'IGNORE')"
-        >
-          Ignore
-        </button>
-      </td></ng-container
-    >
-    <tr mat-header-row *matHeaderRowDef="reportColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: reportColumns"></tr>
-  </table>
-
-  <h3>All Users</h3>
-  <table mat-table [dataSource]="users" class="mat-elevation-z8">
-    <ng-container matColumnDef="id"
-      ><th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let u">{{ u.id }}</td></ng-container
-    >
-    <ng-container matColumnDef="username">
-      <th mat-header-cell *matHeaderCellDef>Username</th>
-      <td mat-cell *matCellDef="let u">
-        <a [routerLink]="['/block', u.username]">{{ u.username }}</a>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="email"
-      ><th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let u">{{ u.email }}</td></ng-container
-    >
-    <ng-container matColumnDef="role"
-      ><th mat-header-cell *matHeaderCellDef>Role</th>
-      <td mat-cell *matCellDef="let u">{{ u.role }}</td></ng-container
-    >
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let u">
-        <span *ngIf="u.role === 'ROLE_ADMIN'">Admin</span>
-
-        <div *ngIf="u.role === 'ROLE_USER'">
-          <button
-            *ngIf="u.banned"
-            mat-button
-            color="accent"
-            (click)="unbanUser(u.id)"
-          >
-            Unban
-          </button>
-
-          <button
-            *ngIf="!u.banned"
-            mat-button
-            color="warn"
-            (click)="banUser(u.id)"
-          >
-            Ban
-          </button>
-          <button
-            mat-button
-            color="warn"
-            (click)="deleteUser(u.id)"
-            style="margin-left: 8px"
-          >
-            Delete
-          </button>
-        </div>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: userColumns"></tr>
-  </table>
-
-  <h3>All Posts</h3>
-  <table mat-table [dataSource]="posts" class="mat-elevation-z8">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let p">
-        <a [routerLink]="['/post', p.id]">{{ p.id }}</a>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="content"
-      ><th mat-header-cell *matHeaderCellDef>Content</th>
-      <td mat-cell *matCellDef="let p">
-        {{ p.content.slice(0, 50) }}...
-      </td></ng-container
-    >
-    <ng-container matColumnDef="author">
-      <th mat-header-cell *matHeaderCellDef>Author</th>
-      <td mat-cell *matCellDef="let p">
-        <a [routerLink]="['/block', p.author.username]">{{
-          p.author.username
-        }}</a>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="createdAt"
-      ><th mat-header-cell *matHeaderCellDef>Created At</th>
-      <td mat-cell *matCellDef="let p">
-        {{ p.createdAt | date : "short" }}
-      </td></ng-container
-    >
-    <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> Actions </th>
-    <td mat-cell *matCellDef="let p">
+  <!-- Tabbed Content Section -->
+  <section class="tabbed-section">
+     <mat-tab-group 
+    class="admin-tabs" 
+    [(selectedIndex)]="selectedTabIndex"
+    animationDuration="300ms"
+    mat-align-tabs="center"
+    [disableRipple]="false">
       
-      <button 
-        *ngIf="p.status === PostStatus.PUBLISHED" 
-        mat-button 
-        color="accent" 
-        (click)="onHide(p)">
-        Hide
-      </button>
+      <!-- Tab 1: Reports -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+        <div class="tab-label-content">
+          <mat-icon class="tab-icon">flag</mat-icon>
+          <span class="tab-label">Reports</span>
+          <span class="tab-badge" *ngIf="reports.length > 0">{{ reports.length }}</span>
+        </div>
+      </ng-template>
 
-      <button 
-        *ngIf="p.status === PostStatus.HIDDEN_BY_ADMIN" 
-        mat-button 
-        color="primary" 
-        (click)="onPublish(p)">
-        Publish
-      </button>
+        <div class="tab-content">
+          <div class="cards-grid" *ngIf="reports.length > 0">
+            <mat-card class="report-card" *ngFor="let r of reports">
+              <mat-card-content>
+                <div class="card-header">
+                  <span class="report-id">#{{ r.id }}</span>
+                  <span class="report-date">{{ r.createdAt | date : "short" }}</span>
+                </div>
 
-      <button 
-        mat-button 
-        color="warn" 
-        (click)="deletePost(p.id)" 
-        style="margin-left: 8px;">
-        Delete
-      </button>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="status">
-  <th mat-header-cell *matHeaderCellDef> Status </th>
-  <td mat-cell *matCellDef="let p">
-    
-    <span *ngIf="p.status === PostStatus.PUBLISHED" class="status-published">
-      Published
-    </span>
-    <span *ngIf="p.status === PostStatus.HIDDEN_BY_ADMIN" class="status-hidden">
-      Hidden
-    </span>
+                <div class="report-reason">
+                  <mat-icon>description</mat-icon>
+                  <p>{{ r.reason }}</p>
+                </div>
 
-  </td>
-</ng-container>
-    <tr mat-header-row *matHeaderRowDef="postColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: postColumns"></tr>
-  </table>
+                <div class="report-users">
+                  <div class="user-info">
+                    <span class="label">Reporter:</span>
+                    <a [routerLink]="['/block', r.reporter.username]" class="username">
+                      <mat-icon>person</mat-icon>
+                      {{ r.reporter.username }}
+                    </a>
+                  </div>
+                  <div class="user-info">
+                    <span class="label">Reported User:</span>
+                    <a [routerLink]="['/block', r.reportedUser.username]" class="username reported">
+                      <mat-icon>person_off</mat-icon>
+                      {{ r.reportedUser.username }}
+                    </a>
+                  </div>
+                </div>
+
+                <div class="card-actions">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="resolveReport(r.id, 'RESOLVE')"
+                  >
+                    <mat-icon>check_circle</mat-icon>
+                    Resolve
+                  </button>
+                  <button
+                    mat-stroked-button
+                    (click)="resolveReport(r.id, 'IGNORE')"
+                  >
+                    <mat-icon>close</mat-icon>
+                    Ignore
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div class="empty-state" *ngIf="reports.length === 0">
+            <mat-icon>check_circle_outline</mat-icon>
+            <p>No open reports</p>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 2: Users -->
+      <mat-tab>
+         <ng-template mat-tab-label>
+        <div class="tab-label-content">
+          <mat-icon class="tab-icon">group</mat-icon>
+          <span class="tab-label">Users</span>
+          <span class="tab-badge" *ngIf="users.length > 0">{{ users.length }}</span>
+        </div>
+      </ng-template>
+
+        <div class="tab-content">
+          <div class="cards-grid">
+            <mat-card class="user-card" *ngFor="let u of users">
+              <mat-card-content>
+                <div class="card-header">
+                  <span class="user-id">#{{ u.id }}</span>
+                  <span class="role-badge" [class.admin]="u.role === 'ROLE_ADMIN'">
+                    {{ u.role === 'ROLE_ADMIN' ? 'Admin' : 'User' }}
+                  </span>
+                </div>
+
+                <div class="user-details">
+                  <a [routerLink]="['/block', u.username]" class="username-link">
+                    <mat-icon>account_circle</mat-icon>
+                    <span>{{ u.username }}</span>
+                  </a>
+                  <div class="user-email">
+                    <mat-icon>email</mat-icon>
+                    <span>{{ u.email }}</span>
+                  </div>
+                </div>
+
+                <div class="card-actions" *ngIf="u.role === 'ROLE_USER'">
+                  <button
+                    *ngIf="u.banned"
+                    mat-raised-button
+                    color="accent"
+                    (click)="unbanUser(u.id)"
+                  >
+                    <mat-icon>lock_open</mat-icon>
+                    Unban
+                  </button>
+                  <button
+                    *ngIf="!u.banned"
+                    mat-raised-button
+                    color="warn"
+                    (click)="banUser(u.id)"
+                  >
+                    <mat-icon>block</mat-icon>
+                    Ban
+                  </button>
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    (click)="deleteUser(u.id)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    Delete
+                  </button>
+                </div>
+
+                <div class="admin-label" *ngIf="u.role === 'ROLE_ADMIN'">
+                  <mat-icon>shield</mat-icon>
+                  <span>Protected Account</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 3: Posts -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+        <div class="tab-label-content">
+          <mat-icon class="tab-icon">feed</mat-icon>
+          <span class="tab-label">Posts</span>
+          <span class="tab-badge" *ngIf="posts.length > 0">{{ posts.length }}</span>
+        </div>
+      </ng-template>
+
+        <div class="tab-content">
+          <div class="cards-grid">
+            <mat-card class="post-card" *ngFor="let p of posts">
+              <mat-card-content>
+                <div class="card-header">
+                  <a [routerLink]="['/post', p.id]" class="post-id">#{{ p.id }}</a>
+                  <span 
+                    class="status-badge" 
+                    [class.published]="p.status === PostStatus.PUBLISHED"
+                    [class.hidden]="p.status === PostStatus.HIDDEN_BY_ADMIN">
+                    <mat-icon>
+                      {{ p.status === PostStatus.PUBLISHED ? 'visibility' : 'visibility_off' }}
+                    </mat-icon>
+                    {{ p.status === PostStatus.PUBLISHED ? 'Published' : 'Hidden' }}
+                  </span>
+                </div>
+
+                <div class="post-content">
+                  <p>{{ p.content.slice(0, 120) }}{{ p.content.length > 120 ? '...' : '' }}</p>
+                </div>
+
+                <div class="post-meta">
+                  <a [routerLink]="['/block', p.author.username]" class="author-link">
+                    <mat-icon>person</mat-icon>
+                    {{ p.author.username }}
+                  </a>
+                  <span class="post-date">
+                    <mat-icon>schedule</mat-icon>
+                    {{ p.createdAt | date : "short" }}
+                  </span>
+                </div>
+
+                <div class="card-actions">
+                  <button
+                    *ngIf="p.status === PostStatus.PUBLISHED"
+                    mat-raised-button
+                    color="accent"
+                    (click)="onHide(p)"
+                  >
+                    <mat-icon>visibility_off</mat-icon>
+                    Hide
+                  </button>
+                  <button
+                    *ngIf="p.status === PostStatus.HIDDEN_BY_ADMIN"
+                    mat-raised-button
+                    color="primary"
+                    (click)="onPublish(p)"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                    Publish
+                  </button>
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    (click)="deletePost(p.id)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    Delete
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </section>
 </div>
