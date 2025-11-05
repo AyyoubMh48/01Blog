@@ -1,30 +1,78 @@
 <div class="notifications-container">
-  <h2>Notifications</h2>
+  <!-- Header Section -->
+  <div class="notifications-header">
+    <div class="header-content">
+      <h1 class="notifications-title">
+        <mat-icon>notifications</mat-icon>
+        Notifications
+      </h1>
+      <p class="notifications-subtitle">Stay updated with activity on your posts</p>
+    </div>
+    <button *ngIf="notifications.length > 0 && hasUnread()" 
+            mat-icon-button 
+            (click)="markAllAsRead()"
+            class="mark-all-btn"
+            matTooltip="Mark all as read">
+      <mat-icon>done_all</mat-icon>
+    </button>
+  </div>
 
-  <mat-card class="notifications-card">
-    <mat-list>
-      <div *ngIf="notifications.length === 0" class="no-notifications">
-        <mat-icon class="empty-icon">notifications_off</mat-icon>
-        <span>You have no notifications yet.</span>
+  <!-- Notifications List Card -->
+  <mat-card class="notifications-card" *ngIf="notifications.length > 0">
+    <div class="notifications-list">
+      <div *ngFor="let notification of notifications; let i = index"
+           [class.unread]="!notification.read"
+           class="notification-item"
+           (click)="markAsRead(notification)">
+        
+        <!-- Unread Indicator -->
+        <div class="unread-indicator" *ngIf="!notification.read"></div>
+
+        <!-- Icon Container -->
+        <div class="icon-container" [ngSwitch]="true">
+          <mat-icon class="notification-icon liked" 
+                    *ngSwitchCase="notification.message.includes('liked')">
+            favorite
+          </mat-icon>
+          <mat-icon class="notification-icon commented" 
+                    *ngSwitchCase="notification.message.includes('commented')">
+            comment
+          </mat-icon>
+          <mat-icon class="notification-icon followed" 
+                    *ngSwitchCase="notification.message.includes('following')">
+            person_add
+          </mat-icon>
+          <mat-icon class="notification-icon default" 
+                    *ngSwitchDefault>
+            notifications
+          </mat-icon>
+        </div>
+
+        <!-- Content -->
+        <div class="notification-content">
+          <div class="notification-message">{{ notification.message }}</div>
+          <div class="notification-date">
+            <mat-icon class="time-icon">schedule</mat-icon>
+            {{ notification.createdAt | date:'short' }}
+          </div>
+        </div>
+
+        <!-- Action Dot (unread) -->
+        <div class="action-indicator" *ngIf="!notification.read"></div>
       </div>
 
-      <mat-list-item *ngFor="let notification of notifications"
-                     [class.unread]="!notification.read"
-                     (click)="markAsRead(notification)"
-                     class="notification-item">
-        
-        <mat-icon matListItemIcon class="notification-icon">
-          <ng-container [ngSwitch]="true">
-            <ng-container *ngSwitchCase="notification.message.includes('liked')">favorite</ng-container>
-            <ng-container *ngSwitchCase="notification.message.includes('commented')">comment</ng-container>
-            <ng-container *ngSwitchCase="notification.message.includes('following')">person_add</ng-container>
-            <ng-container *ngSwitchDefault>notifications</ng-container>
-          </ng-container>
-        </mat-icon>
-        
-        <div matListItemTitle class="notification-message">{{ notification.message }}</div>
-        <div matListItemLine class="notification-date">{{ notification.createdAt | date:'medium' }}</div>
-      </mat-list-item>
-    </mat-list>
+      <!-- Dividers between items -->
+      <div class="divider" *ngFor="let n of notifications; let last = last" 
+           [style.display]="last ? 'none' : 'block'"></div>
+    </div>
   </mat-card>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="notifications.length === 0">
+    <div class="empty-icon-wrapper">
+      <mat-icon class="empty-icon">notifications_off</mat-icon>
+    </div>
+    <h3>No Notifications Yet</h3>
+    <p>You're all caught up! Check back later for updates.</p>
+  </div>
 </div>

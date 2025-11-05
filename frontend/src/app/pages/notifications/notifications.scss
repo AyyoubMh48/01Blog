@@ -1,112 +1,429 @@
+// ===========================
+// NOTIFICATIONS CONTAINER
+// ===========================
+
 .notifications-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 0 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px;
+  min-height: 100vh;
+  background: var(--bg-page);
 
-  h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 24px;
+  @media (max-width: 1024px) {
+    padding: 32px 24px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 24px 16px;
   }
 }
 
-.notifications-card {
-  border: 1px solid var(--mat-divider-color);
-  box-shadow: none !important;
-  border-radius: 16px !important;
-  padding: 0 !important; // Remove card padding, let the list handle it
-}
+// ===========================
+// NOTIFICATIONS HEADER
+// ===========================
 
-.notification-item {
-  height: auto !important;
-  min-height: 72px; // Give some space
-  padding: 16px 24px !important; // Use card-style padding
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.notifications-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--border-color);
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
-  // Style for the icon
-  .notification-icon {
+  .notifications-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    margin: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: var(--mat-primary-main-color);
+    gap: 16px;
+    letter-spacing: -1px;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+      }
+    }
   }
 
-  .notification-message {
+  .notifications-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin: 0;
     font-weight: 500;
-    white-space: normal; // Allow message to wrap
-    line-height: 1.4;
+
+    @media (max-width: 768px) {
+      font-size: 0.95rem;
+    }
   }
 
-  .notification-date {
-    font-size: 0.85em;
-    color: #757575; // Muted color for the date
+  .mark-all-btn {
+    color: var(--primary) !important;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(59, 130, 246, 0.1) !important;
+      transform: scale(1.1);
+    }
+  }
+}
+
+// ===========================
+// NOTIFICATIONS CARD
+// ===========================
+
+.notifications-card {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-color) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 0 !important;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-xl) !important;
+  }
+}
+
+// ===========================
+// NOTIFICATIONS LIST
+// ===========================
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-color);
+}
+
+// ===========================
+// NOTIFICATION ITEM - MODERN DESIGN
+// ===========================
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  background: var(--bg-card);
+
+  &:hover {
+    background: var(--bg-section);
+    transform: translateX(4px);
   }
 
-  // Unread state
+  @media (max-width: 768px) {
+    padding: 16px 20px;
+    gap: 12px;
+  }
+
+  // Unread state - HIGHLIGHTED
   &.unread {
-    // CHANGED: Use a distinct light gray background for unread items
-    background-color: #f7f7f7; 
-    
-    border-left: 4px solid var(--mat-primary-main-color);
-    padding-left: 12px !important; // Adjust padding to account for border
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+    border-left: 4px solid var(--primary);
+    padding-left: 20px;
 
     .notification-message {
-      font-weight: 700; // Make text bolder
+      font-weight: 700;
+      color: var(--text-primary);
     }
 
     .notification-icon {
-      color: var(--mat-primary-main-color);
+      filter: brightness(1.2);
     }
 
     &:hover {
-       // Make the hover slightly darker than the unread background
-       background-color: #eeeeee; 
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
+    }
+  }
+
+  // Unread indicator dot
+  .unread-indicator {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
     }
   }
 }
 
-// Dark Mode Styles
-.dark-mode {
-  mat-list-item {
-    &:hover {
-      background-color: rgba(255,255,255,0.04);
-    }
+// ===========================
+// ICON CONTAINER - GRADIENT BACKGROUNDS
+// ===========================
 
-    &.unread {
-      // CHANGED: Use a distinct dark gray background
-      background-color: #2a2a2a; 
-      border-left-color: var(--mat-primary-light-color);
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
 
-      .notification-icon {
-         color: var(--mat-primary-light-color);
-      }
+.notification-icon {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: white;
+  transition: all 0.3s ease;
 
-      &:hover {
-        background-color: #3a3a3a;
-      }
-    }
+  &.liked {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+
+  &.commented {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  &.followed {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  }
+
+  &.default {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  }
+
+  .notification-item:hover & {
+    transform: scale(1.1);
   }
 }
 
-.no-notifications {
-  padding: 48px 24px;
-  text-align: center;
-  color: #757575;
-  font-style: italic;
+// ===========================
+// NOTIFICATION CONTENT
+// ===========================
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notification-message {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+  word-wrap: break-word;
+  white-space: normal;
+
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+  }
+}
+
+.notification-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+
+  .time-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: var(--text-muted);
+  }
+}
+
+// ===========================
+// ACTION INDICATOR (Read dot)
+// ===========================
+
+.action-indicator {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+// ===========================
+// EMPTY STATE
+// ===========================
+
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  
-  .empty-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    opacity: 0.5;
+  justify-content: center;
+  padding: 80px 40px;
+  background: var(--bg-card);
+  border: 2px dashed var(--border-color);
+  border-radius: 20px;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 60px 32px;
+  }
+}
+
+.empty-icon-wrapper {
+  margin-bottom: 24px;
+}
+
+.empty-icon {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  color: var(--primary);
+  opacity: 0.4;
+
+  @media (max-width: 768px) {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.empty-state h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+.empty-state p {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+// ===========================
+// DARK MODE - NOTIFICATION STYLING
+// ===========================
+
+body.dark-mode {
+  .notification-item {
+    background: var(--bg-card);
+
+    &:hover {
+      background: var(--bg-section);
+    }
+
+    // Unread state in dark mode
+    &.unread {
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(96, 165, 250, 0.08) 100%);
+      border-left-color: var(--primary-light);
+
+      .notification-message {
+        color: var(--text-primary);
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.2) 0%, rgba(96, 165, 250, 0.12) 100%);
+      }
+    }
+  }
+
+  .unread-indicator {
+    background: var(--primary-light);
+    box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+  }
+
+  .action-indicator {
+    background: var(--primary-light);
+    box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+  }
+
+  .notification-icon {
+    &.liked {
+      background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+      box-shadow: 0 4px 12px rgba(248, 113, 113, 0.4);
+    }
+
+    &.commented {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+      box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
+    }
+
+    &.followed {
+      background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+      box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4);
+    }
+
+    &.default {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+    }
+  }
+
+  .mark-all-btn {
+    color: var(--primary-light) !important;
+
+    &:hover {
+      background: rgba(96, 165, 250, 0.15) !important;
+    }
   }
 }

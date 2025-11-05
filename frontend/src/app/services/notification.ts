@@ -51,6 +51,47 @@ export class NotificationService {
     );
   }
 
+  markAllAsRead() {
+    // Get all unread notifications
+    const unreadNotifications = this.notifications$.getValue().filter(n => !n.read);
+    
+    // Call backend for each unread notification
+    const markAllRequests = unreadNotifications.map(notif =>
+      this.http.post(`${this.apiUrl}/${notif.id}/read`, {})
+    );
+
+    // Execute all requests
+    if (markAllRequests.length === 0) {
+      // If no unread, return empty observable
+      return new Promise(resolve => resolve(null));
+    }
+
+    // Alternative: Just update locally if backend supports batch
+    return new Promise((resolve) => {
+      // Mark all locally
+      const updatedNotifications = this.notifications$.getValue().map(n => ({
+        ...n,
+        read: true
+      }));
+      this.notifications$.next(updatedNotifications);
+      
+      // Also send individual requests to backend
+      unreadNotifications.forEach(notif => {
+        this.http.post(`${this.apiUrl}/${notif.id}/read`, {}).subscribe();
+      });
+      
+      resolve(null);
+    });
+  }
+
+  getUnreadCount(): number {
+    return this.notifications$.getValue().filter(n => !n.read).length;
+  }
+
+  hasUnread(): boolean {
+    return this.notifications$.getValue().some(n => !n.read);
+  }
+
   disconnect(): void {
     if (this.stompClient) {
       this.stompClient.disconnect();

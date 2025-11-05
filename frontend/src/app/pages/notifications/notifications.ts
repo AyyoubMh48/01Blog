@@ -9,11 +9,17 @@ import { Notification } from '../../models/notification';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+//import { MatDatepipeModule } from '@angular/material/datepipe';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatIconModule,MatCardModule],
+  imports: [CommonModule, MatListModule, MatIconModule,MatCardModule,
+    MatButtonModule,
+    MatTooltipModule
+  ],
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss'
 })
@@ -43,6 +49,18 @@ export class Notifications implements OnInit, OnDestroy {
     if (notification.link) {
       this.router.navigate([notification.link]);
     }
+  }
+
+  markAllAsRead(): void {
+    this.notificationService.markAllAsRead();
+  }
+
+  hasUnread(): boolean {
+    return this.notificationService.hasUnread();
+  }
+
+  getUnreadCount(): number {
+    return this.notificationService.getUnreadCount();
   }
 
   ngOnDestroy(): void {
