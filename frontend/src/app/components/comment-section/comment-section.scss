@@ -1,57 +1,291 @@
-@use '@angular/material' as mat;
+// ===========================
+// COMMENT SECTION
+// ===========================
 
 .comment-section {
-  padding: 16px;
-  // Add a subtle border to separate it from the post content
-  border-top: 1px solid rgba(0,0,0,0.1);
-
-  .dark-mode & {
-    border-top-color: rgba(255,255,255,0.1);
+  padding: 32px 24px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  
+  @media (max-width: 768px) {
+    padding: 24px 16px;
   }
-
+  
   h4 {
-    font-weight: 500;
-    margin: 0 0 16px 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 24px;
+    letter-spacing: -0.01em;
   }
 }
 
-.comment-form {
-  display: flex;
-  flex-direction: column;
-  //align-items: flex-end; // Pushes the button to the right
+// ===========================
+// COMMENT FORM
+// ===========================
 
+.comment-form {
+  margin-bottom: 32px;
+  padding: 20px;
+  background: rgba(59, 130, 246, 0.03);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  
+  &:focus-within {
+    background: rgba(59, 130, 246, 0.05);
+    border-color: rgba(59, 130, 246, 0.2);
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
   mat-form-field {
     width: 100%;
   }
+  
+  button[mat-raised-button] {
+    align-self: flex-end;
+    padding: 0 24px !important;
+    height: 44px !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.2s ease !important;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3) !important;
+    }
+  }
 }
+
+// ===========================
+// LOGIN PROMPT
+// ===========================
+
+.login-prompt-sm {
+  text-align: center;
+  padding: 24px;
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px dashed rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  margin-bottom: 32px;
+  
+  a[mat-button] {
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #3b82f6;
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.1) !important;
+    }
+  }
+}
+
+// ===========================
+// COMMENT LIST
+// ===========================
 
 .comment-list {
-  padding-top: 24px;
-
-  // Reduce the height of each comment to be more compact
-  .mat-mdc-list-item {
+  padding: 0 !important;
+  
+  mat-list-item {
     height: auto !important;
-    padding-bottom: 12px;
+    min-height: 80px !important;
+    padding: 16px 0 !important;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.2s ease;
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.02);
+    }
+    
+    &:last-child {
+      border-bottom: none;
+    }
   }
 }
+
+// ===========================
+// NO COMMENTS
+// ===========================
 
 .no-comments {
-  color: #757575;
-  padding: 16px;
   text-align: center;
+  padding: 48px 24px;
+  color: #6b7280;
+  font-size: 1.05rem;
   font-style: italic;
-}
-
-.comment-avatar {
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-[matListItemTitle] a {
-  text-decoration: none; 
-  color: inherit;        
-  &:hover {
-    text-decoration: underline; 
+  
+  &::before {
+    content: '💬';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.5;
   }
 }
 
+// ===========================
+// COMMENT AVATAR
+// ===========================
+
+.comment-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+  margin-right: 12px;
+}
+
+// ===========================
+// COMMENT CONTENT - LIGHT MODE DEFAULTS
+// ===========================
+
+::ng-deep [matListItemTitle] {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 6px !important;
+}
+
+::ng-deep [matListItemTitle] a {
+  color: #111827 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+::ng-deep [matListItemTitle] a:hover {
+  color: #3b82f6 !important;
+  text-decoration: underline !important;
+}
+
+::ng-deep [matListItemLine] {
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  margin: 8px 0 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+::ng-deep [matListItemLine] span {
+  display: block !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  color: #111827 !important;
+}
+
+::ng-deep [matListItemMeta] {
+  font-size: 0.85rem !important;
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+  margin-top: 6px !important;
+}
+
+// ===========================
+// RESPONSIVE
+// ===========================
+
+@media (max-width: 640px) {
+  .comment-section {
+    h4 {
+      font-size: 1.25rem;
+    }
+  }
+  
+  .comment-form {
+    padding: 16px;
+    
+    button[mat-raised-button] {
+      width: 100%;
+      align-self: stretch;
+    }
+  }
+  
+  .comment-avatar {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
+// ===========================
+// ✅ DARK MODE - MUST BE AT THE END
+// ===========================
+
+body.dark-mode {
+  .comment-section {
+    border-top-color: #2d2d2d;
+    
+    h4 {
+      color: #f9fafb;
+    }
+  }
+  
+  .comment-form {
+    background: rgba(96, 165, 250, 0.08);
+    border-color: rgba(96, 165, 250, 0.15);
+    
+    &:focus-within {
+      background: rgba(96, 165, 250, 0.12);
+      border-color: rgba(96, 165, 250, 0.25);
+    }
+  }
+  
+  .login-prompt-sm {
+    background: rgba(96, 165, 250, 0.08);
+    border-color: rgba(96, 165, 250, 0.2);
+    
+    a[mat-button] {
+      color: #60a5fa;
+      
+      &:hover {
+        background: rgba(96, 165, 250, 0.15) !important;
+      }
+    }
+  }
+  
+  .comment-list {
+    mat-list-item {
+      border-bottom-color: #2d2d2d;
+      
+      &:hover {
+        background: rgba(96, 165, 250, 0.05);
+      }
+    }
+  }
+  
+  .no-comments {
+    color: #d1d5db;
+  }
+  
+  .comment-avatar {
+    border-color: #2d2d2d;
+  }
+  
+  // ✅ USERNAME - WHITE
+  ::ng-deep [matListItemTitle] a {
+    color: #f9fafb !important;
+  }
+  
+  ::ng-deep [matListItemTitle] a:hover {
+    color: #60a5fa !important;
+  }
+  
+  // ✅ COMMENT CONTENT - LIGHT GRAY
+  ::ng-deep [matListItemLine] span {
+    color: #e5e5e5 !important;
+  }
+  
+  // ✅ DATE - MEDIUM GRAY
+  ::ng-deep [matListItemMeta] {
+    color: #9ca3af !important;
+  }
+}

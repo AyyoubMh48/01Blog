@@ -1,206 +1,480 @@
-// --- Main Layout ---
+// ===========================
+// DESIGN TOKENS
+// ===========================
+
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
+  
+  --bg-page: #f3f4f6;
+  --bg-card: #ffffff;
+  --bg-code: #1e293b;
+  
+  --border-color: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+body.dark-mode {
+  --bg-page: #0a0a0a;
+  --bg-card: #1a1a1a;
+  --bg-code: #0d1117;
+  
+  --border-color: #2d2d2d;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+// ===========================
+// MAIN LAYOUT
+// ===========================
+
 .post-detail-layout {
-  max-width: 900px; // Sets the main content width
-  margin: 20px auto;
-  padding: 0 16px;
-  animation: fadeInUp 0.5s ease-out; // Add fade-in animation
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 20px;
+  animation: fadeInUp 0.5s ease-out;
+  
+  @media (max-width: 768px) {
+    margin: 20px auto;
+    padding: 0 16px;
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-// --- Card Styling ---
-.post-card, .comments-card {
-  border: 1px solid var(--mat-divider-color);
-  box-shadow: none !important;
+// ===========================
+// CARDS
+// ===========================
+
+.post-card,
+.comments-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 16px !important;
+  box-shadow: var(--shadow-md) !important;
   margin-bottom: 24px;
+  transition: box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: var(--shadow-lg) !important;
+  }
 }
 
-// --- Media (Cover Image/Video) ---
-img[mat-card-image], video.post-video {
+// ===========================
+// COVER IMAGE/VIDEO
+// ===========================
+
+img[mat-card-image],
+video.post-video {
   width: 100%;
   height: auto;
-  max-height: 500px; // Height for the main cover image
+  max-height: 500px;
   object-fit: cover;
-  background-color: #eee;
-  border-bottom: 1px solid var(--mat-divider-color);
-}
-.dark-mode img[mat-card-image], .dark-mode video.post-video { 
-  background-color: #424242; 
+  background: #f5f5f5;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 16px 16px 0 0;
 }
 
-// --- Header & Author ---
-.post-header {
-  padding: 24px;
+body.dark-mode img[mat-card-image],
+body.dark-mode video.post-video {
+  background: #2a2a2a;
 }
+
+// ===========================
+// HEADER (Author Section)
+// ===========================
+
+.post-header {
+  padding: 24px !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
 .post-avatar {
   width: 48px;
   height: 48px;
   border-radius: 50%;
   background-size: cover;
+  background-position: center;
+  border: 2px solid var(--border-color);
 }
-mat-card-subtitle a { // Style for the author link
-  text-decoration: none;
-  color: inherit;
-  &:hover {
-    text-decoration: underline;
+
+.post-header {
+  mat-card-title {
+    a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: var(--primary);
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  mat-card-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
   }
 }
 
-// --- Action Bar (Likes, Comments) ---
+// ===========================
+// CONTENT AREA
+// ===========================
+
+.post-content-area {
+  padding: 32px 24px !important;
+  
+  @media (max-width: 768px) {
+    padding: 24px 16px !important;
+  }
+}
+
+.post-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0 0 20px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+// ===========================
+// TAGS
+// ===========================
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 28px;
+}
+
+.tag-link {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  text-decoration: none;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+body.dark-mode .tag-link {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.15);
+  border-color: rgba(96, 165, 250, 0.3);
+  
+  &:hover {
+    background: rgba(96, 165, 250, 0.2);
+    border-color: rgba(96, 165, 250, 0.4);
+  }
+}
+
+// ===========================
+// RICH TEXT CONTENT
+// ===========================
+
+:host ::ng-deep .post-full-content {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+  overflow-wrap: break-word;
+  
+  // Headings
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 800;
+    margin: 2rem 0 1rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.875rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
+  
+  // Paragraphs
+  p {
+    margin: 1.25rem 0;
+    color: var(--text-primary);
+  }
+  
+  // Lists
+  ul, ol {
+    padding-left: 2rem;
+    margin: 1.25rem 0;
+    
+    li {
+      margin: 0.5rem 0;
+      color: var(--text-primary);
+    }
+  }
+  
+  // Images & Videos
+  img, video {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 2rem auto !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-md);
+  }
+  
+  // Embedded iframes (YouTube, etc.)
+  iframe {
+    width: 100% !important;
+    max-width: 100% !important;
+    aspect-ratio: 16/9;
+    margin: 2rem 0;
+    border-radius: 12px;
+    border: 0;
+  }
+  
+  // Blockquotes
+  blockquote {
+    border-left: 4px solid var(--primary);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-style: italic;
+    
+    p {
+      margin: 0.5rem 0;
+    }
+  }
+  
+  // Code blocks
+  pre {
+    background: var(--bg-code);
+    color: #e5e7eb;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin: 2rem 0;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+  }
+  
+  // Inline code
+  code {
+    background: rgba(59, 130, 246, 0.1);
+    color: #dc2626;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+  }
+  
+  // Links
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--primary);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      color: var(--primary-dark);
+      border-bottom-color: transparent;
+    }
+  }
+  
+  // Tables
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    
+    th, td {
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      text-align: left;
+    }
+    
+    th {
+      background: rgba(59, 130, 246, 0.1);
+      font-weight: 700;
+    }
+  }
+  
+  // Horizontal rule
+  hr {
+    border: 0;
+    height: 1px;
+    background: var(--border-color);
+    margin: 3rem 0;
+  }
+}
+
+// Dark mode adjustments
+body.dark-mode :host ::ng-deep .post-full-content {
+  code {
+    background: rgba(96, 165, 250, 0.15);
+    color: #fca5a5;
+  }
+  
+  blockquote {
+    background: rgba(96, 165, 250, 0.08);
+    border-left-color: var(--primary-light);
+  }
+  
+  a {
+    color: var(--primary-light);
+    border-bottom-color: var(--primary-light);
+    
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+// ===========================
+// ACTION BAR (Stats)
+// ===========================
+
 mat-card-actions.stats {
-  padding: 8px 24px 16px;
+  padding: 16px 24px !important;
   display: flex;
   align-items: center;
   gap: 20px;
-  border-top: 1px solid var(--mat-divider-color);
-
-  .action-item { 
-    display: flex; 
-    align-items: center; 
-    gap: 6px; 
-  }
-  span.stat-count { 
-    font-size: 14px; 
-    color: #6b7280; 
-    font-weight: 500; 
-  }
-  .spacer { 
-    flex-grow: 1; 
-  }
-}
-
-// --- Comments Section ---
-.comments-card {
-  padding: 0 !important; // Let the comment component handle its padding
-}
-
-// --- Loading / Error ---
-.loading-indicator, .error-message {
-  text-align: center;
-  padding: 40px;
-  color: #757575;
-  font-style: italic;
-  font-size: 1.2rem;
-}
-
-// --- STYLES FOR [innerHTML] CONTENT ---
-// Use :host ::ng-deep to apply these styles to the Quill content
-:host ::ng-deep {
-  .post-content-area {
-    padding: 0 24px 24px;
-  }
-
-  .post-title {
-    font-size: 2.25rem;
-    font-weight: 800;
-    margin: 0 0 16px;
-    line-height: 1.3;
-    overflow-wrap: break-word;
-    word-break: break-word;
-  }
-  .dark-mode .post-title {
-    color: #f5f5f5;
-  }
-
-  // --- Tags ---
-  .post-tags {
+  border-top: 1px solid var(--border-color);
+  
+  .action-item {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
-    margin-bottom: 24px;
-
-    a.tag-link {
-      font-size: 14px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      color: #575757;
-      background-color: #f0f0f0;
-      text-decoration: none;
-      transition: background-color 0.2s;
-      &:hover { background-color: #e0e0e0; }
-    }
-  }
-  .dark-mode .post-tags a.tag-link {
-    color: #d6d6d6;
-    background-color: #424242;
-    &:hover { background-color: #616161; }
-  }
-
-  // --- Quill Rich Text Content ---
-  .post-full-content {
-    font-size: 1.125rem;
-    line-height: 1.75;
-    color: #171717;
-    overflow-wrap: break-word;
-    word-break: break-word;
-
-    // THE FIX for overflowing media
-    img, video, .ql-video {
-      max-width: 100% !important;
-      height: auto !important;
-      display: block !important;
-      margin: 2rem auto !important;
-      border-radius: 8px !important;
-    }
     
-    // --- Typography Styles (dev.to) ---
-    h1, h2, h3 { font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; }
-    h1 { font-size: 2.25rem; }
-    h2 { font-size: 1.875rem; }
-    h3 { font-size: 1.5rem; }
-    ul, ol { padding-left: 2rem; margin-bottom: 1.5rem; }
-    
-    blockquote {
-      border-left: 4px solid var(--mat-primary-main-color);
-      padding-left: 1.5rem;
-      margin: 1.5rem 0;
-      font-style: italic;
-      color: #525252;
-      background: #f9fafb;
-      padding: 1rem 1.5rem;
-    }
-    pre {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin: 1.5rem 0;
-      overflow-x: auto;
-    }
-    code {
-      background: #f3f4f6;
-      color: #dc2626;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-    }
-    pre code { background: transparent; color: inherit; padding: 0; }
-    a { 
-      color: #3b49df; 
-      text-decoration: none; 
-      border-bottom: 1px solid #3b49df; 
-      &:hover { border-bottom-color: transparent; }
+    button {
+      transition: transform 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
-
-  a {
-  text-decoration: none; // Remove underline
-  color: inherit;        // Use the subtitle's default text color
-
-  &:hover {
-    //text-decoration: underline; // Add underline back on hover
+  
+  .stat-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
+  .post-owner-actions {
+    display: flex;
+    gap: 8px;
+    
+    button {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
   }
 }
-  // --- Dark Mode Content Styles ---
-  .dark-mode .post-full-content {
-    color: #e5e5e5;
-    h1, h2, h3 { color: #f5f5f5; }
-    blockquote { background: #262626; color: #a3a3a3; }
-    pre { background: #0f0f0f; color: #d4d4d4; }
-    code { background: #262626; color: #fca5a5; }
-    a { color: #60a5fa; border-bottom-color: #60a5fa; }
+
+// ===========================
+// COMMENTS CARD
+// ===========================
+
+.comments-card {
+  padding: 0 !important;
+}
+
+// ===========================
+// LOADING & ERROR
+// ===========================
+
+.loading-indicator,
+.error-message {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  font-style: italic;
+}
+
+.error-message {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+body.dark-mode .error-message {
+  color: #fca5a5;
+}
+
+// ===========================
+// RESPONSIVE
+// ===========================
+
+@media (max-width: 640px) {
+  .post-title {
+    font-size: 1.75rem;
+  }
+  
+  :host ::ng-deep .post-full-content {
+    font-size: 1rem;
+    
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+  }
+  
+  mat-card-actions.stats {
+    flex-wrap: wrap;
+    gap: 12px;
+    
+    .post-owner-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
   }
 }

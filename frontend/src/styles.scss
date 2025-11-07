@@ -21,26 +21,23 @@ body.dark-mode {
 }
 
 // ===========================
-// ✅ GLOBAL INPUT TEXT FIX FOR DARK MODE - COMPLETE FIX
+// ✅ GLOBAL INPUT TEXT FIX FOR DARK MODE 
 // ===========================
 
 body.dark-mode {
-  /* Force ALL inputs with GRAY background and BLACK text */
   input {
-    color: #000000 !important;
-    background-color: #2d2d2d !important;
+    color: #ffffff !important;
     caret-color: #a78bfa !important;
   }
 
   input::placeholder {
-    color: #a0a0a0 !important;
+    color: #ffffff !important;
     opacity: 1 !important;
   }
 
   /* Material form fields - INPUTS VISIBLE */
   .mat-mdc-form-field .mdc-text-field__input {
-    color: #000000 !important;
-    background-color: #2d2d2d !important;
+    color: #ffffff !important;
   }
 
   /* ✅ CRITICAL - Placeholder styling for Material */
@@ -121,7 +118,6 @@ app-feed {
     background: #1a1a1a !important;
   }
 
-  // Menu items
   .mat-mdc-menu-item {
     color: #f5f5f5 !important;
 
@@ -129,7 +125,6 @@ app-feed {
       color: #f5f5f5 !important;
     }
 
-    // Icons in menu
     .mat-icon {
       color: #9ca3af !important;
     }
@@ -139,15 +134,13 @@ app-feed {
     }
   }
 
-  // Dividers
   .mat-divider {
     border-top-color: rgba(255, 255, 255, 0.12) !important;
   }
 }
 
-// === GLOBAL DARK MODE MENU FIX ===
+// === GLOBAL DARK MODE MENU ===
 body.dark-mode {
-  // All Material menus
   .mat-mdc-menu-panel {
     background: #1a1a1a !important;
   }
@@ -196,4 +189,44 @@ body.dark-mode .mat-mdc-menu-item * {
 .dark-mode .mat-mdc-menu-item .mat-icon,
 body.dark-mode .mat-mdc-menu-item .mat-icon {
   color: #9ca3af !important;
+}
+
+// ===========================
+// ✅ GLOBAL DARK MODE - MATERIAL LIST ITEMS FIX
+// ===========================
+
+body.dark-mode {
+  // Material List Items - Username, Content, Date
+  .mat-mdc-list-item {
+    color: #f9fafb !important;
+    
+    // Primary text (username)
+    .mdc-list-item__primary-text,
+    [matListItemTitle] {
+      color: #f9fafb !important;
+      
+      a {
+        color: #f9fafb !important;
+        
+        &:hover {
+          color: #60a5fa !important;
+        }
+      }
+    }
+    
+    // Secondary text (comment content)
+    .mdc-list-item__secondary-text,
+    [matListItemLine] {
+      color: #e5e5e5 !important;
+      
+      span {
+        color: #e5e5e5 !important;
+      }
+    }
+    
+    // Meta text (date)
+    [matListItemMeta] {
+      color: #9ca3af !important;
+    }
+  }
 }
