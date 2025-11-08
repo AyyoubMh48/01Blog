@@ -17,6 +17,6 @@ public class RegisterDto {
     private String email;
 
     @NotEmpty(message = "Password cannot be empty.")
-    @Size(min = 8, message = "Password must be at least 8 characters long.")
+    @Size(min = 8, max = 50, message = "Password must be at least 8 characters long(max 20).")
     private String password;
 }

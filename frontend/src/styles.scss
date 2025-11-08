@@ -1,3 +1,7 @@
+// ===========================
+// GLOBAL BASE STYLES
+// ===========================
+
 html, body { 
   height: 100%; 
 }
@@ -11,56 +15,18 @@ body {
 }
 
 // ===========================
-// LIGHT MODE (DEFAULT)
+// DARK MODE - BACKGROUND & TEXT
 // ===========================
 
-// Dark mode
 body.dark-mode {
   background-color: #0d0d0d;
   color: #f5f5f5;
 }
 
 // ===========================
-// ✅ GLOBAL INPUT TEXT FIX FOR DARK MODE 
+// LAYOUT (App-wide)
 // ===========================
 
-body.dark-mode {
-  input {
-    color: #ffffff !important;
-    caret-color: #a78bfa !important;
-  }
-
-  input::placeholder {
-    color: #ffffff !important;
-    opacity: 1 !important;
-  }
-
-  /* Material form fields - INPUTS VISIBLE */
-  .mat-mdc-form-field .mdc-text-field__input {
-    color: #ffffff !important;
-  }
-
-  /* ✅ CRITICAL - Placeholder styling for Material */
-  .mat-mdc-form-field .mdc-text-field__input::placeholder {
-    color: #a0a0a0 !important;
-    opacity: 1 !important;
-  }
-
-  /* Autofill - Browser autofill handling */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #000000 !important;
-    -webkit-box-shadow: inset 0 0 0 1000px #2d2d2d !important;
-    caret-color: #a78bfa !important;
-  }
-}
-
-// ===========================
-// LAYOUT STYLES
-// ===========================
-
-// Remove or modify main-content width restriction
 app-feed {
   display: block;
   width: 100%;
@@ -108,99 +74,49 @@ app-feed {
 }
 
 // ===========================
-// DARK MODE MENU FIX
+// DARK MODE - MATERIAL MENUS ONLY
 // ===========================
 
-// Dark mode Material menu fix
-.dark-mode {
-  // Menu panels
-  .mat-mdc-menu-panel {
-    background: #1a1a1a !important;
-  }
-
-  .mat-mdc-menu-item {
-    color: #f5f5f5 !important;
-
-    .mdc-list-item__primary-text {
-      color: #f5f5f5 !important;
-    }
-
-    .mat-icon {
-      color: #9ca3af !important;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.08) !important;
-    }
-  }
-
-  .mat-divider {
-    border-top-color: rgba(255, 255, 255, 0.12) !important;
-  }
-}
-
-// === GLOBAL DARK MODE MENU ===
 body.dark-mode {
   .mat-mdc-menu-panel {
     background: #1a1a1a !important;
   }
 
-  // All menu items
   .mat-mdc-menu-item {
     color: #f5f5f5 !important;
 
-    // Primary text
     .mdc-list-item__primary-text,
     .mat-mdc-menu-item-text {
       color: #f5f5f5 !important;
     }
 
-    // Icons
     .mat-icon,
     mat-icon {
       color: #9ca3af !important;
     }
 
-    // Spans
     span {
       color: #f5f5f5 !important;
     }
 
-    // Hover
     &:hover {
       background: rgba(255, 255, 255, 0.08) !important;
     }
   }
 
-  // Dividers in menus
   .mat-mdc-menu-content .mat-divider {
     border-top-color: rgba(255, 255, 255, 0.12) !important;
   }
 }
 
-// === NUCLEAR FIX FOR DARK MODE MENUS ===
-.dark-mode .mat-mdc-menu-item,
-body.dark-mode .mat-mdc-menu-item,
-.dark-mode .mat-mdc-menu-item *,
-body.dark-mode .mat-mdc-menu-item * {
-  color: #f5f5f5 !important;
-}
-
-.dark-mode .mat-mdc-menu-item .mat-icon,
-body.dark-mode .mat-mdc-menu-item .mat-icon {
-  color: #9ca3af !important;
-}
-
 // ===========================
-// ✅ GLOBAL DARK MODE - MATERIAL LIST ITEMS FIX
+// DARK MODE - MATERIAL LIST ITEMS ONLY
 // ===========================
 
 body.dark-mode {
-  // Material List Items - Username, Content, Date
   .mat-mdc-list-item {
     color: #f9fafb !important;
     
-    // Primary text (username)
     .mdc-list-item__primary-text,
     [matListItemTitle] {
       color: #f9fafb !important;
@@ -214,7 +130,6 @@ body.dark-mode {
       }
     }
     
-    // Secondary text (comment content)
     .mdc-list-item__secondary-text,
     [matListItemLine] {
       color: #e5e5e5 !important;
@@ -224,7 +139,6 @@ body.dark-mode {
       }
     }
     
-    // Meta text (date)
     [matListItemMeta] {
       color: #9ca3af !important;
     }

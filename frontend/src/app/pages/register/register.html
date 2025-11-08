@@ -98,6 +98,7 @@
                 ngModel 
                 required 
                 minlength="8"
+                maxlength="50"
                 #passwordInput="ngModel"
                 autocomplete="new-password">
               <mat-icon matPrefix>lock</mat-icon>
@@ -114,6 +115,9 @@
               </mat-error>
               <mat-error *ngIf="passwordInput.touched && passwordInput.errors?.['minlength']">
                 Password must be at least 8 characters.
+              </mat-error>
+              <mat-error *ngIf="passwordInput.touched && passwordInput.errors?.['maxlength']">
+                Password cannot exceed 50 characters.
               </mat-error>
             </mat-form-field>
           </div>
