@@ -1,18 +1,5 @@
-// === DESIGN TOKENS ===
-:root {
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-  --blur-amount: 12px;
-  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.dark-mode {
-  --glass-bg: rgba(26, 32, 44, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
+// === USES GLOBAL CSS VARIABLES FROM styles.scss ===
+// No local variable definitions needed - all handled globally
 
 // === ENHANCED ANIMATIONS ===
 @keyframes fadeInUp {
@@ -956,7 +943,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--mat-app-text-color);
+  color: var(--color-text-primary);
 
   .verified-badge {
     font-size: 18px;
@@ -966,19 +953,13 @@
   }
 }
 
-// DARK MODE FIX FOR AUTHOR NAME
-:host-context(.dark-mode) .author-name {
-  color: #f5f5f5 !important; 
-}
-
-
 .post-date {
   display: flex !important;
   align-items: center !important;
   gap: 6px !important;
   font-size: 0.875rem !important;
   margin: 0 !important;
-  color: #757575;
+  color: var(--color-text-secondary);
 
   .date-icon,
   mat-icon {
@@ -997,11 +978,6 @@
     align-items: center;
     gap: 4px;
   }
-}
-
-// DARK MODE FIX FOR POST DATE
-:host-context(.dark-mode) .post-date {
-  color: #bdbdbd; // FIXED: Light gray in dark mode
 }
 
 .bookmark-btn {
@@ -1034,7 +1010,7 @@
     line-height: 1.25;
     overflow-wrap: break-word;
     word-break: break-word;
-    color: var(--mat-app-text-color);
+    color: var(--color-text-primary);
     transition: color 0.3s ease;
     letter-spacing: -0.5px;
   }
@@ -1042,23 +1018,12 @@
   .post-excerpt {
     font-size: 1rem;
     line-height: 1.6;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     margin: 0 0 16px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-}
-
-// DARK MODE FIX FOR POST TITLE AND EXCERPT
-:host-context(.dark-mode) .post-summary {
-  .post-title {
-    color: #f5f5f5 !important; 
-  }
-
-  .post-excerpt {
-    color: #9ca3af;
   }
 }
 
@@ -1109,14 +1074,14 @@
   padding: 8px 14px;
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.06);
-  color: #757575;
+  color: var(--color-text-secondary);
   font-weight: 600;
 }
-// DARK MODE FIX FOR TAGS
-:host-context(.dark-mode) {
+
+body.dark-mode {
   .tag-pill {
     background: rgba(255, 255, 255, 0.1);
-    color: var(--mat-primary-light-color);
+    color: var(--color-primary-light);
 
     &:hover {
       background: rgba(255, 255, 255, 0.15);
@@ -1125,7 +1090,7 @@
 
   .tag-more {
     background: rgba(255, 255, 255, 0.08);
-    color: #bdbdbd;
+    color: var(--color-text-secondary);
   }
 }
 
@@ -1136,17 +1101,16 @@
   display: flex !important;
   align-items: center !important;
   gap: 24px !important;
-  border-top: 1px solid var(--mat-divider-color);
+  border-top: 1px solid var(--color-divider);
   background: rgba(0, 0, 0, 0.01);
   position: relative;
   z-index: 2;
 }
 
 
-// DARK MODE FIX FOR STATS
-:host-context(.dark-mode) .stats {
+body.dark-mode .stats {
   background: rgba(255, 255, 255, 0.02);
-  border-top-color: #2d2d2d;
+  border-top-color: var(--color-border);
 }
 
 .stat-item {
@@ -1157,7 +1121,7 @@
 
 .stat-btn {
   transition: all 0.3s var(--transition-bounce) !important;
-  color: #6b7280 !important;
+  color: var(--color-text-secondary) !important;
 
   mat-icon {
     transition: transform 0.3s ease;
@@ -1170,61 +1134,29 @@
 
   &.like-btn {
     &.liked mat-icon {
-      color: #ef4444;
+      color: var(--color-error);
       animation: pulse 0.5s ease;
     }
 
     &:not([disabled]):hover mat-icon {
-      color: #ef4444 !important;
+      color: var(--color-error) !important;
     }
   }
 
   &.comment-btn:hover mat-icon {
-    color: #6b7280 !important;
-  }
-}
-
-// DARK MODE FIX FOR STAT BUTTONS
-:host-context(.dark-mode) .stat-btn {
-  color: #9ca3af !important; 
-
-  mat-icon {
-    color: #9ca3af !important; 
-  }
-
-  &.like-btn {
-    &.liked mat-icon {
-      color: #ef4444 !important;
-    }
-
-    &:hover mat-icon {
-      color: #ef4444 !important;
-    }
-  }
-
-  &.comment-btn mat-icon {
-    color: #9ca3af !important;
+    color: var(--color-text-secondary) !important;
   }
 }
 
 .stat-count {
   font-size: 0.938rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   transition: all 0.3s ease;
 
   &.active {
-    color: #ef4444;
+    color: var(--color-error);
     transform: scale(1.1);
-  }
-}
-
-// DARK MODE FIX FOR STAT COUNT
-:host-context(.dark-mode) .stat-count {
-  color: #9ca3af; // FIXED: Light gray in dark mode
-
-  &.active {
-    color: #ef4444;
   }
 }
 
@@ -1234,26 +1166,12 @@
 
 .share-btn {
   transition: all 0.3s var(--transition-bounce) !important;
-  color: #6b7280 !important;
+  color: var(--color-text-secondary) !important;
 
   &:hover {
     background: rgba(var(--mat-primary-rgb), 0.12) !important;
     transform: rotate(15deg) scale(1.15);
 
-    mat-icon {
-      color: var(--mat-primary-main-color) !important;
-    }
-  }
-}
-// DARK MODE FIX FOR SHARE BUTTON
-:host-context(.dark-mode) .share-btn {
-  color: #9ca3af !important;
-
-  mat-icon {
-    color: #9ca3af !important;
-  }
-
-  &:hover {
     mat-icon {
       color: var(--mat-primary-main-color) !important;
     }
@@ -1293,7 +1211,7 @@
     font-size: 80px !important;
     width: 80px !important;
     height: 80px !important;
-    color: #bdbdbd;
+    color: var(--color-text-muted);
     opacity: 0.6;
     animation: float 4s ease-in-out infinite;
     position: relative;

@@ -147,7 +147,7 @@
 }
 
 // ===========================
-// COMMENT CONTENT - LIGHT MODE DEFAULTS
+// COMMENT CONTENT - USES CSS VARIABLES
 // ===========================
 
 ::ng-deep [matListItemTitle] {
@@ -157,13 +157,13 @@
 }
 
 ::ng-deep [matListItemTitle] a {
-  color: #111827 !important;
+  color: var(--color-text-primary) !important;
   text-decoration: none !important;
   transition: color 0.2s ease !important;
 }
 
 ::ng-deep [matListItemTitle] a:hover {
-  color: #3b82f6 !important;
+  color: var(--color-primary) !important;
   text-decoration: underline !important;
 }
 
@@ -180,12 +180,12 @@
   display: block !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
-  color: #111827 !important;
+  color: var(--color-text-primary) !important;
 }
 
 ::ng-deep [matListItemMeta] {
   font-size: 0.85rem !important;
-  color: #6b7280 !important;
+  color: var(--color-text-muted) !important;
   font-weight: 500 !important;
   margin-top: 6px !important;
 }
@@ -217,15 +217,15 @@
 }
 
 // ===========================
-// ✅ DARK MODE - MUST BE AT THE END
+// ✅ DARK MODE - OVERRIDES FOR SPECIFIC ELEMENTS
 // ===========================
 
 body.dark-mode {
   .comment-section {
-    border-top-color: #2d2d2d;
+    border-top-color: var(--color-border);
     
     h4 {
-      color: #f9fafb;
+      color: var(--color-text-primary);
     }
   }
   
@@ -244,7 +244,7 @@ body.dark-mode {
     border-color: rgba(96, 165, 250, 0.2);
     
     a[mat-button] {
-      color: #60a5fa;
+      color: var(--color-primary-light);
       
       &:hover {
         background: rgba(96, 165, 250, 0.15) !important;
@@ -254,7 +254,7 @@ body.dark-mode {
   
   .comment-list {
     mat-list-item {
-      border-bottom-color: #2d2d2d;
+      border-bottom-color: var(--color-border);
       
       &:hover {
         background: rgba(96, 165, 250, 0.05);
@@ -263,29 +263,15 @@ body.dark-mode {
   }
   
   .no-comments {
-    color: #d1d5db;
+    color: var(--color-text-secondary);
   }
   
   .comment-avatar {
-    border-color: #2d2d2d;
+    border-color: var(--color-border);
   }
   
-  // ✅ USERNAME - WHITE
-  ::ng-deep [matListItemTitle] a {
-    color: #f9fafb !important;
-  }
-  
+  // Username links in dark mode - use primary light
   ::ng-deep [matListItemTitle] a:hover {
-    color: #60a5fa !important;
-  }
-  
-  // ✅ COMMENT CONTENT - LIGHT GRAY
-  ::ng-deep [matListItemLine] span {
-    color: #e5e5e5 !important;
-  }
-  
-  // ✅ DATE - MEDIUM GRAY
-  ::ng-deep [matListItemMeta] {
-    color: #9ca3af !important;
+    color: var(--color-primary-light) !important;
   }
 }

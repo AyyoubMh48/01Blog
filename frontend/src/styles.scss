@@ -1,4 +1,79 @@
 // ===========================
+// CSS VARIABLES - CENTRALIZED THEMING
+// ===========================
+
+:root {
+  // Brand Colors
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-primary-light: #60a5fa;
+  --color-accent: #8b5cf6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  
+  // Text Colors - Light Mode
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+  --color-text-inverse: #ffffff;
+  
+  // Background Colors - Light Mode
+  --color-bg-page: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-section: #f3f4f6;
+  --color-bg-light: #f9fafb;
+  --color-bg-hover: #f3f4f6;
+  --color-bg-code: #1e293b;
+  
+  // Border & Divider Colors - Light Mode
+  --color-border: #e5e7eb;
+  --color-divider: rgba(0, 0, 0, 0.1);
+  
+  // Shadow Colors - Light Mode
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+  
+  // Glassmorphism
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+
+body.dark-mode {
+  // Text Colors - Dark Mode
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #9ca3af;
+  --color-text-inverse: #111827;
+  
+  // Background Colors - Dark Mode
+  --color-bg-page: #0a0a0a;
+  --color-bg-card: #1a1a1a;
+  --color-bg-section: #111111;
+  --color-bg-light: #252525;
+  --color-bg-hover: #2d2d2d;
+  --color-bg-code: #0d1117;
+  
+  // Border & Divider Colors - Dark Mode
+  --color-border: #2d2d2d;
+  --color-divider: rgba(255, 255, 255, 0.1);
+  
+  // Shadow Colors - Dark Mode
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+  
+  // Glassmorphism - Dark Mode
+  --glass-bg: rgba(26, 32, 44, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+// ===========================
 // GLOBAL BASE STYLES
 // ===========================
 
@@ -9,18 +84,9 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #ffffff;
-  color: #090909;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
   transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-// ===========================
-// DARK MODE - BACKGROUND & TEXT
-// ===========================
-
-body.dark-mode {
-  background-color: #0d0d0d;
-  color: #f5f5f5;
 }
 
 // ===========================
@@ -66,81 +132,73 @@ app-feed {
 }
 
 .header-container {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  
-  .dark-mode & {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-  }
+  border-bottom: 1px solid var(--color-divider);
 }
 
 // ===========================
-// DARK MODE - MATERIAL MENUS ONLY
+// MATERIAL COMPONENTS DARK MODE
 // ===========================
 
 body.dark-mode {
+  // Menus
   .mat-mdc-menu-panel {
-    background: #1a1a1a !important;
+    background: var(--color-bg-card) !important;
   }
 
   .mat-mdc-menu-item {
-    color: #f5f5f5 !important;
+    color: var(--color-text-primary) !important;
 
     .mdc-list-item__primary-text,
     .mat-mdc-menu-item-text {
-      color: #f5f5f5 !important;
+      color: var(--color-text-primary) !important;
     }
 
     .mat-icon,
     mat-icon {
-      color: #9ca3af !important;
+      color: var(--color-text-muted) !important;
     }
 
     span {
-      color: #f5f5f5 !important;
+      color: var(--color-text-primary) !important;
     }
 
     &:hover {
-      background: rgba(255, 255, 255, 0.08) !important;
+      background: var(--color-bg-hover) !important;
     }
   }
 
   .mat-mdc-menu-content .mat-divider {
-    border-top-color: rgba(255, 255, 255, 0.12) !important;
+    border-top-color: var(--color-border) !important;
   }
-}
 
-// ===========================
-// DARK MODE - MATERIAL LIST ITEMS ONLY
-// ===========================
-
-body.dark-mode {
+  // List Items
   .mat-mdc-list-item {
-    color: #f9fafb !important;
+    color: var(--color-text-primary) !important;
     
     .mdc-list-item__primary-text,
     [matListItemTitle] {
-      color: #f9fafb !important;
+      color: var(--color-text-primary) !important;
       
       a {
-        color: #f9fafb !important;
+        color: var(--color-text-primary) !important;
         
         &:hover {
-          color: #60a5fa !important;
+          color: var(--color-primary-light) !important;
         }
       }
     }
     
     .mdc-list-item__secondary-text,
     [matListItemLine] {
-      color: #e5e5e5 !important;
+      color: var(--color-text-secondary) !important;
       
       span {
-        color: #e5e5e5 !important;
+        color: var(--color-text-secondary) !important;
       }
     }
     
     [matListItemMeta] {
-      color: #9ca3af !important;
+      color: var(--color-text-muted) !important;
     }
   }
 }
