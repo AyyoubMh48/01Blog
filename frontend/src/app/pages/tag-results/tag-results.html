@@ -1,56 +1,147 @@
-<div
-  class="tag-results-container"
-  infiniteScroll
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="300"
-  (scrolled)="onScroll()">
+<div class="tag-results-page"
+     infiniteScroll
+     [infiniteScrollDistance]="2"
+     [infiniteScrollThrottle]="300"
+     [scrollWindow]="true"
+     (scrolled)="onScroll()">
 
-  <div class="tag-header" *ngIf="tagName">
-    <h1>#{{ tagName }}</h1>
+  <!-- Enhanced Tag Header -->
+  <div class="tag-header-section" *ngIf="tagName">
+    <div class="tag-header-content">
+      <div class="tag-icon-wrapper">
+        <mat-icon class="tag-icon">label</mat-icon>
+        <div class="icon-glow"></div>
+      </div>
+      <div class="tag-info">
+        <h1 class="tag-title">#{{ tagName }}</h1>
+        <p class="tag-subtitle" *ngIf="posts.length > 0">
+          {{ posts.length }} {{ posts.length === 1 ? 'post' : 'posts' }} found
+        </p>
+      </div>
     </div>
+  </div>
 
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <p>{{ errorMessage }}</p>
+  </div>
 
+  <!-- Post Grid -->
   <section class="post-list">
+    <!-- Empty State -->
     <div *ngIf="posts.length === 0 && !isLoading && !errorMessage" class="no-posts-message">
-      No posts found for this tag yet.
+      <div class="empty-state">
+        <div class="empty-icon-wrapper">
+          <mat-icon class="empty-icon">search_off</mat-icon>
+          <div class="empty-icon-bg"></div>
+        </div>
+        <p class="empty-text">No posts found for #{{ tagName }}</p>
+        <p class="empty-subtext">Be the first to create a post with this tag!</p>
+        <a mat-raised-button color="primary" routerLink="/create" class="create-btn">
+          <mat-icon>add</mat-icon>
+          <span>Create Post</span>
+        </a>
+      </div>
     </div>
 
-    <a *ngFor="let post of posts" [routerLink]="['/post', post.id]" class="post-card-link">
-      <mat-card class="post-card devto-style">
-        <img mat-card-image *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')" [src]="post.mediaUrl" alt="Post media">
-        
-        <div class="post-card-main-content">
-          <mat-card-header>
-            <div mat-card-avatar class="post-avatar" [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'"></div>
-            <mat-card-title>{{ post.author.username }}</mat-card-title>
-            <mat-card-subtitle>{{ post.createdAt | date:'MMM d' }}</mat-card-subtitle>
-          </mat-card-header>
+    <!-- Post Cards -->
+    <article *ngFor="let post of posts; let i = index" 
+             class="post-card-wrapper"
+             [style.animation-delay.ms]="i * 60">
+      <a [routerLink]="['/post', post.id]" 
+         class="post-card-link"
+         [attr.aria-label]="'Read post: ' + post.title">
+        <mat-card class="post-card devto-style">
+          <div class="card-shine"></div>
           
-          <mat-card-content class="post-summary">
-            <h2>{{ post.title }}</h2>
-            <div class="post-tags" *ngIf="post.tags.length > 0">
-              <a *ngFor="let tag of post.tags" [routerLink]="['/tag', tag.name]" class="tag-link summary" (click)="$event.stopPropagation()">#{{ tag.name }}</a>
+          <!-- Media -->
+          <div class="post-media-wrapper" *ngIf="post.mediaUrl && !post.mediaUrl.includes('/video/')">
+            <img mat-card-image 
+                 [src]="post.mediaUrl" 
+                 [alt]="'Cover image for ' + post.title"
+                 class="post-media-image"
+                 loading="lazy">
+            <div class="media-overlay">
+              <div class="media-gradient"></div>
             </div>
+          </div>
+
+          <!-- Content -->
+          <div class="post-card-main-content">
+            <mat-card-header class="post-header">
+              <div mat-card-avatar 
+                   class="post-avatar" 
+                   [style.backgroundImage]="'url(' + post.author.avatarUrl + ')'"
+                   [attr.aria-label]="post.author.username + ' avatar'">
+                <div class="avatar-ring"></div>
+              </div>
+              <div class="author-info">
+                <mat-card-title class="author-name">
+                  {{ post.author.username }}
+                </mat-card-title>
+                <mat-card-subtitle class="post-date">
+                  <mat-icon class="date-icon">schedule</mat-icon>
+                  {{ post.createdAt | date:'MMM d, y' }}
+                </mat-card-subtitle>
+              </div>
+            </mat-card-header>
+
+            <mat-card-content class="post-summary">
+              <h2 class="post-title">{{ post.title }}</h2>
+              <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
+                <a *ngFor="let tag of post.tags.slice(0, 4)" 
+                   [routerLink]="['/tag', tag.name]" 
+                   class="tag-link tag-pill"
+                   [class.active-tag]="tag.name === tagName"
+                   (click)="$event.stopPropagation()"
+                   [attr.aria-label]="'View posts tagged ' + tag.name">
+                  #{{ tag.name }}
+                </a>
+                <span *ngIf="post.tags.length > 4" class="tag-more">
+                  +{{ post.tags.length - 4 }}
+                </span>
+              </div>
             </mat-card-content>
-        </div>
-        
-        <mat-card-actions class="stats">
-          <div class="action-item">
-            <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
-            <span>{{ post.likeCount }}</span>
           </div>
-          <div class="action-item">
-            <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
-            <span>{{ post.commentCount }} Comments</span>
-          </div>
-        </mat-card-actions>
-      </mat-card>
-    </a>
+
+          <!-- Stats -->
+          <mat-card-actions class="stats">
+            <div class="stat-item">
+              <button mat-icon-button class="stat-btn" disabled>
+                <mat-icon>favorite_border</mat-icon>
+              </button>
+              <span class="stat-count">{{ post.likeCount | number }}</span>
+            </div>
+            <div class="stat-item">
+              <button mat-icon-button class="stat-btn" disabled>
+                <mat-icon>chat_bubble_outline</mat-icon>
+              </button>
+              <span class="stat-count">{{ post.commentCount | number }}</span>
+            </div>
+            <div class="stat-spacer"></div>
+          </mat-card-actions>
+        </mat-card>
+      </a>
+    </article>
   </section>
 
-  <div *ngIf="isLoading" class="loading-indicator">
-    <div class="spinner"></div>
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="loading-indicator" role="status" aria-live="polite">
+    <div class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+      <div class="spinner-glow"></div>
+    </div>
     <p class="loading-text">Loading more posts...</p>
+  </div>
+
+  <!-- End Message -->
+  <div *ngIf="!isLoading && currentPage >= totalPages && totalPages > 0 && posts.length > 0" class="end-message">
+    <mat-icon class="end-icon">check_circle</mat-icon>
+    <p class="end-text">You've seen all posts for #{{ tagName }} 🎉</p>
+    <button mat-button routerLink="/feed" class="explore-btn">
+      <mat-icon>explore</mat-icon>
+      <span>Explore More</span>
+    </button>
   </div>
 </div>

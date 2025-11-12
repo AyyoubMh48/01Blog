@@ -1,7 +1,6 @@
 package com._blog.backend.dto;
 
 import lombok.Data;
-import java.util.List;
 
 @Data
 public class AdminAnalyticsDto {

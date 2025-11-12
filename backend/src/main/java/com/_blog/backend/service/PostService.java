@@ -10,7 +10,6 @@ import com._blog.backend.dto.TrendingPostDto;
 import com._blog.backend.entity.Tag;
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.LikeRepository;
-import com._blog.backend.repository.MediaRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.SubscriptionRepository;
 import com._blog.backend.repository.TagRepository;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com._blog.backend.exception.ResourceNotFoundException;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

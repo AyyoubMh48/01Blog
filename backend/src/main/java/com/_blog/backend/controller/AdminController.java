@@ -4,7 +4,6 @@ import com._blog.backend.dto.AdminAnalyticsDto;
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.ReportResponseDto;
 import com._blog.backend.dto.UserDto;
-import com._blog.backend.entity.Report;
 import com._blog.backend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

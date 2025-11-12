@@ -7,7 +7,9 @@ import { Post } from '../../models/post';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button'; 
 import { MatIconModule } from '@angular/material/icon';   
-import { InfiniteScrollModule } from 'ngx-infinite-scroll'; 
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 @Component({
   selector: 'app-tag-results',
@@ -18,7 +20,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     MatCardModule,
     MatButtonModule, 
     MatIconModule,   
-    InfiniteScrollModule 
+    InfiniteScrollModule ,
+    MatProgressSpinnerModule
   ],
   templateUrl: './tag-results.html',
   styleUrl: './tag-results.scss'
