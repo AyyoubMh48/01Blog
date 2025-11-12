@@ -1,79 +1,77 @@
-<div
-  class="feed-page-layout"
-  infiniteScroll
-  [infiniteScrollContainer]="'.main-feed-column'" 
-  [fromRoot]="true" 
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="300"
-  (scrolled)="onScroll()"
-  role="main"
-  aria-label="Blog Feed">
+<!-- Use window scroll on parent container -->
+<div class="feed-page-layout" 
+     infiniteScroll
+     [infiniteScrollDistance]="2"
+     [infiniteScrollThrottle]="300"
+     [scrollWindow]="true"
+     (scrolled)="onScroll()"
+     role="main" 
+     aria-label="Blog Feed">
   
   <!-- Enhanced Sidebar -->
-<aside class="sidebar-column" role="complementary" aria-label="Sidebar content">
-  <!-- Trending Posts Card -->
-  <mat-card class="sidebar-card trending-card" *ngIf="trendingPosts.length > 0">
-    <mat-card-header>
-      <mat-card-title>
-        <span class="emoji-icon" aria-hidden="true">🔥</span>
-        <span class="title-text">Trending Now</span>
-        <span class="pulse-indicator"></span>
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <ul class="trending-list" role="list">
-        <li *ngFor="let trendPost of trendingPosts; let i = index" 
-            class="trending-item" 
-            [style.animation-delay.ms]="i * 50"
-            role="listitem">
-          <a [routerLink]="['/post', trendPost.id]" 
-             class="trending-link"
-             [attr.aria-label]="'Read trending post: ' + trendPost.title">
-            <div class="trending-content">
-              <span class="trending-title">{{ trendPost.title }}</span>
-              <div class="post-tags" *ngIf="trendPost.tags && trendPost.tags.length > 0">
-                <a *ngFor="let tag of trendPost.tags.slice(0, 2)" 
-                   [routerLink]="['/tag', tag.name]" 
-                   class="tag-link tag-link-small"
-                   (click)="$event.stopPropagation()"
-                   [attr.aria-label]="'View posts tagged ' + tag.name">
-                  #{{ tag.name }}
-                </a>
-                <span *ngIf="trendPost.tags.length > 2" class="tag-more-small">
-                  +{{ trendPost.tags.length - 2 }}
-                </span>
+  <aside class="sidebar-column" role="complementary" aria-label="Sidebar content">
+    <!-- Trending Posts Card -->
+    <mat-card class="sidebar-card trending-card" *ngIf="trendingPosts.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          <span class="emoji-icon" aria-hidden="true">🔥</span>
+          <span class="title-text">Trending Now</span>
+          <span class="pulse-indicator"></span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="trending-list" role="list">
+          <li *ngFor="let trendPost of trendingPosts; let i = index" 
+              class="trending-item" 
+              [style.animation-delay.ms]="i * 50"
+              role="listitem">
+            <a [routerLink]="['/post', trendPost.id]" 
+               class="trending-link"
+               [attr.aria-label]="'Read trending post: ' + trendPost.title">
+              <div class="trending-content">
+                <span class="trending-title">{{ trendPost.title }}</span>
+                <div class="post-tags" *ngIf="trendPost.tags && trendPost.tags.length > 0">
+                  <a *ngFor="let tag of trendPost.tags.slice(0, 2)" 
+                     [routerLink]="['/tag', tag.name]" 
+                     class="tag-link tag-link-small"
+                     (click)="$event.stopPropagation()"
+                     [attr.aria-label]="'View posts tagged ' + tag.name">
+                    #{{ tag.name }}
+                  </a>
+                  <span *ngIf="trendPost.tags.length > 2" class="tag-more-small">
+                    +{{ trendPost.tags.length - 2 }}
+                  </span>
+                </div>
               </div>
-            </div>
-            <mat-icon class="arrow-icon" aria-hidden="true">arrow_forward</mat-icon>
+              <mat-icon class="arrow-icon" aria-hidden="true">arrow_forward</mat-icon>
+            </a>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Popular Tags Card -->
+    <mat-card class="sidebar-card tags-card" *ngIf="popularTags.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          <span class="emoji-icon" aria-hidden="true">🏷️</span>
+          <span class="title-text">Popular Topics</span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="tag-cloud" role="list">
+          <a *ngFor="let tag of popularTags; let i = index" 
+             [routerLink]="['/tag', tag.name]" 
+             class="tag-link tag-bubble"
+             [style.animation-delay.ms]="i * 30"
+             [attr.aria-label]="'View posts tagged ' + tag.name"
+             role="listitem">
+            #{{ tag.name }}
           </a>
-        </li>
-      </ul>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Popular Tags Card -->
-  <mat-card class="sidebar-card tags-card" *ngIf="popularTags.length > 0">
-    <mat-card-header>
-      <mat-card-title>
-        <span class="emoji-icon" aria-hidden="true">🏷️</span>
-        <span class="title-text">Popular Topics</span>
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="tag-cloud" role="list">
-        <a *ngFor="let tag of popularTags; let i = index" 
-           [routerLink]="['/tag', tag.name]" 
-           class="tag-link tag-bubble"
-           [style.animation-delay.ms]="i * 30"
-           [attr.aria-label]="'View posts tagged ' + tag.name"
-           role="listitem">
-          #{{ tag.name }}
-        </a>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</aside>
-
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </aside>
 
   <!-- Main Feed Column -->
   <div class="main-feed-column" role="feed" aria-label="Blog posts">
@@ -252,6 +250,16 @@
         <div class="spinner-glow"></div>
       </div>
       <p class="loading-text">Discovering more amazing content...</p>
+    </div>
+
+    <!-- End Message -->
+    <div *ngIf="!isLoading && currentPage >= totalPages && totalPages > 0" class="end-message">
+      <mat-icon class="end-icon">check_circle</mat-icon>
+      <p class="end-text">You've reached the end! 🎉</p>
+      <button mat-button (click)="resetAndLoadPosts()" class="reload-btn">
+        <mat-icon>refresh</mat-icon>
+        <span>Reload Feed</span>
+      </button>
     </div>
   </div>
 </div>

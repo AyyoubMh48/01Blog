@@ -78,7 +78,7 @@ export class Feed implements OnInit {
     this.resetAndLoadPosts();
   }
 
-  private resetAndLoadPosts(): void {
+  resetAndLoadPosts(): void {
       this.posts = [];
       this.currentPage = 0;
       this.totalPages = 0;
@@ -97,9 +97,15 @@ export class Feed implements OnInit {
 
   loadPosts(): void {
   if (this.isLoading || (this.totalPages > 0 && this.currentPage >= this.totalPages)) {
+    console.log('⛔ Load blocked:', { 
+      isLoading: this.isLoading, 
+      currentPage: this.currentPage, 
+      totalPages: this.totalPages 
+    });
     return;
   }
   this.isLoading = true;
+    console.log('📥 Loading page:', this.currentPage);
 
   let apiCall: Observable<Page<Post>>;
 
@@ -117,20 +123,24 @@ export class Feed implements OnInit {
     }
 
   
-  apiCall.subscribe((page: Page<Post>) => {
+  apiCall.subscribe({
+    next: (page: Page<Post>) => {
+      console.log('✅ Loaded:', page.content.length, 'posts. Total pages:', page.totalPages);
       this.posts = [...this.posts, ...page.content];
       this.totalPages = page.totalPages;
-      this.currentPage++; 
+      this.currentPage++;
       this.isLoading = false;
-    }, error => {
-      console.error("Failed to load posts:", error);
+    },
+    error: (error) => {
+      console.error('❌ Failed to load posts:', error);
       this.isLoading = false;
-    });
+    }
+  });
 }
 
 // This method is called by the infinite scroll directive
   onScroll(): void {
-    console.log("Scrolled, loading next page...");
+    console.log('🔄 Scroll event triggered at page:', this.currentPage);
     this.loadPosts();
   }
 
