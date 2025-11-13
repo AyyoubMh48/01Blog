@@ -8,6 +8,8 @@
   --color-primary-dark: #2563eb;
   --color-primary-light: #60a5fa;
   --color-accent: #8b5cf6;
+  --color-accent-dark: #7c3aed;
+  --color-accent-light: #a78bfa;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
@@ -35,6 +37,7 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
   --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --color-shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
   
   // Glassmorphism
   --glass-bg: rgba(255, 255, 255, 0.7);
@@ -66,6 +69,7 @@ body.dark-mode {
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+  --color-shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
   
   // Glassmorphism - Dark Mode
   --glass-bg: rgba(26, 32, 44, 0.7);
