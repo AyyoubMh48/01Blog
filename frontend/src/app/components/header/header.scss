@@ -1,22 +1,31 @@
+
 // === SCOPED TO APP-HEADER ===
 app-header {
   display: block;
   width: 100%;
 }
-// === MAIN TOOLBAR ===
+
+// === MAIN TOOLBAR - ELEVATED MODERN DESIGN ===
 .main-toolbar {
   display: flex;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 24px;
   background: var(--color-bg-card);
   color: var(--color-text-primary);
   border-bottom: 1px solid var(--color-border);
-  height: 56px;
-  box-shadow: var(--shadow-sm);
+  height: 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 1000;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+body.dark-mode .main-toolbar {
+  background: rgba(26, 26, 26, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 // === TOOLBAR CONTENT WRAPPER ===
@@ -24,8 +33,8 @@ app-header {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 1600px;
-  gap: 16px;
+  max-width: 1400px;
+  gap: 20px;
 }
 
 .toolbar-section {
@@ -33,44 +42,123 @@ app-header {
   align-items: center;
   gap: 12px;
 }
+.toolbar-section a {
+  overflow: hidden;
+}
 
 .toolbar-spacer {
   flex-grow: 1;
 }
 
-// === BRAND LOGO ===
+// === BRAND LOGO - BOLD & VISIBLE ===
 .brand-logo {
-  font-weight: 700 !important;
-  font-size: 1.375rem !important;
+  font-weight: 900 !important;
+  font-size: 1.5rem !important;
   text-decoration: none;
-  color: var(--color-text-primary) !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease !important;
-  letter-spacing: -0.5px;
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  letter-spacing: -1px;
+  position: relative;
+  
+  // Solid color - always visible
+  color: var(--color-primary) !important;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
 
   &:hover {
     background: var(--color-bg-hover) !important;
+    color: var(--color-primary-dark) !important;
+    transform: translateY(-2px);
+
+    &::after {
+      transform: scaleX(1);
+    }
   }
 
   .logo-text {
     color: inherit;
-    font-weight: 700;
+    font-weight: 900;
   }
 }
 
-// === CREATE POST BUTTON ===
-.create-post-btn {
-  font-weight: 600 !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
-  border: 1px solid var(--color-primary) !important;
-  color: var(--color-primary) !important;
-  transition: all 0.2s ease !important;
+body.dark-mode .brand-logo {
+  color: var(--color-primary-light) !important;
 
   &:hover {
-    background: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+  }
+}
+
+// === CREATE POST BUTTON - CLEAN SLIDE ANIMATION ===
+.create-post-btn {
+  font-weight: 700 !important;
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  border: 2px solid var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  background-color: transparent !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem !important;
+  position: relative;
+  overflow: hidden;
+
+  // Disable Material ripple and hover
+  ::ng-deep .mat-mdc-button-persistent-ripple,
+  ::ng-deep .mat-mdc-button-ripple,
+  ::ng-deep .mat-ripple-element {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-mdc-button-persistent-ripple::before {
+    display: none !important;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--color-primary);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+  }
+
+  &:hover {
+    background-color: transparent !important;
     color: white !important;
+    border-color: var(--color-primary-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+
+    &::before {
+      left: 0;
+    }
+
+    // Override Material hover state
+    ::ng-deep .mat-mdc-button-persistent-ripple::before {
+      opacity: 0 !important;
+    }
+  }
+
+  &:active,
+  &:focus {
+    background-color: transparent !important;
   }
 }
 
@@ -78,166 +166,207 @@ body.dark-mode .create-post-btn {
   border-color: var(--color-primary-light) !important;
   color: var(--color-primary-light) !important;
 
+  &::before {
+    background: var(--color-primary-light);
+  }
+
   &:hover {
-    background: var(--color-primary-light) !important;
+    background-color: transparent !important;
     color: var(--color-text-inverse) !important;
+    border-color: var(--color-primary-light) !important;
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+  }
+
+  &:active,
+  &:focus {
+    background-color: transparent !important;
   }
 }
 
-// === ICON BUTTONS ===
+// === ICON BUTTONS - MODERN ROUNDED DESIGN ===
 app-header .icon-btn {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 8px !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
   color: var(--color-text-primary) !important;
-  transition: background 0.2s ease !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   padding: 0 !important;
+  position: relative;
 
   mat-icon {
     color: var(--color-text-primary) !important;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
   }
 
   &:hover {
     background: var(--color-bg-hover) !important;
-    transform: none !important; 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   &.notification-btn {
     ::ng-deep .mat-badge-content {
       background: var(--color-error) !important;
       color: white !important;
-      font-weight: 600;
-      font-size: 10px;
+      font-weight: 700;
+      font-size: 11px;
+      min-width: 18px;
+      height: 18px;
+      line-height: 18px;
+      border: 2px solid var(--color-bg-card);
     }
   }
+}
+
+body.dark-mode app-header .icon-btn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 // === TEXT BUTTON ===
 .text-btn {
   font-weight: 600 !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
+  padding: 10px 18px !important;
+  border-radius: 10px !important;
   color: var(--color-text-primary) !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.3s ease !important;
 
   &:hover {
     background: var(--color-bg-hover) !important;
+    transform: translateY(-1px);
   }
 }
 
-// === PROFILE BUTTON ===
+// === PROFILE BUTTON - ELEGANT AVATAR ===
 .profile-btn {
   padding: 4px !important;
   min-width: auto !important;
   border-radius: 50% !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 2px solid transparent !important;
 
   &:hover {
-    background: var(--color-bg-hover) !important;
+    border-color: var(--color-primary) !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
   }
 }
 
+body.dark-mode .profile-btn:hover {
+  border-color: var(--color-primary-light) !important;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+}
+
 .header-avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
   display: block;
 }
 
-// === SIGNUP BUTTON ===
+// === SIGNUP BUTTON - PREMIUM GRADIENT ===
 .signup-btn {
-  font-weight: 600 !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
-  background: #3b49df !important;
+  font-weight: 700 !important;
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%) !important;
   color: white !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 
   &:hover {
-    background: #2d3db8 !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 73, 223, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
-:host-context(.dark-mode) .signup-btn {
-  background: #5865f2 !important;
+body.dark-mode .signup-btn {
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%) !important;
+  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
 
   &:hover {
-    background: #4752c4 !important;
+    box-shadow: 0 6px 16px rgba(96, 165, 250, 0.4);
   }
 }
 
-// === PROFILE DROPDOWN ===
+// === PROFILE DROPDOWN - ELEGANT MODERN MENU ===
 ::ng-deep {
   .profile-dropdown {
-    margin-top: 8px;
-    border-radius: 8px !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
-    min-width: 250px !important;
+    margin-top: 12px;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12) !important;
+    min-width: 280px !important;
+    border: 1px solid var(--color-border) !important;
+    overflow: hidden;
 
     .mat-mdc-menu-content {
-      padding: 8px !important;
+      padding: 12px !important;
+      
     }
 
     .mat-mdc-menu-panel {
-      background: #ffffff;
+      background: var(--color-bg-card) !important;
     }
+    
 
-    // Force menu item colors in light mode
+    // Light mode menu items
     .mat-mdc-menu-item {
-      color: #090909 !important;
+      color: var(--color-text-primary) !important;
 
       .mdc-list-item__primary-text {
-        color: #090909 !important;
+        color: var(--color-text-primary) !important;
       }
     }
   }
 
-  // DARK MODE FIX
-  .dark-mode .profile-dropdown,
+  // DARK MODE
   body.dark-mode .profile-dropdown {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6) !important;
+    border-color: #2d2d2d !important;
 
     .mat-mdc-menu-panel {
-      background: #1a1a1a !important;
+      background: var(--color-bg-card) !important;
     }
 
-    // Force white text in dark mode
     .mat-mdc-menu-item {
-      color: #f5f5f5 !important;
+      color: var(--color-text-primary) !important;
 
       .mdc-list-item__primary-text {
-        color: #f5f5f5 !important;
+        color: var(--color-text-primary) !important;
       }
 
-      // Menu item content
       .mat-mdc-menu-item-text {
-        color: #f5f5f5 !important;
+        color: var(--color-text-primary) !important;
       }
 
-      // Icons
       .mat-icon {
-        color: #9ca3af !important;
+        color: var(--color-text-muted) !important;
       }
 
-      // Hover state
       &:hover {
-        background: rgba(255, 255, 255, 0.08) !important;
+        background: var(--color-bg-hover) !important;
+
 
         .mat-icon {
-          color: #5865f2 !important;
+          color: var(--color-primary-light) !important;
         }
       }
     }
 
-    // Fix divider
     .mat-divider {
-      border-top-color: rgba(255, 255, 255, 0.12) !important;
+      border-top-color: #2d2d2d !important;
     }
   }
 }
@@ -245,96 +374,140 @@ app-header .icon-btn {
 .profile-menu-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #f3f4f6;
-  border-radius: 6px;
-  margin-bottom: 8px;
+  gap: 14px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.05) 100%);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(59, 130, 246, 0.15);
 }
 
-:host-context(.dark-mode) .profile-menu-header {
-  background: #2d2d2d;
+body.dark-mode .profile-menu-header {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-color: rgba(96, 165, 250, 0.2);
 }
 
 .profile-menu-avatar {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+body.dark-mode .profile-menu-avatar {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 4px 8px rgba(96, 165, 250, 0.3);
 }
 
 .profile-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .profile-username {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #090909;
-}
-
-:host-context(.dark-mode) .profile-username {
-  color: #f5f5f5 !important;
+  color: var(--color-text-primary);
+  letter-spacing: -0.3px;
 }
 
 .menu-item {
-  border-radius: 6px !important;
-  padding: 10px 16px !important;
-  margin: 2px 0 !important;
-  transition: all 0.2s ease !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+  margin: 4px 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: flex !important;
   align-items: center !important;
 
   mat-icon {
-    color: #6b7280 !important;
-    margin-right: 12px !important;
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    color: var(--color-text-muted) !important;
+    margin-right: 14px !important;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
   }
 
   span {
-    color: #090909 !important;
-    font-weight: 500;
+    color: var(--color-text-primary) !important;
+    font-weight: 600;
+    font-size: 0.95rem;
   }
 
   &:hover {
-    background: #f3f4f6 !important;
+    background: var(--color-bg-hover) !important;
+   // transform: translateX(4px);
 
     mat-icon {
-      color: #3b49df !important;
-    }
-  }
-}
-
-:host-context(.dark-mode) .menu-item {
-  mat-icon {
-    color: #9ca3af !important;
-  }
-
-  span {
-    color: #f5f5f5 !important;
-  }
-
-  &:hover {
-    background: #2d2d2d !important;
-
-    mat-icon {
-      color: #5865f2 !important;
+      color: var(--color-primary) !important;
     }
 
     span {
-      color: #ffffff !important;
+      color: var(--color-primary) !important;
     }
   }
 }
 
-// === RESPONSIVE DESIGN ===
+body.dark-mode .menu-item {
+  &:hover {
+    mat-icon {
+      color: var(--color-primary-light) !important;
+    }
+
+    span {
+      color: var(--color-primary-light) !important;
+    }
+  }
+}
+
+
+// === RESPONSIVE DESIGN - MOBILE OPTIMIZED ===
 @media (max-width: 768px) {
   .main-toolbar {
+    padding: 0 16px;
+    height: 60px;
+  }
+
+  .toolbar-content-wrapper {
+    gap: 12px;
+  }
+
+  .brand-logo {
+    font-size: 1.35rem !important;
+    padding: 8px 16px !important;
+  }
+
+  .toolbar-section.right {
+    gap: 8px;
+  }
+
+  .create-post-btn {
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.3px;
+  }
+
+  .text-btn {
+    display: none !important;
+  }
+
+  .signup-btn {
+    padding: 8px 14px !important;
+    font-size: 0.8rem !important;
+  }
+
+  app-header .icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-toolbar {
+    height: 56px;
     padding: 0 12px;
   }
 
@@ -343,32 +516,30 @@ app-header .icon-btn {
   }
 
   .brand-logo {
-    font-size: 1.25rem !important;
-    padding: 6px 12px !important;
-  }
-
-  .toolbar-section.right {
-    gap: 8px;
+    font-size: 1.2rem !important;
+    padding: 6px 10px !important;
   }
 
   .create-post-btn {
-    padding: 6px 12px !important;
-    font-size: 0.875rem !important;
-  }
-
-  .text-btn {
-    display: none !important;
+    padding: 6px 10px !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.2px;
+    border-width: 1.5px !important;
   }
 
   .signup-btn {
-    padding: 6px 12px !important;
-    font-size: 0.875rem !important;
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
   }
-}
 
-@media (max-width: 480px) {
-  .create-post-btn {
-    display: none !important;
+  app-header .icon-btn {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .header-avatar {
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -378,18 +549,4 @@ app-header .icon-btn {
     animation: none !important;
     transition: none !important;
   }
-}
-
-
-/* Force light and dark explicitly for header */
-body:not(.dark-mode) app-header .main-toolbar {
-  background: #ffffff !important;
-  color: #090909 !important;
-  border-bottom-color: #e5e7eb !important;
-}
-
-body.dark-mode app-header .main-toolbar {
-  background: #1a1a1a !important;
-  color: #f5f5f5 !important;
-  border-bottom-color: #2d2d2d !important;
 }
