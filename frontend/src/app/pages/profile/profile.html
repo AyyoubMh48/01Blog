@@ -41,11 +41,15 @@
             </div>
             <mat-card-actions class="stats">
               <div class="action-item">
-                <button mat-icon-button disabled><mat-icon>favorite_border</mat-icon></button>
+                <button mat-icon-button (click)="toggleLike(post); $event.preventDefault(); $event.stopPropagation()">
+                  <mat-icon>{{ post.likedByCurrentUser ? 'favorite' : 'favorite_border' }}</mat-icon>
+                </button>
                 <span>{{ post.likeCount }}</span>
               </div>
               <div class="action-item">
-                <button mat-icon-button disabled><mat-icon>chat_bubble_outline</mat-icon></button>
+                <button mat-icon-button (click)="toggleComments(post.id); $event.preventDefault(); $event.stopPropagation()">
+                  <mat-icon>chat_bubble_outline</mat-icon>
+                </button>
                 <span>{{ post.commentCount }} Comments</span>
               </div>
                <span class="spacer"></span>
