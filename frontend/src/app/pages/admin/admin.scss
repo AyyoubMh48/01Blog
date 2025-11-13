@@ -1,49 +1,3 @@
-// === DESIGN TOKENS ===
-:root {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-light: #60a5fa;
-  --accent: #8b5cf6;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-
-  --bg-page: #f3f4f6;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f9fafb;
-  --bg-section: #fafbfc;
-
-  --border-color: #e5e7eb;
-  --border-color-light: #f3f4f6;
-
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-muted: #9ca3af;
-
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-body.dark-mode {
-  --bg-page: #0a0a0a;
-  --bg-card: #1a1a1a;
-  --bg-card-hover: #222222;
-  --bg-section: #151515;
-
-  --border-color: #2d2d2d;
-  --border-color-light: #252525;
-
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
-
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
-}
 
 // ===========================
 // ADMIN DASHBOARD
@@ -51,7 +5,7 @@ body.dark-mode {
 
 .admin-dashboard {
   min-height: 100vh;
-  background: var(--bg-page);
+  background: var(--color-bg-page);
   padding: 40px;
 
   @media (max-width: 1024px) {
@@ -76,7 +30,7 @@ body.dark-mode {
   .dashboard-title {
     font-size: 2.5rem;
     font-weight: 900;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
     margin: 0;
     display: flex;
     align-items: center;
@@ -87,7 +41,7 @@ body.dark-mode {
       font-size: 48px;
       width: 48px;
       height: 48px;
-      color: var(--primary);
+      color: var(--color-primary);
     }
 
     @media (max-width: 768px) {
@@ -103,7 +57,7 @@ body.dark-mode {
 
   .dashboard-subtitle {
     font-size: 1.125rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     margin: 0;
     padding-left: 64px;
     font-weight: 500;
@@ -129,8 +83,8 @@ body.dark-mode {
 }
 
 .stat-card {
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-border);
   border-radius: 16px;
   padding: 32px;
   display: flex;
@@ -143,7 +97,7 @@ body.dark-mode {
   &:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-xl);
-    border-color: var(--primary);
+    border-color: var(--color-primary);
   }
 
   .stat-icon {
@@ -181,7 +135,7 @@ body.dark-mode {
     .stat-value {
       font-size: 3rem;
       font-weight: 900;
-      color: var(--text-primary);
+      color: var(--color-text-primary);
       margin: 0 0 4px 0;
       line-height: 1;
       letter-spacing: -1px;
@@ -189,7 +143,7 @@ body.dark-mode {
 
     .stat-label {
       font-size: 0.95rem;
-      color: var(--text-secondary);
+      color: var(--color-text-secondary);
       margin: 0;
       font-weight: 600;
       text-transform: uppercase;
@@ -222,8 +176,8 @@ body.dark-mode {
 // ===========================
 
 .tabbed-section {
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-border);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--shadow-xl);
@@ -238,8 +192,8 @@ body.dark-mode {
     // TAB HEADER CONTAINER - CENTERED & FULL WIDTH
     // ===========================
     .mat-mdc-tab-header {
-     background: linear-gradient(135deg, var(--bg-section) 0%, var(--bg-card) 100%);
-      border-bottom: 3px solid var(--border-color);
+     background: linear-gradient(135deg, var(--color-bg-section) 0%, var(--color-bg-card) 100%);
+      border-bottom: 3px solid var(--color-border);
       padding: 16px 40px;
       display: flex;
       justify-content: center;
@@ -261,8 +215,8 @@ body.dark-mode {
         height: 3px;
         background: linear-gradient(90deg, 
           transparent 0%, 
-          var(--primary) 25%, 
-          var(--primary) 75%, 
+          var(--color-primary) 25%, 
+          var(--color-primary) 75%, 
           transparent 100%);
         opacity: 0.15;
       }
@@ -277,11 +231,33 @@ body.dark-mode {
       align-items: center;
       gap: 8px;
       flex-grow: 0;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 0 8px;
+      
+      // Hide scrollbar but keep functionality
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      @media (max-width: 1024px) {
+        gap: 6px;
+      }
 
       @media (max-width: 768px) {
         gap: 4px;
         width: 100%;
-        justify-content: space-evenly;
+        justify-content: flex-start;
+        padding: 0 4px;
+      }
+
+      @media (max-width: 480px) {
+        gap: 2px;
+        padding: 0 2px;
       }
     }
 
@@ -289,9 +265,9 @@ body.dark-mode {
     // INDIVIDUAL TAB LABELS - MODERN DESIGN
     // ===========================
     .mat-mdc-tab {
-      min-width: auto;
+      min-width: 180px;
       height: 64px;
-      padding: 0 28px;
+      padding: 0 32px;
       opacity: 0.65;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 12px 12px 0 0;
@@ -324,10 +300,10 @@ body.dark-mode {
       // Active state
       &.mdc-tab--active {
         opacity: 1;
-        background: var(--bg-card);
+        background: var(--color-bg-card);
         box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
         transform: translateY(-4px);
-        border: 2px solid var(--border-color);
+        border: 2px solid var(--color-border);
         border-bottom: none;
         z-index: 2;
 
@@ -338,17 +314,26 @@ body.dark-mode {
           left: 0;
           right: 0;
           height: 4px;
-          background: var(--bg-card);
+          background: var(--color-bg-card);
           z-index: 3;
         }
+      }
+
+      @media (max-width: 1024px) {
+        min-width: 140px;
+        padding: 0 20px;
       }
 
       @media (max-width: 768px) {
         min-width: auto;
         height: 56px;
-        padding: 0 16px;
+        padding: 0 12px;
         margin: 0 2px;
         flex: 1;
+      }
+
+      @media (max-width: 480px) {
+        padding: 0 8px;
       }
     }
 
@@ -385,7 +370,7 @@ body.dark-mode {
     // ===========================
     .mat-mdc-tab-body-wrapper {
       padding: 0;
-      background: var(--bg-card);
+      background: var(--color-bg-card);
     }
 
     // ===========================
@@ -452,7 +437,7 @@ body.dark-mode {
 .tab-label {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
   white-space: nowrap;
@@ -520,14 +505,14 @@ body.dark-mode {
 body.dark-mode {
   .admin-tabs ::ng-deep {
     .mat-mdc-tab-header {
-      background: linear-gradient(135deg, var(--bg-section) 0%, var(--bg-card) 100%);
-      border-bottom-color: var(--border-color);
+      background: linear-gradient(135deg, var(--color-bg-section) 0%, var(--color-bg-card) 100%);
+      border-bottom-color: var(--color-border);
       color: white;
       &::before {
         background: linear-gradient(90deg, 
           transparent 0%, 
-          var(--primary-light) 25%, 
-          var(--primary-light) 75%, 
+          var(--color-primary-light) 25%, 
+          var(--color-primary-light) 75%, 
           transparent 100%);
         opacity: 0.1;
       }
@@ -543,9 +528,9 @@ body.dark-mode {
       }
 
       &.mdc-tab--active {
-        background: var(--bg-card);
+        background: var(--color-bg-card);
         box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
-        border-color: var(--border-color);
+        border-color: var(--color-border);
       }
     }
 
@@ -632,8 +617,8 @@ body.dark-mode {
 
 // === BASE CARD STYLES ===
 %card-base {
-  background: var(--bg-card) !important;
-  border: 2px solid var(--border-color) !important;
+  background: var(--color-bg-card) !important;
+  border: 2px solid var(--color-border) !important;
   border-radius: 12px !important;
   box-shadow: var(--shadow-md) !important;
   transition: all 0.3s ease !important;
@@ -642,11 +627,14 @@ body.dark-mode {
   &:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg) !important;
-    border-color: var(--primary) !important;
+    border-color: var(--color-primary) !important;
   }
 
   mat-card-content {
     padding: 24px !important;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .card-header {
@@ -655,7 +643,9 @@ body.dark-mode {
     justify-content: space-between;
     margin-bottom: 20px;
     padding-bottom: 16px;
-    border-bottom: 2px solid var(--border-color-light);
+    border-bottom: 2px solid var(--color-border);
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .card-actions {
@@ -722,13 +712,13 @@ body.dark-mode {
 
     // ✅ STROKED BUTTONS (mat-stroked-button default)
     &:not([color="primary"]):not([color="accent"]):not([color="warn"]) {
-      border: 2px solid var(--border-color) !important;
-      color: var(--text-secondary) !important;
+      border: 2px solid var(--color-border) !important;
+      color: var(--color-text-secondary) !important;
       background: transparent !important;
 
       &:hover:not(:disabled) {
-        border-color: var(--text-secondary) !important;
-        background: var(--bg-section) !important;
+        border-color: var(--color-text-secondary) !important;
+        background: var(--color-bg-section) !important;
       }
     }
 
@@ -747,7 +737,7 @@ body.dark-mode {
   .report-id {
     font-size: 0.9rem;
     font-weight: 800;
-    color: var(--primary);
+    color: var(--color-primary);
     background: rgba(59, 130, 246, 0.1);
     padding: 6px 12px;
     border-radius: 6px;
@@ -755,29 +745,33 @@ body.dark-mode {
 
   .report-date {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
     font-weight: 600;
   }
 
   .report-reason {
     display: flex;
+    align-items: flex-start;
     gap: 12px;
     padding: 16px;
-    background: var(--bg-section);
+    background: var(--color-bg-section);
     border-radius: 8px;
     margin-bottom: 16px;
-    border-left: 4px solid var(--warning);
+    border-left: 4px solid #f59e0b;
 
     mat-icon {
-      color: var(--warning);
+      color: #f59e0b;
       flex-shrink: 0;
+      margin-top: 2px;
     }
 
     p {
       margin: 0;
-      color: var(--text-primary);
+      color: var(--color-text-primary);
       font-weight: 600;
       line-height: 1.5;
+      word-break: break-word;
+      flex: 1;
     }
   }
 
@@ -795,7 +789,7 @@ body.dark-mode {
       .label {
         font-size: 0.8rem;
         font-weight: 700;
-        color: var(--text-muted);
+        color: var(--color-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
@@ -804,7 +798,7 @@ body.dark-mode {
         display: flex;
         align-items: center;
         gap: 8px;
-        color: var(--primary);
+        color: var(--color-primary);
         text-decoration: none;
         font-weight: 700;
         font-size: 1rem;
@@ -841,7 +835,7 @@ body.dark-mode {
   .user-id {
     font-size: 0.85rem;
     font-weight: 800;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 
   .role-badge {
@@ -849,9 +843,9 @@ body.dark-mode {
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 800;
-    background: var(--bg-section);
-    color: var(--text-primary);
-    border: 2px solid var(--border-color);
+    background: var(--color-bg-section);
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-border);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 
@@ -872,7 +866,7 @@ body.dark-mode {
       display: flex;
       align-items: center;
       gap: 12px;
-      color: var(--primary);
+      color: var(--color-primary);
       text-decoration: none;
       font-weight: 800;
       font-size: 1.25rem;
@@ -894,7 +888,7 @@ body.dark-mode {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--text-secondary);
+      color: var(--color-text-secondary);
       font-size: 0.95rem;
       font-weight: 600;
 
@@ -902,7 +896,7 @@ body.dark-mode {
         font-size: 20px;
         width: 20px;
         height: 20px;
-        color: var(--text-muted);
+        color: var(--color-text-muted);
       }
     }
   }
@@ -935,7 +929,7 @@ body.dark-mode {
   .post-id {
     font-size: 0.9rem;
     font-weight: 800;
-    color: var(--primary);
+    color: var(--color-primary);
     text-decoration: none;
     background: rgba(59, 130, 246, 0.1);
     padding: 6px 12px;
@@ -979,17 +973,21 @@ body.dark-mode {
   }
 
   .post-content {
-    padding: 20px;
-    background: var(--bg-section);
+    padding: 16px;
+    background: var(--color-bg-section);
     border-radius: 8px;
     margin-bottom: 16px;
-    border-left: 4px solid var(--primary);
+    border-left: 4px solid var(--color-primary);
+    overflow: hidden;
 
     p {
       margin: 0;
-      color: var(--text-primary);
+      color: var(--color-text-primary);
       line-height: 1.6;
       font-size: 0.95rem;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
     }
   }
 
@@ -1005,20 +1003,29 @@ body.dark-mode {
       display: flex;
       align-items: center;
       gap: 8px;
-      color: var(--primary);
+      color: var(--color-primary);
       text-decoration: none;
       font-weight: 700;
       font-size: 0.95rem;
       transition: all 0.2s ease;
+      max-width: 100%;
+      overflow: hidden;
 
       mat-icon {
         font-size: 20px;
         width: 20px;
         height: 20px;
+        flex-shrink: 0;
+      }
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       &:hover {
-        color: var(--primary-dark);
+        color: #2563eb;
         transform: translateX(4px);
       }
     }
@@ -1027,7 +1034,7 @@ body.dark-mode {
       display: flex;
       align-items: center;
       gap: 6px;
-      color: var(--text-muted);
+      color: var(--color-text-muted);
       font-size: 0.85rem;
       font-weight: 600;
 
@@ -1047,8 +1054,8 @@ body.dark-mode {
   align-items: center;
   justify-content: center;
   padding: 80px 40px;
-  background: var(--bg-card);
-  border: 2px dashed var(--border-color);
+  background: var(--color-bg-card);
+  border: 2px dashed var(--color-border);
   border-radius: 12px;
 
   mat-icon {
@@ -1061,7 +1068,7 @@ body.dark-mode {
 
   p {
     margin: 0;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-size: 1.125rem;
     font-weight: 600;
   }
