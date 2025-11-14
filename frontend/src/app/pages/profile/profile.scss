@@ -410,27 +410,58 @@ mat-card-actions.stats {
     
     button {
       color: var(--color-text-secondary) !important;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      background-color: transparent !important;
+      
+      // Disable Material button ripple effects
+      ::ng-deep .mat-mdc-button-persistent-ripple,
+      ::ng-deep .mat-mdc-button-ripple,
+      ::ng-deep .mat-ripple-element {
+        display: none !important;
+      }
       
       &:hover {
         color: var(--color-primary) !important;
-        background-color: rgba(59, 130, 246, 0.1) !important;
-        transform: scale(1.1);
+        background-color: rgba(var(--mat-primary-rgb), 0.1) !important;
+        transform: scale(1.15);
       }
       
       mat-icon {
         color: inherit !important;
+        transition: all 0.3s ease;
+      }
+    }
+    
+    // Liked state - when post is liked by current user
+    button.liked,
+    button:has(mat-icon[fonticon="favorite"]) {
+      color: var(--color-error) !important;
+      
+      mat-icon {
+        color: var(--color-error) !important;
+      }
+      
+      &:hover {
+        color: #dc2626 !important;
+        transform: scale(1.2);
         
-        &[fonticon="favorite"] {
-          color: var(--color-error) !important;
+        mat-icon {
+          color: #dc2626 !important;
         }
       }
     }
     
     span {
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: 700;
       color: var(--color-text-secondary);
+      transition: color 0.3s ease;
+    }
+    
+    // Liked count styling
+    span.liked-count {
+      color: var(--color-error);
+      font-weight: 800;
     }
   }
   
@@ -689,6 +720,47 @@ body.dark-mode {
       
       &:hover {
         background-color: rgba(239, 68, 68, 0.15) !important;
+      }
+    }
+    
+    // Stats liked state in dark mode
+    mat-card-actions.stats {
+      .action-item {
+        button {
+          color: var(--color-text-secondary) !important;
+          
+          &:hover {
+            color: var(--color-primary-light) !important;
+            background-color: rgba(var(--mat-primary-rgb), 0.2) !important;
+          }
+        }
+        
+        // Liked state in dark mode
+        button.liked,
+        button:has(mat-icon[fonticon="favorite"]) {
+          color: #fca5a5 !important;
+          
+          mat-icon {
+            color: #fca5a5 !important;
+          }
+          
+          &:hover {
+            color: #f87171 !important;
+            background-color: rgba(248, 113, 113, 0.15) !important;
+            
+            mat-icon {
+              color: #f87171 !important;
+            }
+          }
+        }
+        
+        span {
+          color: var(--color-text-secondary);
+        }
+        
+        span.liked-count {
+          color: #fca5a5;
+        }
       }
     }
   }

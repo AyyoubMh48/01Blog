@@ -393,18 +393,58 @@ mat-card-actions.stats {
     gap: 8px;
     
     button {
-      transition: transform 0.2s ease;
+      transition: all 0.3s ease;
+      background-color: transparent !important;
+      color: var(--color-text-secondary) !important;
+      
+      // Disable Material button ripple effects
+      ::ng-deep .mat-mdc-button-persistent-ripple,
+      ::ng-deep .mat-mdc-button-ripple,
+      ::ng-deep .mat-ripple-element {
+        display: none !important;
+      }
+      
+      mat-icon {
+        color: inherit !important;
+        transition: all 0.3s ease;
+      }
       
       &:hover {
-        transform: scale(1.1);
+        transform: scale(1.15);
+        color: var(--color-primary) !important;
+      }
+      
+      // Liked state - when post is liked by current user
+      &[color="warn"] {
+        color: var(--color-error) !important;
+        
+        mat-icon {
+          color: var(--color-error) !important;
+        }
+        
+        &:hover {
+          color: #dc2626 !important;
+          transform: scale(1.2);
+          
+          mat-icon {
+            color: #dc2626 !important;
+          }
+        }
       }
     }
   }
   
   .stat-count {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+    
+    // Liked count styling
+    &.liked-count {
+      color: var(--color-error);
+      font-weight: 800;
+    }
   }
   
   .spacer {
@@ -451,6 +491,43 @@ mat-card-actions.stats {
 
 body.dark-mode .error-message {
   color: #fca5a5;
+}
+
+// Dark mode - liked state
+body.dark-mode {
+  .post-actions .action-item {
+    button {
+      color: var(--color-text-secondary) !important;
+      
+      &:hover {
+        color: var(--color-primary-light) !important;
+      }
+      
+      &[color="warn"] {
+        color: #fca5a5 !important;
+        
+        mat-icon {
+          color: #fca5a5 !important;
+        }
+        
+        &:hover {
+          color: #f87171 !important;
+          
+          mat-icon {
+            color: #f87171 !important;
+          }
+        }
+      }
+    }
+    
+    .stat-count {
+      color: var(--color-text-secondary);
+      
+      &.liked-count {
+        color: #fca5a5;
+      }
+    }
+  }
 }
 
 // ===========================
