@@ -1,42 +1,16 @@
-// === DESIGN TOKENS ===
+// === DESIGN TOKENS - Using Global Variables ===
 :root {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-light: #60a5fa;
-  --error: #ef4444;
-  --success: #10b981;
-
-  // Page background (outer)
-  --bg-page: #e5e7eb;
-  
-  // Editor card background (inner)
-  --bg-editor-card: #ffffff;
-  --bg-editor-light: #f9fafb;
-  --bg-editor-lighter: #f3f4f6;
-  
-  --border-light: #e5e7eb;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-muted: #9ca3af;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  // Editor-specific overrides (if needed)
+  --bg-editor-card: var(--color-bg-card);
+  --bg-editor-light: var(--color-bg-light);
+  --bg-editor-lighter: var(--color-bg-section);
 }
 
 body.dark-mode {
-  // Page background (outer) - darker
-  --bg-page: #000000;
-  
-  // Editor card background (inner) - lighter than page
-  --bg-editor-card: #1a1a1a;
-  --bg-editor-light: #0f0f0f;
-  --bg-editor-lighter: #0a0a0a;
-  
-  --border-light: #2d2d2d;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
+  // Editor-specific dark mode overrides (if needed)
+  --bg-editor-card: var(--color-bg-card);
+  --bg-editor-light: var(--color-bg-section);
+  --bg-editor-lighter: var(--color-bg-hover);
 }
 
 // ===========================
@@ -45,14 +19,14 @@ body.dark-mode {
 
 .editor-wrapper {
   min-height: 100vh;
-  background: var(--bg-page); // Outer page background
-  overflow: hidden; // Prevent page scroll
+  background: var(--color-bg-page);
+  overflow: hidden;
 }
 
 // === HEADER ===
 .editor-header {
-  background: var(--bg-editor-card);
-  border-bottom: 2px solid var(--border-light);
+  background: var(--color-bg-card);
+  border-bottom: 2px solid var(--color-border);
   padding: 24px 0;
   position: sticky;
   top: 0;
@@ -70,7 +44,7 @@ body.dark-mode {
 .editor-title {
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -79,7 +53,7 @@ body.dark-mode {
 
   mat-icon {
     font-size: 32px;
-    color: var(--primary);
+    color: var(--color-primary);
   }
 
   @media (max-width: 768px) {
@@ -95,9 +69,9 @@ body.dark-mode {
 .char-count {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   padding: 8px 16px;
-  background: var(--bg-editor-lighter);
+  background: var(--color-bg-section);
   border-radius: 8px;
   border: 1px solid var(--border-light);
 }
@@ -280,9 +254,15 @@ body.dark-mode .title-input::placeholder {
 }
 
 .tags-icon {
-  color: var(--primary);
+  color: #3b82f6 !important;
   font-size: 22px;
   flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+// Dark mode with Angular component scoping fix
+:host-context(body.dark-mode) .tags-icon {
+  color: rgba(96, 165, 250, 0.95) !important;
 }
 
 .tags-input {
@@ -313,23 +293,34 @@ body.dark-mode .title-input::placeholder {
   display: inline-flex;
   align-items: center;
   padding: 8px 16px;
-  background: var(--primary);
-  color: white;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: white !important;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35), 0 0 20px rgba(59, 130, 246, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  cursor: default;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.45), 0 0 30px rgba(59, 130, 246, 0.25) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
   }
 }
 
-body.dark-mode .tag-badge {
-  background: var(--primary-light);
-  color: #111827;
+// Dark mode with Angular component scoping fix
+:host-context(body.dark-mode) .tag-badge {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.95) 0%, rgba(59, 130, 246, 0.9) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(96, 165, 250, 0.4) !important;
+  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.4), 0 0 20px rgba(59, 130, 246, 0.3) !important;
+
+  &:hover {
+    box-shadow: 0 6px 16px rgba(96, 165, 250, 0.6), 0 0 30px rgba(59, 130, 246, 0.4) !important;
+    border-color: rgba(96, 165, 250, 0.6) !important;
+  }
 }
 
 // ===========================
@@ -764,24 +755,53 @@ body.dark-mode .error-box {
   font-size: 1rem !important;
   padding: 14px 40px !important;
   border-radius: 8px !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: flex !important;
   align-items: center !important;
   gap: 10px !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4), 0 2px 6px rgba(59, 130, 246, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+
+  // Disable Material ripple effects
+  ::ng-deep .mat-mdc-button-persistent-ripple,
+  ::ng-deep .mat-mdc-button-ripple,
+  ::ng-deep .mat-ripple-element {
+    display: none !important;
+  }
 
   mat-icon {
     font-size: 20px;
+    color: white !important;
   }
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5), 0 4px 10px rgba(59, 130, 246, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+}
+
+// Dark mode with Angular component scoping fix
+:host-context(body.dark-mode) .btn-publish {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.95) 0%, rgba(59, 130, 246, 0.9) 100%) !important;
+  border: 1px solid rgba(96, 165, 250, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.45), 0 2px 6px rgba(59, 130, 246, 0.3) !important;
+  color: white !important;
+
+  mat-icon {
+    color: white !important;
+  }
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 8px 20px rgba(96, 165, 250, 0.6), 0 4px 10px rgba(59, 130, 246, 0.4) !important;
+    border-color: rgba(96, 165, 250, 0.6) !important;
   }
 }
 
@@ -791,22 +811,45 @@ body.dark-mode .error-box {
   font-size: 1rem !important;
   padding: 12px 32px !important;
   border-radius: 8px !important;
-  border: 2px solid var(--border-light) !important;
-  color: var(--text-secondary) !important;
+  border: 2px solid #d1d5db !important;
+  color: #6b7280 !important;
   background: transparent !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+
+  // Disable Material ripple effects
+  ::ng-deep .mat-mdc-button-persistent-ripple,
+  ::ng-deep .mat-mdc-button-ripple,
+  ::ng-deep .mat-ripple-element {
+    display: none !important;
+  }
 
   mat-icon {
     font-size: 20px;
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--text-secondary) !important;
-    background: var(--bg-editor-light) !important;
+    border-color: #6b7280 !important;
+    background: #f3f4f6 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px);
   }
 
   &:disabled {
     opacity: 0.5;
+  }
+}
+
+// Dark mode with Angular component scoping fix
+:host-context(body.dark-mode) .btn-cancel {
+  border-color: rgba(156, 163, 175, 0.4) !important;
+  color: rgba(209, 213, 219, 0.95) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+
+  &:hover:not(:disabled) {
+    border-color: rgba(209, 213, 219, 0.7) !important;
+    background: rgba(55, 65, 81, 0.6) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
   }
 }
 
