@@ -79,6 +79,13 @@
     color: var(--primary) !important;
     transition: all 0.3s ease;
 
+    // Disable Material ripple effects
+    ::ng-deep .mat-mdc-button-persistent-ripple,
+    ::ng-deep .mat-mdc-button-ripple,
+    ::ng-deep .mat-ripple-element {
+      display: none !important;
+    }
+
     &:hover {
       background: rgba(59, 130, 246, 0.1) !important;
       transform: scale(1.1);
@@ -98,6 +105,11 @@
   padding: 0 !important;
   overflow: hidden;
   transition: all 0.3s ease;
+  
+  // Top gradient accent
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--color-primary), var(--color-accent)) 1;
+  border-image-slice: 1 0 0 0;
 
   &:hover {
     box-shadow: var(--shadow-xl) !important;
@@ -131,6 +143,16 @@
   transition: all 0.25s ease;
   position: relative;
   background: var(--bg-card);
+  
+  // Smooth entry animation with stagger
+  opacity: 0;
+  animation: slideInFromLeft 0.4s ease forwards;
+  
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
 
   &:hover {
     background: var(--bg-section);
@@ -142,10 +164,10 @@
     gap: 12px;
   }
 
-  // Unread state - HIGHLIGHTED
+  // Unread state - HIGHLIGHTED with cyan/teal
   &.unread {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
-    border-left: 4px solid var(--primary);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(20, 184, 166, 0.08) 100%);
+    border-left: 5px solid #06b6d4;
     padding-left: 20px;
 
     .notification-message {
@@ -158,7 +180,8 @@
     }
 
     &:hover {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.18) 0%, rgba(20, 184, 166, 0.12) 100%);
+      transform: translateX(4px);
     }
   }
 
@@ -170,7 +193,7 @@
     transform: translateY(-50%);
     width: 8px;
     height: 8px;
-    background: var(--primary);
+    background: #06b6d4;
     border-radius: 50%;
     animation: pulse 2s infinite;
   }
@@ -178,10 +201,23 @@
   @keyframes pulse {
     0%, 100% {
       opacity: 1;
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
     }
     50% {
-      opacity: 0.5;
+      opacity: 0.7;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.8);
     }
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -282,9 +318,9 @@
   flex-shrink: 0;
   width: 10px;
   height: 10px;
-  background: var(--primary);
+  background: #06b6d4;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
   animation: shimmer 2s infinite;
 }
 
@@ -292,10 +328,12 @@
   0%, 100% {
     transform: scale(1);
     opacity: 1;
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
   }
   50% {
     transform: scale(1.2);
     opacity: 0.7;
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.8);
   }
 }
 
@@ -321,6 +359,16 @@
 
 .empty-icon-wrapper {
   margin-bottom: 24px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .empty-icon {
@@ -364,7 +412,7 @@
 // DARK MODE - NOTIFICATION STYLING
 // ===========================
 
-body.dark-mode {
+:host-context(body.dark-mode) {
   .notification-item {
     background: var(--bg-card);
 
@@ -372,29 +420,70 @@ body.dark-mode {
       background: var(--bg-section);
     }
 
-    // Unread state in dark mode
+    // Unread state in dark mode - BRIGHT CYAN/TEAL (high contrast against black!)
     &.unread {
-      background: linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(96, 165, 250, 0.08) 100%);
-      border-left-color: var(--primary-light);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.45) 0%, rgba(20, 184, 166, 0.38) 100%) !important;
+      border-left: 5px solid #06b6d4 !important;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.5), inset 0 0 30px rgba(6, 182, 212, 0.2) !important;
 
       .notification-message {
-        color: var(--text-primary);
+        color: #ffffff !important;
+        font-weight: 700 !important;
+      }
+
+      .notification-date {
+        color: #a5f3fc !important;
+        font-weight: 600;
       }
 
       &:hover {
-        background: linear-gradient(135deg, rgba(96, 165, 250, 0.2) 0%, rgba(96, 165, 250, 0.12) 100%);
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.55) 0%, rgba(20, 184, 166, 0.48) 100%) !important;
+        box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6), inset 0 0 40px rgba(6, 182, 212, 0.25) !important;
+        transform: translateX(6px) !important;
+      }
+    }
+
+    // Read notifications should be VERY dim in dark mode
+    &:not(.unread) {
+      opacity: 0.5;
+      background: rgba(255, 255, 255, 0.02);
+
+      .notification-message {
+        color: #6b7280;
+        font-weight: 400;
+      }
+
+      .notification-date {
+        color: #4b5563;
+      }
+
+      &:hover {
+        opacity: 0.7;
+        background: rgba(255, 255, 255, 0.04);
       }
     }
   }
 
   .unread-indicator {
-    background: var(--primary-light);
-    box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+    background: #06b6d4;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.9);
+    animation: pulseCyan 2s infinite;
+  }
+
+  @keyframes pulseCyan {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.9);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(6, 182, 212, 1);
+      transform: scale(1.3);
+    }
   }
 
   .action-indicator {
-    background: var(--primary-light);
-    box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+    background: #06b6d4;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.9);
   }
 
   .notification-icon {
@@ -421,6 +510,13 @@ body.dark-mode {
 
   .mark-all-btn {
     color: var(--primary-light) !important;
+
+    // Disable Material ripple effects in dark mode
+    ::ng-deep .mat-mdc-button-persistent-ripple,
+    ::ng-deep .mat-mdc-button-ripple,
+    ::ng-deep .mat-ripple-element {
+      display: none !important;
+    }
 
     &:hover {
       background: rgba(96, 165, 250, 0.15) !important;
