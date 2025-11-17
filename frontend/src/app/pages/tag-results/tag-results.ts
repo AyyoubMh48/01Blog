@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router'; 
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'; 
 import { PostService, Page } from '../../services/post'; 
 import { TagService } from '../../services/tag';
+import { LikeService } from '../../services/like';
+import { AuthService } from '../../services/auth';
 import { Post } from '../../models/post';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button'; 
@@ -34,13 +36,19 @@ export class TagResults implements OnInit {
   totalPages = 0;
   isLoading = false;
   errorMessage: string | null = null;
+  isLoggedIn = false;
 
   constructor(
     private route: ActivatedRoute,
-    private tagService: TagService
+    private router: Router,
+    private tagService: TagService,
+    private likeService: LikeService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    
     this.route.paramMap.subscribe(params => {
       this.tagName = params.get('tagName');
       if (this.tagName) {
@@ -85,6 +93,17 @@ export class TagResults implements OnInit {
 
   onScroll(): void {
     this.loadPosts();
+  }
+
+  toggleLike(post: Post): void {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.likeService.toggleLike(post.id).subscribe(() => {
+      post.likedByCurrentUser = !post.likedByCurrentUser;
+      post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
+    });
   }
 
   stripHtml(html: string): string {

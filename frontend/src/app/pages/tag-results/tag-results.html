@@ -108,8 +108,12 @@
           <!-- Stats -->
           <mat-card-actions class="stats">
             <div class="stat-item">
-              <button mat-icon-button class="stat-btn" disabled>
-                <mat-icon>favorite_border</mat-icon>
+              <button mat-icon-button 
+                      class="stat-btn" 
+                      [class.liked]="post.likedByCurrentUser"
+                      (click)="toggleLike(post); $event.preventDefault(); $event.stopPropagation()"
+                      [attr.aria-label]="post.likedByCurrentUser ? 'Unlike post' : 'Like post'">
+                <mat-icon [fontIcon]="post.likedByCurrentUser ? 'favorite' : 'favorite_border'"></mat-icon>
               </button>
               <span class="stat-count">{{ post.likeCount | number }}</span>
             </div>
