@@ -144,67 +144,30 @@ video.post-video {
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 20px;
-  color: var(--color-primary);
-  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.12) !important;
   text-decoration: none;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  transition: all 0.2s ease;
+  border: 1px solid rgba(59, 130, 246, 0.25) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
   
   &:hover {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
-    transform: translateY(-1px);
+    background: rgba(59, 130, 246, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25) !important;
   }
 }
 
-body.dark-mode .tag-link {
-  color: var(--color-primary-light);
-  background: rgba(96, 165, 250, 0.15);
-  border-color: rgba(96, 165, 250, 0.25);
+:host-context(body.dark-mode) .tag-link {
+  color: rgba(96, 165, 250, 0.95) !important;
+  background: rgba(96, 165, 250, 0.18) !important;
+  border-color: rgba(96, 165, 250, 0.35) !important;
   
   &:hover {
-    background: rgba(96, 165, 250, 0.2);
-    border-color: rgba(96, 165, 250, 0.4);
-  }
-}
-
-// ===========================
-// TAGS
-// ===========================
-
-.post-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 0 0 28px;
-}
-
-.tag-link {
-  font-size: 14px;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 20px;
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
-  text-decoration: none;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
-    transform: translateY(-1px);
-  }
-}
-
-body.dark-mode .tag-link {
-  color: #60a5fa;
-  background: rgba(96, 165, 250, 0.15);
-  border-color: rgba(96, 165, 250, 0.3);
-  
-  &:hover {
-    background: rgba(96, 165, 250, 0.2);
-    border-color: rgba(96, 165, 250, 0.4);
+    background: rgba(96, 165, 250, 0.25) !important;
+    border-color: rgba(96, 165, 250, 0.5) !important;
+    box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3) !important;
   }
 }
 
@@ -284,23 +247,83 @@ body.dark-mode .tag-link {
     }
   }
   
-  // Code blocks
-  pre {
-    background: var(--color-bg-code);
-    color: #e5e7eb;
-    padding: 1.5rem;
-    border-radius: 10px;
-    margin: 2rem 0;
-    overflow-x: auto;
-    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  // Code blocks - Multiple selectors for Quill compatibility
+  pre,
+  .ql-code-block,
+  .ql-syntax {
+    background: #1e293b !important;
+    color: #e2e8f0 !important;
+    padding: 1.5rem !important;
+    border-radius: 12px !important;
+    margin: 2rem 0 !important;
+    overflow-x: auto !important;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+    font-size: 0.95rem !important;
+    line-height: 1.7 !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    display: block !important;
+    white-space: pre !important;
+    word-wrap: normal !important;
+    tab-size: 2 !important;
     
     code {
-      background: transparent;
-      padding: 0;
-      color: inherit;
+      background: transparent !important;
+      padding: 0 !important;
+      color: inherit !important;
+      display: inline !important;
+      white-space: pre !important;
+      word-wrap: normal !important;
+      font-family: inherit !important;
+    }
+  }
+  
+  // Handle Quill's individual code lines
+  .ql-code-block-container {
+    background: #1e293b !important;
+    color: #e2e8f0 !important;
+    padding: 1.5rem !important;
+    border-radius: 12px !important;
+    margin: 2rem 0 !important;
+    overflow-x: auto !important;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+    font-size: 0.95rem !important;
+    line-height: 1.7 !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    
+    .ql-code-block {
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: block !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
+  
+  // Force code blocks to stay together
+  div[class*="code"],
+  [class*="code-block"] {
+    background: #1e293b !important;
+    color: #e2e8f0 !important;
+    display: block !important;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+    padding: 0.2rem 0 !important;
+    
+    &:first-child {
+      padding-top: 1.5rem !important;
+      border-radius: 12px 12px 0 0 !important;
+    }
+    
+    &:last-child {
+      padding-bottom: 1.5rem !important;
+      border-radius: 0 0 12px 12px !important;
+    }
+    
+    &:only-child {
+      padding: 1.5rem !important;
+      border-radius: 12px !important;
     }
   }
   
@@ -355,23 +378,56 @@ body.dark-mode .tag-link {
 }
 
 // Dark mode adjustments
-body.dark-mode :host ::ng-deep .post-full-content {
-  code {
-    background: rgba(96, 165, 250, 0.15);
-    color: #fca5a5;
-  }
-  
-  blockquote {
-    background: rgba(96, 165, 250, 0.08);
-    border-left-color: var(--color-primary-light);
-  }
-  
-  a {
-    color: var(--color-primary-light);
-    border-bottom-color: var(--color-primary-light);
+:host-context(body.dark-mode) {
+  :host ::ng-deep .post-full-content {
+    code {
+      background: rgba(96, 165, 250, 0.15);
+      color: #fca5a5;
+    }
     
-    &:hover {
-      color: var(--color-primary);
+    pre,
+    .ql-code-block,
+    .ql-syntax {
+      background: #0f172a !important;
+      border-color: rgba(148, 163, 184, 0.3) !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+      color: #e2e8f0 !important;
+      
+      code {
+        background: transparent !important;
+        color: #e2e8f0 !important;
+      }
+    }
+    
+    .ql-code-block-container {
+      background: #0f172a !important;
+      border-color: rgba(148, 163, 184, 0.3) !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+      
+      .ql-code-block {
+        background: transparent !important;
+        color: #e2e8f0 !important;
+      }
+    }
+    
+    div[class*="code"],
+    [class*="code-block"] {
+      background: #0f172a !important;
+      color: #e2e8f0 !important;
+    }
+    
+    blockquote {
+      background: rgba(96, 165, 250, 0.08);
+      border-left-color: var(--color-primary-light);
+    }
+    
+    a {
+      color: var(--color-primary-light);
+      border-bottom-color: var(--color-primary-light);
+      
+      &:hover {
+        color: var(--color-primary);
+      }
     }
   }
 }
@@ -453,12 +509,88 @@ mat-card-actions.stats {
   
   .post-owner-actions {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     
     button {
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      padding: 10px 24px !important;
+      border-radius: 8px !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      font-size: 0.875rem !important;
+      
+      // Disable Material ripple effects
+      ::ng-deep .mat-mdc-button-persistent-ripple,
+      ::ng-deep .mat-mdc-button-ripple,
+      ::ng-deep .mat-ripple-element {
+        display: none !important;
+      }
+      
+      // Edit button - modern blue design
+      &:not([color="warn"]) {
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25), 0 1px 3px rgba(59, 130, 246, 0.15) !important;
+        
+        &:hover {
+          background: #2563eb !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35), 0 2px 6px rgba(59, 130, 246, 0.2) !important;
+        }
+        
+        &:active {
+          transform: translateY(0);
+        }
+      }
+      
+      // Delete button - modern red design
+      &[color="warn"] {
+        background: #ef4444 !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25), 0 1px 3px rgba(239, 68, 68, 0.15) !important;
+        
+        &:hover {
+          background: #dc2626 !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35), 0 2px 6px rgba(239, 68, 68, 0.2) !important;
+        }
+        
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+// Dark mode for owner actions - cleaner design
+:host-context(body.dark-mode) {
+  mat-card-actions.stats .post-owner-actions {
+    button {
+      // Edit button in dark mode - brighter blue
+      &:not([color="warn"]) {
+        background: #60a5fa !important;
+        box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3), 0 1px 3px rgba(96, 165, 250, 0.2) !important;
+        
+        &:hover {
+          background: #3b82f6 !important;
+          box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4), 0 2px 6px rgba(96, 165, 250, 0.25) !important;
+        }
+      }
+      
+      // Delete button in dark mode - brighter red
+      &[color="warn"] {
+        background: #f87171 !important;
+        box-shadow: 0 2px 8px rgba(248, 113, 113, 0.3), 0 1px 3px rgba(248, 113, 113, 0.2) !important;
+        
+        &:hover {
+          background: #ef4444 !important;
+          box-shadow: 0 4px 12px rgba(248, 113, 113, 0.4), 0 2px 6px rgba(248, 113, 113, 0.25) !important;
+        }
+      }
     }
   }
 }
@@ -489,13 +621,13 @@ mat-card-actions.stats {
   font-weight: 600;
 }
 
-body.dark-mode .error-message {
+:host-context(body.dark-mode) .error-message {
   color: #fca5a5;
 }
 
-// Dark mode - liked state
-body.dark-mode {
-  .post-actions .action-item {
+// Dark mode - liked state for action buttons
+:host-context(body.dark-mode) {
+  mat-card-actions.stats .action-item {
     button {
       color: var(--color-text-secondary) !important;
       
