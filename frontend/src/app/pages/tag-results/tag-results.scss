@@ -466,8 +466,10 @@
     display: none !important;
   }
   
+  color: var(--color-text-secondary) !important;
+  
   &:hover {
-    color: #3b82f6 !important;
+    color: #ef4444 !important;
     transform: scale(1.1);
   }
   
@@ -491,10 +493,10 @@
 }
 
 :host-context(body.dark-mode) .stat-btn {
-  color: #9ca3af !important;
+  color: var(--color-text-secondary) !important;
   
   &:hover {
-    color: rgba(96, 165, 250, 0.95) !important;
+    color: #f87171 !important;
   }
   
   &.liked {
@@ -510,10 +512,19 @@
   font-size: 0.938rem;
   font-weight: 600;
   color: #6b7280;
+  
+  &.liked-count {
+    color: #ef4444;
+    font-weight: 700;
+  }
 }
 
 :host-context(body.dark-mode) .stat-count {
   color: #9ca3af;
+  
+  &.liked-count {
+    color: #f87171;
+  }
 }
 
 .stat-spacer {

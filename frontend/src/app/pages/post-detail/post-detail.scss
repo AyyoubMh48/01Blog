@@ -465,17 +465,23 @@ mat-card-actions.stats {
         transition: all 0.3s ease;
       }
       
+      color: var(--color-text-secondary) !important;
+      
       &:hover {
         transform: scale(1.15);
-        color: var(--color-primary) !important;
+        color: #ef4444 !important;
+        
+        mat-icon {
+          color: #ef4444 !important;
+        }
       }
       
       // Liked state - when post is liked by current user
-      &[color="warn"] {
-        color: var(--color-error) !important;
+      &.liked {
+        color: #ef4444 !important;
         
         mat-icon {
-          color: var(--color-error) !important;
+          color: #ef4444 !important;
         }
         
         &:hover {
@@ -498,7 +504,7 @@ mat-card-actions.stats {
     
     // Liked count styling
     &.liked-count {
-      color: var(--color-error);
+      color: #ef4444;
       font-weight: 800;
     }
   }
@@ -632,21 +638,25 @@ mat-card-actions.stats {
       color: var(--color-text-secondary) !important;
       
       &:hover {
-        color: var(--color-primary-light) !important;
-      }
-      
-      &[color="warn"] {
-        color: #fca5a5 !important;
+        color: #f87171 !important;
         
         mat-icon {
-          color: #fca5a5 !important;
+          color: #f87171 !important;
+        }
+      }
+      
+      &.liked {
+        color: #f87171 !important;
+        
+        mat-icon {
+          color: #f87171 !important;
         }
         
         &:hover {
-          color: #f87171 !important;
+          color: #fca5a5 !important;
           
           mat-icon {
-            color: #f87171 !important;
+            color: #fca5a5 !important;
           }
         }
       }
@@ -656,7 +666,7 @@ mat-card-actions.stats {
       color: var(--color-text-secondary);
       
       &.liked-count {
-        color: #fca5a5;
+        color: #f87171;
       }
     }
   }

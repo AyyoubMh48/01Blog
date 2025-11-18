@@ -1203,6 +1203,44 @@ body.dark-mode {
 body.dark-mode .stats {
   background: rgba(255, 255, 255, 0.02);
   border-top-color: var(--color-border);
+  
+  .stat-btn.like-btn {
+    color: var(--color-text-secondary) !important;
+    
+    mat-icon {
+      color: var(--color-text-secondary) !important;
+    }
+    
+    &:not([disabled]):hover {
+      color: #f87171 !important;
+      
+      mat-icon {
+        color: #f87171 !important;
+      }
+    }
+    
+    &.liked {
+      color: #f87171 !important;
+      
+      mat-icon {
+        color: #f87171 !important;
+      }
+      
+      &:hover {
+        color: #fca5a5 !important;
+        
+        mat-icon {
+          color: #fca5a5 !important;
+        }
+      }
+    }
+  }
+  
+  .stat-count {
+    &.liked-count {
+      color: #f87171;
+    }
+  }
 }
 
 .stat-item {
@@ -1233,13 +1271,35 @@ body.dark-mode .stats {
   }
 
   &.like-btn {
-    &.liked mat-icon {
-      color: var(--color-error);
-      animation: pulse 0.5s ease;
+    color: var(--color-text-secondary) !important;
+    
+    mat-icon {
+      color: var(--color-text-secondary) !important;
     }
-
-    &:not([disabled]):hover mat-icon {
-      color: var(--color-error) !important;
+    
+    &:not([disabled]):hover {
+      color: #ef4444 !important;
+      
+      mat-icon {
+        color: #ef4444 !important;
+      }
+    }
+    
+    &.liked {
+      color: #ef4444 !important;
+      
+      mat-icon {
+        color: #ef4444 !important;
+        animation: pulse 0.5s ease;
+      }
+      
+      &:hover {
+        color: #dc2626 !important;
+        
+        mat-icon {
+          color: #dc2626 !important;
+        }
+      }
     }
   }
 
@@ -1254,9 +1314,10 @@ body.dark-mode .stats {
   color: var(--color-text-secondary);
   transition: all 0.3s ease;
 
-  &.active {
-    color: var(--color-error);
-    transform: scale(1.1);
+  &.active,
+  &.liked-count {
+    color: #ef4444;
+    font-weight: 700;
   }
 }
 

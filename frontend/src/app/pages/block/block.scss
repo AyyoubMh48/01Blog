@@ -787,21 +787,24 @@ mat-card-actions.stats {
         color: inherit !important;
       }
       
+      color: var(--color-text-secondary) !important;
+      
       &:hover:not(:disabled) {
         transform: scale(1.15);
-        color: var(--color-primary) !important;
+        color: #ef4444 !important;
         
         mat-icon {
+          color: #ef4444 !important;
           transform: rotate(-10deg);
         }
       }
       
       // Liked state - red heart
       &.liked {
-        color: var(--color-error) !important;
+        color: #ef4444 !important;
         
         mat-icon {
-          color: var(--color-error) !important;
+          color: #ef4444 !important;
         }
         
         &:hover {
@@ -833,7 +836,7 @@ mat-card-actions.stats {
       transition: color 0.3s ease;
       
       &.liked-count {
-        color: var(--color-error);
+        color: #ef4444;
         font-weight: 700;
       }
     }
@@ -850,21 +853,25 @@ mat-card-actions.stats {
       color: var(--color-text-secondary) !important;
       
       &:hover:not(:disabled) {
-        color: var(--color-primary-light) !important;
+        color: #f87171 !important;
+        
+        mat-icon {
+          color: #f87171 !important;
+        }
       }
       
       &.liked {
-        color: #fca5a5 !important;
+        color: #f87171 !important;
         
         mat-icon {
-          color: #fca5a5 !important;
+          color: #f87171 !important;
         }
         
         &:hover {
-          color: #f87171 !important;
+          color: #fca5a5 !important;
           
           mat-icon {
-            color: #f87171 !important;
+            color: #fca5a5 !important;
           }
         }
       }
@@ -882,7 +889,7 @@ mat-card-actions.stats {
       color: var(--color-text-secondary);
       
       &.liked-count {
-        color: #fca5a5;
+        color: #f87171;
       }
     }
   }

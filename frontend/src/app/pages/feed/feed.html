@@ -222,7 +222,7 @@
                         [attr.aria-label]="post.likedByCurrentUser ? 'Unlike post' : 'Like post'">
                   <mat-icon>{{ post.likedByCurrentUser ? 'favorite' : 'favorite_border' }}</mat-icon>
                 </button>
-                <span class="stat-count" [class.active]="post.likedByCurrentUser">{{ post.likeCount | number }}</span>
+                <span class="stat-count" [class.liked-count]="post.likedByCurrentUser">{{ post.likeCount | number }}</span>
               </div>
               <div class="stat-item">
                 <button mat-icon-button class="stat-btn comment-btn" disabled>
