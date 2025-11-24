@@ -51,6 +51,9 @@ public class PostService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private HtmlSanitizationService htmlSanitizationService;
+
     @Transactional
     public PostResponseDto createPost(String title, String content, MultipartFile file, String tags,
             String authorEmail) {
@@ -71,14 +74,18 @@ public class PostService {
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + authorEmail));
 
+        // Sanitize user input to prevent XSS
+        String sanitizedTitle = htmlSanitizationService.escapeHtml(title);
+        String sanitizedContent = htmlSanitizationService.sanitize(content);
+
         String mediaUrl = null;
         if (file != null && !file.isEmpty()) {
             mediaUrl = fileStorageService.storeFile(file, authorEmail);
         }
 
         Post newPost = new Post();
-        newPost.setTitle(title);
-        newPost.setContent(content);
+        newPost.setTitle(sanitizedTitle);
+        newPost.setContent(sanitizedContent);
         newPost.setAuthor(author);
         newPost.setMediaUrl(mediaUrl);
 
@@ -170,15 +177,19 @@ public class PostService {
             throw new AccessDeniedException("You do not have permission to edit this post.");
         }
 
-        post.setTitle(title);
-        post.setContent(content);
+        // Sanitize user input to prevent XSS
+        String sanitizedTitle = htmlSanitizationService.escapeHtml(title);
+        String sanitizedContent = htmlSanitizationService.sanitize(content);
+
+        post.setTitle(sanitizedTitle);
+        post.setContent(sanitizedContent);
 
         Set<Tag> tagSet = parseAndSaveTags(tags);
         post.setTags(tagSet);
 
-        String mediaUrl = null;
         if (file != null && !file.isEmpty()) {
-            mediaUrl = fileStorageService.storeFile(file, userEmail);
+            String mediaUrl = fileStorageService.storeFile(file, userEmail);
+            post.setMediaUrl(mediaUrl);
         }
 
         Post updatedPost = postRepository.save(post);

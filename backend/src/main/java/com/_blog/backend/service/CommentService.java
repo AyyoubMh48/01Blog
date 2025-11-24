@@ -29,6 +29,8 @@ public class CommentService {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private HtmlSanitizationService htmlSanitizationService;
 
     @Transactional
     public CommentResponseDto addComment(Long postId, CommentRequestDto commentDto, String userEmail) {
@@ -37,8 +39,11 @@ public class CommentService {
         User author = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        // Sanitize comment content to prevent XSS
+        String sanitizedContent = htmlSanitizationService.escapeHtml(commentDto.getContent());
+
         Comment newComment = new Comment();
-        newComment.setContent(commentDto.getContent());
+        newComment.setContent(sanitizedContent);
         newComment.setPost(post);
         newComment.setAuthor(author);
         
