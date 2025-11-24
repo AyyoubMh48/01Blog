@@ -3,12 +3,17 @@ package com._blog.backend.controller;
 import com._blog.backend.dto.RegisterDto;
 import com._blog.backend.entity.User;
 import com._blog.backend.service.AuthService;
+import com._blog.backend.config.RateLimitConfig;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.ConsumptionProbe;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.HashMap; 
 import com._blog.backend.dto.LoginDto;
@@ -24,8 +29,24 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private RateLimitConfig rateLimitConfig;
+
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto registerDto) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto registerDto, HttpServletRequest request) {
+        String clientIp = getClientIP(request);
+        Bucket bucket = rateLimitConfig.resolveRegisterBucket(clientIp);
+        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
+        
+        if (!probe.isConsumed()) {
+            long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "Too many registration attempts");
+            response.put("message", "Please try again in " + waitForRefill + " seconds");
+            response.put("retryAfter", waitForRefill);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
+        }
+
         User newUser = new User();
         newUser.setUsername(registerDto.getUsername());
         newUser.setEmail(registerDto.getEmail());
@@ -33,14 +54,36 @@ public class AuthController {
 
         authService.registerUser(newUser);
 
-         Map<String, String> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         response.put("message", "User registered successfully!");
 
         return ResponseEntity.ok(response);
     }
+    
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginDto loginDto) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request) {
+        String clientIp = getClientIP(request);
+        Bucket bucket = rateLimitConfig.resolveLoginBucket(clientIp);
+        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
+        
+        if (!probe.isConsumed()) {
+            long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "Too many login attempts");
+            response.put("message", "Please try again in " + waitForRefill + " seconds");
+            response.put("retryAfter", waitForRefill);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
+        }
+
         String token = authService.login(loginDto);
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    private String getClientIP(HttpServletRequest request) {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
     }
 }
