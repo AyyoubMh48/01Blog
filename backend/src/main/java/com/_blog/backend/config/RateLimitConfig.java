@@ -3,6 +3,7 @@ package com._blog.backend.config;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import io.github.bucket4j.ConsumptionProbe;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -108,5 +109,21 @@ public class RateLimitConfig {
         return Bucket.builder()
                 .addLimit(limit)
                 .build();
+    }
+
+ 
+    public Map<String, Object> checkRateLimit(Bucket bucket, String errorMessage) {
+        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
+        
+        if (!probe.isConsumed()) {
+            long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
+            Map<String, Object> response = new java.util.HashMap<>();
+            response.put("error", errorMessage);
+            response.put("message", "Please try again in " + waitForRefill + " seconds");
+            response.put("retryAfter", waitForRefill);
+            return response;
+        }
+        
+        return null; // Rate limit not exceeded
     }
 }

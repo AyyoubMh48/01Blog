@@ -3,7 +3,6 @@ package com._blog.backend.controller;
 import com._blog.backend.service.PostService;
 import com._blog.backend.config.RateLimitConfig;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.ConsumptionProbe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -38,18 +36,13 @@ public class PostController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createPost(@RequestParam("title") String title, @RequestParam("content") String content, @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "tags", required = false) String tags, Principal principal, HttpServletRequest request) {
         
-        
         String userEmail = principal.getName();
-        Bucket bucket = rateLimitConfig.resolvePostBucket(userEmail);
-        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
         
-        if (!probe.isConsumed()) {
-            long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "Too many posts created");
-            response.put("message", "Please try again in " + waitForRefill + " seconds");
-            response.put("retryAfter", waitForRefill);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
+        // Check rate limit
+        Bucket bucket = rateLimitConfig.resolvePostBucket(userEmail);
+        Map<String, Object> rateLimitError = rateLimitConfig.checkRateLimit(bucket, "Too many posts created");
+        if (rateLimitError != null) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(rateLimitError);
         }
 
         PostResponseDto createdPost = postService.createPost(title, content, file, tags, userEmail);

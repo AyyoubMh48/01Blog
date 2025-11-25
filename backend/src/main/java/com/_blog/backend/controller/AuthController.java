@@ -5,7 +5,6 @@ import com._blog.backend.entity.User;
 import com._blog.backend.service.AuthService;
 import com._blog.backend.config.RateLimitConfig;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.ConsumptionProbe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +34,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto registerDto, HttpServletRequest request) {
         String clientIp = getClientIP(request);
-        Bucket bucket = rateLimitConfig.resolveRegisterBucket(clientIp);
-        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
         
-        if (!probe.isConsumed()) {
-            long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "Too many registration attempts");
-            response.put("message", "Please try again in " + waitForRefill + " seconds");
-            response.put("retryAfter", waitForRefill);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
+        // Check rate limit
+        Bucket bucket = rateLimitConfig.resolveRegisterBucket(clientIp);
+        Map<String, Object> rateLimitError = rateLimitConfig.checkRateLimit(bucket, "Too many registration attempts");
+        if (rateLimitError != null) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(rateLimitError);
         }
 
         User newUser = new User();
@@ -63,16 +58,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request) {
         String clientIp = getClientIP(request);
-        Bucket bucket = rateLimitConfig.resolveLoginBucket(clientIp);
-        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
         
-        if (!probe.isConsumed()) {
-            long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "Too many login attempts");
-            response.put("message", "Please try again in " + waitForRefill + " seconds");
-            response.put("retryAfter", waitForRefill);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
+        // Check rate limit
+        Bucket bucket = rateLimitConfig.resolveLoginBucket(clientIp);
+        Map<String, Object> rateLimitError = rateLimitConfig.checkRateLimit(bucket, "Too many login attempts");
+        if (rateLimitError != null) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(rateLimitError);
         }
 
         String token = authService.login(loginDto);
