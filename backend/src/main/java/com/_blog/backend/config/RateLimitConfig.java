@@ -31,8 +31,28 @@ public class RateLimitConfig {
     @Value("${rate.limit.register.refill-duration-minutes}")
     private int registerRefillDurationMinutes;
 
+    @Value("${rate.limit.post.capacity}")
+    private int postCapacity;
+
+    @Value("${rate.limit.post.refill-tokens}")
+    private int postRefillTokens;
+
+    @Value("${rate.limit.post.refill-duration-minutes}")
+    private int postRefillDurationMinutes;
+
+    @Value("${rate.limit.comment.capacity}")
+    private int commentCapacity;
+
+    @Value("${rate.limit.comment.refill-tokens}")
+    private int commentRefillTokens;
+
+    @Value("${rate.limit.comment.refill-duration-minutes}")
+    private int commentRefillDurationMinutes;
+
     private final Map<String, Bucket> loginBuckets = new ConcurrentHashMap<>();
     private final Map<String, Bucket> registerBuckets = new ConcurrentHashMap<>();
+    private final Map<String, Bucket> postBuckets = new ConcurrentHashMap<>();
+    private final Map<String, Bucket> commentBuckets = new ConcurrentHashMap<>();
 
     public Bucket resolveLoginBucket(String key) {
         return loginBuckets.computeIfAbsent(key, k -> createLoginBucket());
@@ -40,6 +60,14 @@ public class RateLimitConfig {
 
     public Bucket resolveRegisterBucket(String key) {
         return registerBuckets.computeIfAbsent(key, k -> createRegisterBucket());
+    }
+
+    public Bucket resolvePostBucket(String key) {
+        return postBuckets.computeIfAbsent(key, k -> createPostBucket());
+    }
+
+    public Bucket resolveCommentBucket(String key) {
+        return commentBuckets.computeIfAbsent(key, k -> createCommentBucket());
     }
 
     private Bucket createLoginBucket() {
@@ -56,6 +84,26 @@ public class RateLimitConfig {
         Bandwidth limit = Bandwidth.classic(
                 registerCapacity,
                 Refill.intervally(registerRefillTokens, Duration.ofMinutes(registerRefillDurationMinutes))
+        );
+        return Bucket.builder()
+                .addLimit(limit)
+                .build();
+    }
+
+    private Bucket createPostBucket() {
+        Bandwidth limit = Bandwidth.classic(
+                postCapacity,
+                Refill.intervally(postRefillTokens, Duration.ofMinutes(postRefillDurationMinutes))
+        );
+        return Bucket.builder()
+                .addLimit(limit)
+                .build();
+    }
+
+    private Bucket createCommentBucket() {
+        Bandwidth limit = Bandwidth.classic(
+                commentCapacity,
+                Refill.intervally(commentRefillTokens, Duration.ofMinutes(commentRefillDurationMinutes))
         );
         return Bucket.builder()
                 .addLimit(limit)
