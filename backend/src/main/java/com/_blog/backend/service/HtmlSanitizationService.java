@@ -13,22 +13,28 @@ public class HtmlSanitizationService {
 
         this.policy = new HtmlPolicyBuilder()
                 // Text formatting
-                .allowElements("p", "br", "strong", "em", "u", "s")
+                .allowElements("p", "br", "strong", "em", "u", "s", "span", "div")
                 // Headings
                 .allowElements("h1", "h2", "h3", "h4", "h5", "h6")
                 // Lists
                 .allowElements("ul", "ol", "li")
-                // Links
+                // Links with protocols
                 .allowElements("a")
                 .allowAttributes("href").onElements("a")
+                .allowUrlProtocols("http", "https")
                 .requireRelNofollowOnLinks()
-                // Images
+                // Images - allow Cloudinary URLs
                 .allowElements("img")
-                .allowAttributes("src", "alt").onElements("img")
+                .allowAttributes("src", "alt", "width", "height", "style").onElements("img")
+                // Videos - IMPORTANT for Cloudinary videos
+                .allowElements("video")
+                .allowAttributes("src", "controls", "width", "height", "style", "autoplay", "loop", "muted").onElements("video")
                 // Code blocks
                 .allowElements("code", "pre", "blockquote")
                 // Tables
                 .allowElements("table", "thead", "tbody", "tr", "th", "td")
+                // Quill editor classes
+                .allowAttributes("class").globally()
                 .toFactory();
     }
 
