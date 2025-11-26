@@ -100,6 +100,7 @@
                 minlength="8"
                 maxlength="50"
                 #passwordInput="ngModel"
+                (ngModelChange)="checkPasswordStrength($event)"
                 autocomplete="new-password">
               <mat-icon matPrefix>lock</mat-icon>
               <button 
@@ -120,6 +121,42 @@
                 Password cannot exceed 50 characters.
               </mat-error>
             </mat-form-field>
+            
+            <!-- Password Strength Indicator -->
+            <div *ngIf="passwordInput.value" class="password-strength">
+              <div class="strength-label">Password Strength:</div>
+              <div class="strength-bar" [ngClass]="passwordStrengthColor">
+                <div class="strength-fill"></div>
+              </div>
+              <div class="strength-text" [ngClass]="passwordStrengthColor">{{ passwordStrength }}</div>
+            </div>
+            
+            <!-- Password Requirements -->
+            <div class="password-requirements" *ngIf="passwordInput.touched">
+              <div class="requirement-title">Password must contain:</div>
+              <div class="requirement-list">
+                <div class="requirement-item" [class.met]="hasMinLength(passwordInput.value)">
+                  <mat-icon>{{ hasMinLength(passwordInput.value) ? 'check_circle' : 'cancel' }}</mat-icon>
+                  <span>At least 8 characters</span>
+                </div>
+                <div class="requirement-item" [class.met]="hasUppercase(passwordInput.value)">
+                  <mat-icon>{{ hasUppercase(passwordInput.value) ? 'check_circle' : 'cancel' }}</mat-icon>
+                  <span>One uppercase letter</span>
+                </div>
+                <div class="requirement-item" [class.met]="hasLowercase(passwordInput.value)">
+                  <mat-icon>{{ hasLowercase(passwordInput.value) ? 'check_circle' : 'cancel' }}</mat-icon>
+                  <span>One lowercase letter</span>
+                </div>
+                <div class="requirement-item" [class.met]="hasDigit(passwordInput.value)">
+                  <mat-icon>{{ hasDigit(passwordInput.value) ? 'check_circle' : 'cancel' }}</mat-icon>
+                  <span>One number</span>
+                </div>
+                <div class="requirement-item" [class.met]="hasSpecial(passwordInput.value)">
+                  <mat-icon>{{ hasSpecial(passwordInput.value) ? 'check_circle' : 'cancel' }}</mat-icon>
+                  <span>One special character (&#64;#$%^&+=!*)</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Confirm Password Field -->

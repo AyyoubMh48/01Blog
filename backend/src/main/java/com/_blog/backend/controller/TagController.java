@@ -2,7 +2,6 @@ package com._blog.backend.controller;
 
 import com._blog.backend.dto.PostResponseDto;
 import com._blog.backend.dto.TagDto;
-import com._blog.backend.service.PostService;
 import com._blog.backend.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -20,7 +20,6 @@ import java.util.Map;
 import com._blog.backend.dto.ChangePasswordDto;
 import com._blog.backend.dto.ProfileUpdateRequestDto;
 
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
