@@ -8,6 +8,7 @@ import com._blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -24,7 +25,7 @@ public class SubscriptionService {
 
     
 
-    @Transactional 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void followUser(String followerEmail, Long followingId) {
         User follower = userRepository.findByEmail(followerEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Follower not found"));

@@ -8,7 +8,12 @@ import java.util.Set;
 import java.util.HashSet;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "posts", indexes = {
+    @Index(name = "idx_posts_author_created", columnList = "user_id, createdAt"),
+    @Index(name = "idx_posts_status_created", columnList = "status, createdAt"),
+    @Index(name = "idx_posts_status", columnList = "status"),
+    @Index(name = "idx_posts_created", columnList = "createdAt")
+})
 @Getter
 @Setter
 public class Post {

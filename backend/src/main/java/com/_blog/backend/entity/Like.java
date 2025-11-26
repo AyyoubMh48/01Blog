@@ -5,10 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "post_likes", uniqueConstraints = {
-    // A user can only like a post once
-    @UniqueConstraint(columnNames = {"user_id", "post_id"})
-})
+@Table(name = "post_likes", 
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "post_id"})
+    },
+    indexes = {
+        @Index(name = "idx_likes_post", columnList = "post_id"),
+        @Index(name = "idx_likes_user", columnList = "user_id")
+    }
+)
 @Getter
 @Setter
 public class Like {

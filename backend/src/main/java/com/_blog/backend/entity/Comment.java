@@ -7,7 +7,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comments", indexes = {
+    @Index(name = "idx_comments_post", columnList = "post_id"),
+    @Index(name = "idx_comments_author", columnList = "user_id"),
+    @Index(name = "idx_comments_created", columnList = "createdAt")
+})
 @Getter
 @Setter
 public class Comment {

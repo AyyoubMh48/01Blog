@@ -5,9 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "subscriptions", uniqueConstraints = { //user can't following the same person more than once.
-    @UniqueConstraint(columnNames = {"follower_id", "following_id"})
-})
+@Table(name = "subscriptions", 
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"follower_id", "following_id"})
+    },
+    indexes = {
+        @Index(name = "idx_sub_follower", columnList = "follower_id"),
+        @Index(name = "idx_sub_following", columnList = "following_id")
+    }
+)
 @Getter
 @Setter
 public class Subscription {

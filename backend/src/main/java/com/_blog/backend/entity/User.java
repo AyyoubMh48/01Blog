@@ -10,7 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+    @Index(name = "idx_users_email", columnList = "email", unique = true),
+    @Index(name = "idx_users_username", columnList = "username", unique = true)
+})
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")

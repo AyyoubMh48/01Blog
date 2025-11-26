@@ -9,6 +9,7 @@ import com._blog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class LikeService {
     @Autowired
     private PostRepository postRepository;
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void toggleLike(Long postId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));

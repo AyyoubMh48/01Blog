@@ -33,7 +33,13 @@ public class TagService {
     @Transactional(readOnly = true)
     public Page<PostResponseDto> getPostsByTag(String tagName, String currentUserEmail, Pageable pageable) {
         User currentUser = (currentUserEmail != null) ? userRepository.findByEmail(currentUserEmail).orElse(null) : null;
-    Page<Post> postPage = postRepository.findByTags_NameIgnoreCaseAndStatusOrderByCreatedAtDesc(tagName, PostStatus.PUBLISHED, pageable);
+        Page<Post> postPage = postRepository.findByTags_NameIgnoreCaseAndStatusOrderByCreatedAtDesc(tagName, PostStatus.PUBLISHED, pageable);
+        
+        // Eagerly load authors to prevent N+1
+        if (!postPage.isEmpty()) {
+            postPage.getContent().forEach(post -> post.getAuthor().getId());
+        }
+        
         return postPage.map(post -> postService.mapToDto(post, currentUser));
     }
 

@@ -22,12 +22,24 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByAuthorAndStatusOrderByCreatedAtDesc(User author, PostStatus status, Pageable pageable);
 
+    @Query("SELECT p FROM Post p JOIN FETCH p.author WHERE p.author IN :authors AND p.status = :status ORDER BY p.createdAt DESC")
+    List<Post> findByAuthorInAndStatusWithAuthor(List<User> authors, PostStatus status);
+
     Page<Post> findByAuthorInAndStatusOrderByCreatedAtDesc(List<User> authors, PostStatus status, Pageable pageable);
+
+    @Query("SELECT p FROM Post p JOIN FETCH p.author WHERE p.status = :status ORDER BY p.createdAt DESC")
+    List<Post> findAllByStatusWithAuthor(PostStatus status, Pageable pageable);
 
     Page<Post> findAllByStatusOrderByCreatedAtDesc(PostStatus status, Pageable pageable);
 
+    @Query("SELECT p FROM Post p JOIN FETCH p.author JOIN p.tags t WHERE LOWER(t.name) = LOWER(:tagName) AND p.status = :status ORDER BY p.createdAt DESC")
+    List<Post> findByTagNameAndStatusWithAuthor(String tagName, PostStatus status, Pageable pageable);
+
     Page<Post> findByTags_NameIgnoreCaseAndStatusOrderByCreatedAtDesc(String tagName, PostStatus status, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.status = 'PUBLISHED' ORDER BY SIZE(p.likes) DESC LIMIT :limit")
-    List<Post> findTrendingPosts(int limit);
+    @Query("SELECT p FROM Post p JOIN FETCH p.author LEFT JOIN FETCH p.tags WHERE p.status = 'PUBLISHED' ORDER BY SIZE(p.likes) DESC")
+    List<Post> findTrendingPostsWithAuthor();
+
+    @Query("SELECT p FROM Post p WHERE p.status = 'PUBLISHED' ORDER BY SIZE(p.likes) DESC")
+    List<Post> findTrendingPosts();
 }

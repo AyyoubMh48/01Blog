@@ -9,28 +9,33 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
+@Validated
 public class TagController {
 
     @Autowired
     private TagService tagService;
 
     @GetMapping("/popular")
-    public ResponseEntity<List<TagDto>> getPopularTags(@RequestParam(defaultValue = "10") int limit) {
+    public ResponseEntity<List<TagDto>> getPopularTags(
+            @RequestParam(defaultValue = "10") @Min(1) @Max(50) int limit) {
         return ResponseEntity.ok(tagService.getPopularTags(limit));
     }
 
     @GetMapping("/{tagName}/posts")
     public ResponseEntity<Page<PostResponseDto>> getPostsByTag(
             @PathVariable String tagName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             Principal principal) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         String currentUserEmail = (principal != null) ? principal.getName() : null;

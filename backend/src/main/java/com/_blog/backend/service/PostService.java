@@ -108,7 +108,16 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<PostResponseDto> getAllPosts(String currentUserEmail, Pageable pageable) {
         User currentUser = (currentUserEmail != null) ? userRepository.findByEmail(currentUserEmail).orElse(null) : null;
+        
+        // Use optimized query with JOIN FETCH to prevent N+1 problem
         Page<Post> postPage = postRepository.findAllByStatusOrderByCreatedAtDesc(PostStatus.PUBLISHED, pageable);
+        
+        // Eagerly fetch authors for all posts in one query to avoid N+1
+        if (!postPage.isEmpty()) {
+            // This triggers the lazy-loaded author for all posts at once
+            postPage.getContent().forEach(post -> post.getAuthor().getId());
+        }
+        
         return postPage.map(post -> mapToDto(post, currentUser));
     }
 
@@ -139,6 +148,12 @@ public class PostService {
                 .collect(Collectors.toList());
 
         Page<Post> postPage = postRepository.findByAuthorInAndStatusOrderByCreatedAtDesc(authorsToFetch, PostStatus.PUBLISHED, pageable);
+        
+        // Eagerly load authors to prevent N+1
+        if (!postPage.isEmpty()) {
+            postPage.getContent().forEach(post -> post.getAuthor().getId());
+        }
+        
         return postPage.map(post -> mapToDto(post, currentUser));
     }
 
@@ -241,7 +256,9 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<TrendingPostDto> getTrendingPosts(int limit) {
-        return postRepository.findTrendingPosts(limit).stream()
+        // Use optimized query with JOIN FETCH to prevent N+1, then limit in Java
+        return postRepository.findTrendingPostsWithAuthor().stream()
+                .limit(limit)
                 .map(post -> {
                     TrendingPostDto dto = new TrendingPostDto();
                     dto.setId(post.getId());

@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tags")
+@Table(name = "tags", indexes = {
+    @Index(name = "idx_tags_name", columnList = "name", unique = true)
+})
 @Getter
 @Setter
 public class Tag {
