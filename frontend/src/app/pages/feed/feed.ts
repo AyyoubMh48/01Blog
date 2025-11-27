@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog';
 import { Observable } from 'rxjs';
 import { TagService } from '../../services/tag';
 import { Tag } from '../../models/post';
@@ -33,7 +35,8 @@ type FeedFilter = 'following' | 'myPosts' | 'all';
     MatInputModule,
     InfiniteScrollModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
@@ -60,7 +63,8 @@ export class Feed implements OnInit {
     private likeService: LikeService,
     private router: Router,
     private tagService: TagService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -152,17 +156,29 @@ export class Feed implements OnInit {
   }
 
   deletePost(postId: number): void {
-    if (confirm('Are you sure you want to delete this post?')) {
-      this.postService.deletePost(postId).subscribe(() => {
-        // Remove the post from the local array for an instant UI update
-        this.posts = this.posts.filter((p) => p.id !== postId);
-        this.snackBar.open('Post deleted successfully', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Post',
+        message: 'Are you sure you want to delete this post? This action cannot be undone.',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        confirmColor: 'warn',
+        icon: 'delete'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.postService.deletePost(postId).subscribe(() => {
+          this.posts = this.posts.filter((p) => p.id !== postId);
+          this.snackBar.open('Post deleted successfully', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
         });
-      });
-    }
+      }
+    });
   }
   
 

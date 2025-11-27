@@ -8,6 +8,8 @@ import { PostService } from '../../services/post';
 import { LikeService } from '../../services/like';
 import { Post } from '../../models/post';
 import { Router, RouterLink } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,7 +31,8 @@ import { CommentSectionComponent } from '../../components/comment-section/commen
     MatFormFieldModule,
     MatInputModule,RouterLink,
     MatButtonModule,MatIconModule, MatProgressBarModule,MatTabsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
@@ -47,7 +50,8 @@ export class Profile {
     private postService: PostService,
     private likeService: LikeService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -170,13 +174,27 @@ export class Profile {
   }
 
  deletePost(postId: number): void {
-  if (confirm('Are you sure you want to delete this post?')) {
-    this.postService.deletePost(postId).subscribe(() => {
-      if (this.userProfile && this.userProfile.posts) {
-        this.userProfile.posts = this.userProfile.posts.filter(p => p.id !== postId);
-      }
-    });
-  }
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    data: {
+      title: 'Delete Post',
+      message: 'Are you sure you want to delete this post? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      confirmColor: 'warn',
+      icon: 'delete'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.postService.deletePost(postId).subscribe(() => {
+        if (this.userProfile && this.userProfile.posts) {
+          this.userProfile.posts = this.userProfile.posts.filter(p => p.id !== postId);
+        }
+        this.snackBar.open('Post deleted successfully', 'Close', { duration: 3000 });
+      });
+    }
+  });
 }
 
    toggleLike(post: Post): void {

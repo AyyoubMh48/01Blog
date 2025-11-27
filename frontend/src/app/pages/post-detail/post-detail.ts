@@ -9,11 +9,14 @@ import { CommentSectionComponent } from '../../components/comment-section/commen
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatCardModule, MatButtonModule, MatIconModule, CommentSectionComponent],
+  imports: [CommonModule, RouterLink, MatCardModule, MatButtonModule, MatIconModule, CommentSectionComponent, MatDialogModule, MatSnackBarModule],
   templateUrl: './post-detail.html',
   styleUrl: './post-detail.scss'
 })
@@ -29,7 +32,9 @@ export class PostDetail implements OnInit {
     private postService: PostService,
     private authService: AuthService,
     private likeService: LikeService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
 ngOnInit(): void {
@@ -79,11 +84,25 @@ ngOnInit(): void {
   }
 
   deletePost(postId: number): void {
-    if (confirm('Are you sure you want to delete this post?')) {
-      this.postService.deletePost(postId).subscribe(() => {
-        this.router.navigate(['/feed']);
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Post',
+        message: 'Are you sure you want to delete this post? This action cannot be undone.',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        confirmColor: 'warn',
+        icon: 'delete'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.postService.deletePost(postId).subscribe(() => {
+          this.snackBar.open('Post deleted successfully', 'Close', { duration: 3000 });
+          this.router.navigate(['/feed']);
+        });
+      }
+    });
   }
 
   onCommentAdded(post: Post): void {

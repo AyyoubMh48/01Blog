@@ -11,6 +11,8 @@ import { Post } from '../../models/post';
 import { CommentSectionComponent } from '../../components/comment-section/comment-section';
 import { ReportService } from '../../services/report'; 
 import { FormsModule, NgForm } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,7 +29,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule],
+    MatSnackBarModule,
+    MatDialogModule],
   templateUrl: './block.html',
   styleUrl: './block.scss'
 })
@@ -48,7 +51,8 @@ export class Block implements OnInit {
     private router : Router,
     private reportService: ReportService,
     private postService: PostService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -105,13 +109,27 @@ export class Block implements OnInit {
     });
   }
    deletePost(postId: number): void {
-    if (confirm('Are you sure you want to delete this post?')) {
-      this.postService.deletePost(postId).subscribe(() => {
-        if (this.userProfile) {
-          this.userProfile.posts = this.userProfile.posts.filter(p => p.id !== postId);
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Post',
+        message: 'Are you sure you want to delete this post? This action cannot be undone.',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        confirmColor: 'warn',
+        icon: 'delete'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.postService.deletePost(postId).subscribe(() => {
+          if (this.userProfile) {
+            this.userProfile.posts = this.userProfile.posts.filter(p => p.id !== postId);
+          }
+          this.snackBar.open('Post deleted successfully', 'Close', { duration: 3000 });
+        });
+      }
+    });
   }
 
   toggleLike(post: Post): void {
@@ -141,17 +159,31 @@ export class Block implements OnInit {
     if (form.invalid || !this.userProfile) {
       return;
     }
-    if (window.confirm('Are you sure you want to submit this report?')) {
-    this.reportService.reportUser(this.userProfile.id, form.value.reason).subscribe({
-      next: () => {
-        this.showReportForm = false;
-        this.snackBar.open('Report submitted successfully. Thank you. 🛡️', 'Close', { duration: 3000 });
-      },
-      error: (err) => {
-        this.snackBar.open('Failed to submit report', 'Close', { duration: 4000 });
+    
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Submit Report',
+        message: `Are you sure you want to report "${this.userProfile.username}"? Our moderation team will review this report.`,
+        confirmText: 'Submit Report',
+        cancelText: 'Cancel',
+        confirmColor: 'warn',
+        icon: 'flag'
       }
     });
-  }
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.reportService.reportUser(this.userProfile!.id, form.value.reason).subscribe({
+          next: () => {
+            this.showReportForm = false;
+            this.snackBar.open('Report submitted successfully. Thank you. 🛡️', 'Close', { duration: 3000 });
+          },
+          error: (err) => {
+            this.snackBar.open('Failed to submit report', 'Close', { duration: 4000 });
+          }
+        });
+      }
+    });
   }
   stripHtml(html: string): string {
     const doc = new DOMParser().parseFromString(html, 'text/html');
