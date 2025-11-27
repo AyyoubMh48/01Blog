@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommentSectionComponent } from '../../components/comment-section/comment-section';
 
 @Component({
@@ -27,8 +28,8 @@ import { CommentSectionComponent } from '../../components/comment-section/commen
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,RouterLink,
-    MatButtonModule,MatIconModule, MatProgressBarModule,MatTabsModule, 
-    //CommentSectionComponent
+    MatButtonModule,MatIconModule, MatProgressBarModule,MatTabsModule,
+    MatSnackBarModule
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
@@ -45,7 +46,8 @@ export class Profile {
     private authService: AuthService,
     private postService: PostService,
     private likeService: LikeService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -107,10 +109,11 @@ export class Profile {
             this.userProfile.avatarUrl = response.url; // Update the avatar in the view
           }
           this.isUploading = false;
+          this.snackBar.open('Avatar updated successfully! 📷', 'Close', { duration: 3000 });
         },
         error: (err) => {
-          this.errorMessage = "Avatar upload failed.";
           this.isUploading = false;
+          this.snackBar.open('Avatar upload failed', 'Close', { duration: 4000 });
         }
       });
     }
@@ -124,10 +127,10 @@ export class Profile {
 
     this.userService.updateProfile({ bio: form.value.bio }).subscribe({
       next: () => {
-        this.successMessage = "Profile updated successfully!";
+        this.snackBar.open('Bio updated successfully! ✏️', 'Close', { duration: 3000 });
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || "An error occurred.";
+        this.snackBar.open(err.error?.message || 'Failed to update bio', 'Close', { duration: 4000 });
       }
     });
   }
@@ -141,7 +144,7 @@ export class Profile {
 
     const { newPassword, confirmPassword } = form.value;
     if (newPassword !== confirmPassword) {
-      this.errorMessage = "New passwords do not match.";
+      this.snackBar.open('New passwords do not match', 'Close', { duration: 4000 });
       return;
     }
 
@@ -152,11 +155,11 @@ export class Profile {
 
     this.userService.changePassword(passwordData).subscribe({
       next: (response) => {
-        this.successMessage = "Password changed successfully!";
+        this.snackBar.open('Password changed successfully! 🔒', 'Close', { duration: 3000 });
         form.reset();
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || "An error occurred.";
+        this.snackBar.open(err.error?.message || 'Failed to change password', 'Close', { duration: 4000 });
       }
     });
   }

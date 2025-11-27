@@ -156,6 +156,11 @@ export class Feed implements OnInit {
       this.postService.deletePost(postId).subscribe(() => {
         // Remove the post from the local array for an instant UI update
         this.posts = this.posts.filter((p) => p.id !== postId);
+        this.snackBar.open('Post deleted successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
       });
     }
   }
@@ -168,8 +173,17 @@ export class Feed implements OnInit {
     }
 
     this.likeService.toggleLike(post.id).subscribe(() => {
+      const wasLiked = post.likedByCurrentUser;
       post.likedByCurrentUser = !post.likedByCurrentUser;
       post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
+      
+      if (!wasLiked) {
+        this.snackBar.open('Post liked! ❤️', '', {
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
+      }
     });
   }
 

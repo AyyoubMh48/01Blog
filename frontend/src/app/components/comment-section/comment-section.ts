@@ -5,6 +5,7 @@ import { Comment } from '../../models/comment';
 import { CommentService } from '../../services/comment';
 import { AuthService } from '../../services/auth';
 import { RouterLink } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,7 +20,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatListModule,
-    MatIconModule],
+    MatIconModule,
+    MatSnackBarModule],
   templateUrl: './comment-section.html',
   styleUrl: './comment-section.scss'
 })
@@ -32,7 +34,8 @@ export class CommentSectionComponent implements OnInit {
 
   constructor(
     private commentService: CommentService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -53,10 +56,16 @@ export class CommentSectionComponent implements OnInit {
       return;
     }
 
-    this.commentService.addComment(this.postId, form.value.content).subscribe(newComment => {
-      this.comments.push(newComment); // Add new comment to the list
-      this.commentAdded.emit(); // Notify the parent component
-      form.reset();
+    this.commentService.addComment(this.postId, form.value.content).subscribe({
+      next: (newComment) => {
+        this.comments.push(newComment); // Add new comment to the list
+        this.commentAdded.emit(); // Notify the parent component
+        form.reset();
+        this.snackBar.open('Comment added! 💬', 'Close', { duration: 2000 });
+      },
+      error: (err) => {
+        this.snackBar.open('Failed to add comment', 'Close', { duration: 4000 });
+      }
     });
   }
 }

@@ -17,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-block',
@@ -25,7 +26,8 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatInputModule],
+    MatInputModule,
+    MatSnackBarModule],
   templateUrl: './block.html',
   styleUrl: './block.scss'
 })
@@ -45,8 +47,8 @@ export class Block implements OnInit {
     private likeService: LikeService,
     private router : Router,
     private reportService: ReportService,
-    private postService: PostService
-
+    private postService: PostService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -80,6 +82,11 @@ export class Block implements OnInit {
     this.subscriptionService.follow(this.userProfile.id).subscribe(() => {
       if (this.userProfile) {
         this.userProfile.followedByCurrentUser = true;
+        this.snackBar.open(`You are now following ${this.userProfile.username}`, 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
       }
     });
   }
@@ -89,6 +96,11 @@ export class Block implements OnInit {
     this.subscriptionService.unfollow(this.userProfile.id).subscribe(() => {
       if (this.userProfile) {
         this.userProfile.followedByCurrentUser = false;
+        this.snackBar.open(`You unfollowed ${this.userProfile.username}`, 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
       }
     });
   }
@@ -130,9 +142,14 @@ export class Block implements OnInit {
       return;
     }
     if (window.confirm('Are you sure you want to submit this report?')) {
-    this.reportService.reportUser(this.userProfile.id, form.value.reason).subscribe(() => {
-      this.showReportForm = false;
-      alert('Report submitted successfully. Thank you.');
+    this.reportService.reportUser(this.userProfile.id, form.value.reason).subscribe({
+      next: () => {
+        this.showReportForm = false;
+        this.snackBar.open('Report submitted successfully. Thank you. 🛡️', 'Close', { duration: 3000 });
+      },
+      error: (err) => {
+        this.snackBar.open('Failed to submit report', 'Close', { duration: 4000 });
+      }
     });
   }
   }

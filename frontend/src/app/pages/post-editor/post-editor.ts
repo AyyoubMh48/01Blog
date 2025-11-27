@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
@@ -96,6 +97,7 @@ interface PendingMedia {
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
+    MatSnackBarModule,
     QuillModule
   ],
   templateUrl: './post-editor.html',
@@ -131,7 +133,8 @@ export class PostEditor implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private postService: PostService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -356,7 +359,11 @@ export class PostEditor implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Media upload failed:', err);
         this.isSubmitting = false;
-        alert('Failed to upload media. Please try again.');
+        this.snackBar.open('Failed to upload media. Please try again.', 'Close', {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
       }
     });
   }
@@ -377,12 +384,25 @@ export class PostEditor implements OnInit, OnDestroy {
       next: () => {
         console.log('Post saved successfully');
         this.isSubmitting = false;
+        this.snackBar.open(
+          this.isEditMode ? 'Post updated successfully!' : 'Post created successfully!',
+          'Close',
+          {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          }
+        );
         this.router.navigate(['/feed']);
       },
       error: (err) => {
         console.error('Failed to save post:', err);
         this.isSubmitting = false;
-        alert('Failed to save post. Please try again.');
+        this.snackBar.open('Failed to save post. Please try again.', 'Close', {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
       },
     });
   }
