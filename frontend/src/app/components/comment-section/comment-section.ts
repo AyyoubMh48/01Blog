@@ -6,6 +6,8 @@ import { CommentService } from '../../services/comment';
 import { AuthService } from '../../services/auth';
 import { RouterLink } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,25 +23,33 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatListModule,
     MatIconModule,
-    MatSnackBarModule],
+    MatSnackBarModule,
+    MatDialogModule],
   templateUrl: './comment-section.html',
   styleUrl: './comment-section.scss'
 })
 export class CommentSectionComponent implements OnInit {
   @Input() postId!: number; // Input from the parent component (e.g., FeedComponent)
   @Output() commentAdded = new EventEmitter<void>(); // Notifies the parent when a comment is added
+  @Output() commentDeleted = new EventEmitter<void>(); // Notifies the parent when a comment is deleted
 
   comments: Comment[] = [];
   isLoggedIn = false;
+  currentUsername: string | null = null;
+  isAdmin = false;
 
   constructor(
     private commentService: CommentService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
+    const currentUser = this.authService.getCurrentUser();
+    this.currentUsername = currentUser?.username || null;
+    this.isAdmin = currentUser?.role === 'ROLE_ADMIN';
     if (this.postId) {
       this.loadComments();
     }
@@ -48,6 +58,38 @@ export class CommentSectionComponent implements OnInit {
   loadComments(): void {
     this.commentService.getComments(this.postId).subscribe(comments => {
       this.comments = comments;
+    });
+  }
+
+  canDeleteComment(comment: Comment): boolean {
+    return this.isLoggedIn && (this.currentUsername === comment.author.username || this.isAdmin);
+  }
+
+  deleteComment(comment: Comment): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Comment',
+        message: 'Are you sure you want to delete this comment?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        confirmColor: 'warn',
+        icon: 'delete'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.commentService.deleteComment(this.postId, comment.id).subscribe({
+          next: () => {
+            this.comments = this.comments.filter(c => c.id !== comment.id);
+            this.commentDeleted.emit();
+            this.snackBar.open('Comment deleted', 'Close', { duration: 2000 });
+          },
+          error: (err) => {
+            this.snackBar.open('Failed to delete comment', 'Close', { duration: 4000 });
+          }
+        });
+      }
     });
   }
 

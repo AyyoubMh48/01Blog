@@ -25,22 +25,32 @@
     <div *ngIf="comments.length === 0" class="no-comments">
       No comments yet.
     </div>
-    <mat-list-item *ngFor="let comment of comments">
+    <mat-list-item *ngFor="let comment of comments" class="comment-item">
       <img
         matListItemAvatar
         [src]="comment.author.avatarUrl"
         alt="Author avatar"
         class="comment-avatar"
       />
-      <div matListItemTitle>
+      <div matListItemTitle class="comment-header">
         <a [routerLink]="['/block', comment.author.username]">{{
           comment.author.username
         }}</a>
+        <span class="comment-date">{{ comment.createdAt | date : "short" }}</span>
       </div>
-      <div matListItemLine>
+      <div matListItemLine class="comment-content">
         <span>{{ comment.content }}</span>
       </div>
-      <div matListItemMeta>{{ comment.createdAt | date : "short" }}</div>
+      <button
+        *ngIf="canDeleteComment(comment)"
+        mat-icon-button
+        color="warn"
+        class="delete-comment-btn"
+        (click)="deleteComment(comment)"
+        aria-label="Delete comment"
+      >
+        <mat-icon>delete_outline</mat-icon>
+      </button>
     </mat-list-item>
   </mat-list>
 </div>

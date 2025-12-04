@@ -67,6 +67,25 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteComment(Long commentId, String userEmail) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+        
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        
+        // Check if user is the comment author or an admin
+        boolean isAuthor = comment.getAuthor().getId().equals(user.getId());
+        boolean isAdmin = "ROLE_ADMIN".equals(user.getRole());
+        
+        if (!isAuthor && !isAdmin) {
+            throw new RuntimeException("You are not authorized to delete this comment");
+        }
+        
+        commentRepository.delete(comment);
+    }
+
     private CommentResponseDto mapToDto(Comment comment) {
         CommentResponseDto dto = new CommentResponseDto();
         dto.setId(comment.getId());

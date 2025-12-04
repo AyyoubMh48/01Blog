@@ -102,14 +102,72 @@
     padding: 16px 0 !important;
     border-bottom: 1px solid var(--border-color);
     transition: background 0.2s ease;
+    position: relative;
     
     &:hover {
       background: rgba(59, 130, 246, 0.02);
+      
+      .delete-comment-btn {
+        opacity: 1;
+      }
     }
     
     &:last-child {
       border-bottom: none;
     }
+  }
+}
+
+// ===========================
+// COMMENT ITEM
+// ===========================
+
+.comment-item {
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .comment-date {
+    font-size: 0.8rem;
+    color: var(--color-text-muted, #6b7280);
+    font-weight: 400;
+  }
+
+  .comment-content {
+    margin-top: 4px;
+  }
+}
+
+// ===========================
+// DELETE COMMENT BUTTON
+// ===========================
+
+.delete-comment-btn {
+  position: absolute !important;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+  }
+}
+
+// Always show on mobile
+@media (max-width: 768px) {
+  .delete-comment-btn {
+    opacity: 0.7;
   }
 }
 

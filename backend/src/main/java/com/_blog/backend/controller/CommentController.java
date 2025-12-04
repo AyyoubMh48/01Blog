@@ -53,4 +53,18 @@ public class CommentController {
         List<CommentResponseDto> comments = commentService.getCommentsForPost(postId);
         return ResponseEntity.ok(comments);
     }
+
+    // Delete a comment (only author or admin)
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<?> deleteComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            Principal principal) {
+        try {
+            commentService.deleteComment(commentId, principal.getName());
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
 }
