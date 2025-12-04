@@ -5,13 +5,11 @@ import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification';
 import { Notification } from '../../models/notification';
 
-// Material Imports
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-//import { MatDatepipeModule } from '@angular/material/datepipe';
 
 @Component({
   selector: 'app-notifications',
@@ -33,7 +31,6 @@ export class Notifications implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to the notification stream from the service
     this.notificationSub = this.notificationService.notifications$.subscribe(data => {
       this.notifications = data;
     });
@@ -45,7 +42,6 @@ export class Notifications implements OnInit, OnDestroy {
         notification.read = true;
       });
     }
-    // Navigate to the link associated with the notification
     if (notification.link) {
       this.router.navigate([notification.link]);
     }

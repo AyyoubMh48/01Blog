@@ -39,17 +39,7 @@ export class Admin implements OnInit {
   PostStatus = PostStatus;
   selectedTabIndex = 0; 
 
-  // reportColumns: string[] = [
-  //   'id',
-  //   'reason',
-  //   'reporter',
-  //   'reportedUser',
-  //   'date',
-  //   'actions',
-  // ];
-  // userColumns: string[] = ['id', 'username', 'email', 'role', 'status'];
-  // postColumns: string[] = ['id', 'content', 'author','status', 'createdAt', 'actions'];
-
+ 
   constructor(
     private adminService: AdminService,
     private snackBar: MatSnackBar,

@@ -69,35 +69,6 @@ export class Profile {
     }
   }
 
-  // onSubmit(form: NgForm): void {
-  //   if (form.invalid) {
-  //     return;
-  //   }
-  //   // Clear previous messages
-  //   this.successMessage = null;
-  //   this.errorMessage = null;
-
-  //   const { newPassword, confirmPassword } = form.value;
-  //   if (newPassword !== confirmPassword) {
-  //     this.errorMessage = "New passwords do not match.";
-  //     return;
-  //   }
-
-  //   const passwordData = {
-  //     oldPassword: form.value.oldPassword,
-  //     newPassword: form.value.newPassword
-  //   };
-
-  //   this.userService.changePassword(passwordData).subscribe({
-  //     next: (response) => {
-  //       this.successMessage = "Password changed successfully!";
-  //       form.reset();
-  //     },
-  //     error: (err) => {
-  //       this.errorMessage = err.error?.message || "An error occurred.";
-  //     }
-  //   });
-  // }
 
   onAvatarSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

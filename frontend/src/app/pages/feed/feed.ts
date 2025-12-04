@@ -101,7 +101,7 @@ export class Feed implements OnInit {
 
   loadPosts(): void {
   if (this.isLoading || (this.totalPages > 0 && this.currentPage >= this.totalPages)) {
-    console.log('⛔ Load blocked:', { 
+    console.log('load blocked:', { 
       isLoading: this.isLoading, 
       currentPage: this.currentPage, 
       totalPages: this.totalPages 
@@ -109,7 +109,7 @@ export class Feed implements OnInit {
     return;
   }
   this.isLoading = true;
-    console.log('📥 Loading page:', this.currentPage);
+    console.log('loading page:', this.currentPage);
 
   let apiCall: Observable<Page<Post>>;
 
@@ -129,14 +129,14 @@ export class Feed implements OnInit {
   
   apiCall.subscribe({
     next: (page: Page<Post>) => {
-      console.log('✅ Loaded:', page.content.length, 'posts. Total pages:', page.totalPages);
+      console.log('loaded:', page.content.length, 'posts. Total pages:', page.totalPages);
       this.posts = [...this.posts, ...page.content];
       this.totalPages = page.totalPages;
       this.currentPage++;
       this.isLoading = false;
     },
     error: (error) => {
-      console.error('❌ Failed to load posts:', error);
+      console.error('failed to load posts:', error);
       this.isLoading = false;
     }
   });

@@ -32,7 +32,7 @@ export class Login {
   errorMessage: string | null = null;
   showPassword = false;
   isLoading = false;
-  rememberMe = false;
+  
 
   constructor(
     private authService: AuthService,

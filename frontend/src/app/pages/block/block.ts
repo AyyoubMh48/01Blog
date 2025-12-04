@@ -71,7 +71,7 @@ export class Block implements OnInit {
     if (profileUsername) {
       this.userService.getUserProfile(profileUsername).subscribe({
         next: (profile) => {
-                  //  console.log("--- [FRONTEND DEBUG] Profile data received:", profile);
+                  //  console.log("--- profile data received:", profile);
           this.userProfile = profile;
         },
         error: (err) => {
