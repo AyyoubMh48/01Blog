@@ -18,18 +18,18 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
 
-// Configure Quill to allow blob URLs (for local preview)
+// configure Quill to allow blob URLs (for local preview)
 const Link = Quill.import('formats/link') as any;
 Link.PROTOCOL_WHITELIST.push('blob');
 
-// Register custom image blot that allows blob URLs
+// register custom image blot that allows blob URLs
 const BlockEmbed = Quill.import('blots/block/embed') as any;
 const ImageBlot = Quill.import('formats/image') as any;
 
 class CustomImageBlot extends ImageBlot {
   static create(value: string) {
-    const node = super.create(value) as HTMLImageElement;
-    // Allow blob URLs without sanitization
+    const node = super.create(value) as HTMLImageElement;//<img>
+    //  allow blob URLs without sanitization
     if (value.startsWith('blob:') || value.startsWith('http://') || value.startsWith('https://')) {
       node.setAttribute('src', value);
     }
@@ -37,7 +37,7 @@ class CustomImageBlot extends ImageBlot {
   }
 
   static sanitize(url: string) {
-    // Allow blob URLs for local preview
+    //   allow blob URLs for local preview
     if (url.startsWith('blob:')) {
       return url;
     }
@@ -47,15 +47,14 @@ class CustomImageBlot extends ImageBlot {
 
 Quill.register(CustomImageBlot, true);
 
-// Register custom video blot for better video handling
 class VideoBlot extends BlockEmbed {
   static blotName = 'video';
   static tagName = 'video';
   static className = 'ql-video';
-  static scope = Quill.import('parchment').Scope.BLOCK_BLOT;
+  static scope = Quill.import('parchment').Scope.BLOCK_BLOT;//make it Block like div
 
   static create(value: string) {
-    const node = super.create(value) as HTMLVideoElement;
+    const node = super.create(value) as HTMLVideoElement;//<video>
     node.setAttribute('src', value);
     node.setAttribute('controls', 'true');
     node.setAttribute('style', 'max-width: 100%; height: auto;');
@@ -63,11 +62,10 @@ class VideoBlot extends BlockEmbed {
   }
 
   static sanitize(url: string) {
-    // Allow blob URLs for local preview
+    
     if (url.startsWith('blob:')) {
       return url;
     }
-    // For other URLs, return as-is (you can add more validation if needed)
     return url;
   }
 
@@ -111,7 +109,7 @@ export class PostEditor implements OnInit, OnDestroy {
   isSubmitting = false;
   errorMessage: string | null = null;
 
-  // Store pending media files that will be uploaded on publish
+  // store pending media files that will be uploaded on publish
   pendingMediaFiles: PendingMedia[] = [];
 
   // Quill setup
@@ -179,7 +177,7 @@ export class PostEditor implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up object URLs to prevent memory leaks
+    // clean up object URLs to prevent memory leaks
     this.pendingMediaFiles.forEach(media => {
       URL.revokeObjectURL(media.localUrl);
     });
