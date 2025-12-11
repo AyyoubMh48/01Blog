@@ -12,7 +12,7 @@ import { FooterComponent } from './components/footer/footer';
   styleUrl: './app.scss'
 })
 export class App implements OnInit { 
-  title = '01blog-frontend';
+  title = 'LogX';
 
   constructor(private authService: AuthService) {
   }

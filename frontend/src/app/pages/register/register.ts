@@ -2,6 +2,7 @@ import { Component , ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth';
+import { ThemeService } from '../../services/theme';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,7 +39,7 @@ export class Register {
   private readonly hasNumber = /\d/;
   private readonly hasSpecialChar = /[@#$%^&+=!*]/;
 
-  constructor(private authService: AuthService, private router: Router,private cdr: ChangeDetectorRef ) {}
+  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef, public themeService: ThemeService) {}
 
 
   togglePasswordVisibility(): void {

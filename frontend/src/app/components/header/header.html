@@ -4,7 +4,10 @@
     <!-- Left Section: Logo -->
     <div class="toolbar-section left">
       <a mat-button routerLink="/feed" class="brand-logo">
-        <span class="logo-text">01Blog</span>
+        <img 
+          [src]="themeService.isDarkMode() ? 'assets/images/logx-logo-dark.png' : 'assets/images/logx-logo-light.png'" 
+          alt="LogX" 
+          class="logo-image">
       </a>
     </div>
 

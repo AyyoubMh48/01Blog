@@ -11,7 +11,7 @@
     <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>backend</name>
-    <description>01blog backend</description>
+    <description>LogX backend</description>
 
     <properties>
         <java.version>17</java.version>

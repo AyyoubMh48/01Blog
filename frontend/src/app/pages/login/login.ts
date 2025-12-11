@@ -2,6 +2,7 @@ import { Component,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth';
+import { ThemeService } from '../../services/theme';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -37,7 +38,8 @@ export class Login {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public themeService: ThemeService
   ) {}
 
   togglePasswordVisibility(): void {

@@ -3,9 +3,12 @@
   <div class="login-branding">
     <div class="branding-content">
       <div class="branding-logo">
-        <mat-icon>article</mat-icon>
+        <img 
+          [src]="themeService.isDarkMode() ? 'assets/images/logx-icon-dark.png' : 'assets/images/logx-icon-light.png'" 
+          alt="LogX" 
+          class="branding-logo-image">
       </div>
-      <h1 class="branding-title">01Blog</h1>
+      <h1 class="branding-title">LogX</h1>
       <p class="branding-subtitle">Share your stories, connect with readers</p>
       
       <div class="branding-features">
@@ -31,7 +34,7 @@
       <!-- Header -->
       <div class="login-header">
         <h1 class="login-title">Welcome Back!</h1>
-        <p class="login-subtitle">Log in to your 01Blog account</p>
+        <p class="login-subtitle">Log in to your LogX account</p>
       </div>
 
       <!-- Form -->

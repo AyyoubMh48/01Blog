@@ -91,6 +91,17 @@ body.dark-mode .main-toolbar {
     color: inherit;
     font-weight: 900;
   }
+
+  .logo-image {
+    height: 48px;
+    width: auto;
+    display: block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  &:hover .logo-image {
+    transform: scale(1.05);
+  }
 }
 
 body.dark-mode .brand-logo {

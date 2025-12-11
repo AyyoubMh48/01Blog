@@ -3,9 +3,12 @@
   <div class="register-branding">
     <div class="branding-content">
       <div class="branding-logo">
-        <mat-icon>edit</mat-icon>
+        <img 
+          [src]="themeService.isDarkMode() ? 'assets/images/logx-icon-dark.png' : 'assets/images/logx-icon-light.png'" 
+          alt="LogX" 
+          class="branding-logo-image">
       </div>
-      <h1 class="branding-title">Join 01Blog</h1>
+      <h1 class="branding-title">Join LogX</h1>
       <p class="branding-subtitle">Start sharing your amazing stories</p>
       
       <div class="branding-benefits">
@@ -31,7 +34,7 @@
       <!-- Header -->
       <div class="register-header">
         <h1 class="register-title">Create Account</h1>
-        <p class="register-subtitle">Join the 01Blog community</p>
+        <p class="register-subtitle">Join the LogX community</p>
       </div>
 
       <!-- Form -->

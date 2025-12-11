@@ -1,4 +1,4 @@
-# 01Blog - Production-Ready Social Blogging Platform 🚀
+# LogX - Production-Ready Social Blogging Platform 🚀
 
 [![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-success)](https://github.com/AyyoubMh48/01Blog)
 [![Grade](https://img.shields.io/badge/Grade-A--92%2F100-brightgreen)](PROJECT_ANALYSIS.md)
