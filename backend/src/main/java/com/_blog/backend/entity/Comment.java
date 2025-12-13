@@ -27,11 +27,11 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User author; // The user who wrote the comment
+    private User author; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private Post post; // The post the comment belongs to
+    private Post post;
 
     @PrePersist
     protected void onCreate() {

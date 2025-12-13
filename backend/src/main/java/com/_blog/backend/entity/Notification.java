@@ -20,7 +20,7 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipient_id", nullable = false)
-    private User recipient; // The user who receives the notification
+    private User recipient; 
 
     @Column(nullable = false)
     private String message;

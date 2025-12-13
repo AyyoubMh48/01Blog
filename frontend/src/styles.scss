@@ -264,3 +264,46 @@ body.dark-mode {
     }
   }
 }
+
+// ===========================
+// TOAST / SNACKBAR STYLES
+// ===========================
+
+.toast-success {
+  --mdc-snackbar-container-color: #10b981;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+}
+
+.toast-error {
+  --mdc-snackbar-container-color: #ef4444;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+}
+
+.toast-warning {
+  --mdc-snackbar-container-color: #f59e0b;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+}
+
+.toast-info {
+  --mdc-snackbar-container-color: #3b82f6;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+}
+
+// Snackbar styling improvements
+.mat-mdc-snack-bar-container {
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  
+  .mdc-snackbar__surface {
+    border-radius: 8px !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+  
+  .mat-mdc-snack-bar-label {
+    font-size: 14px !important;
+  }
+}

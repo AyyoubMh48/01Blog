@@ -24,9 +24,9 @@ public class Like {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // The user who gave the like
+    private User user; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private Post post; // The post that was liked
+    private Post post; 
 }

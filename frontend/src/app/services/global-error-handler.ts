@@ -1,6 +1,7 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ToastService } from './toast';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -8,12 +9,17 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: Error | HttpErrorResponse): void {
     const router = this.injector.get(Router);
+    const toast = this.injector.get(ToastService);
+    
     let errorMessage = 'An unexpected error occurred';
     let shouldRedirect = false;
+    let errorType: 'error' | 'warning' = 'error';
 
     if (error instanceof HttpErrorResponse) {
       // Server-side error
-      errorMessage = this.getServerErrorMessage(error);
+      const result = this.getServerErrorMessage(error);
+      errorMessage = result.message;
+      errorType = result.type;
       shouldRedirect = this.shouldRedirectOnError(error);
     } else {
       // Client-side error
@@ -28,64 +34,68 @@ export class GlobalErrorHandler implements ErrorHandler {
     // Log to external service (e.g., Sentry, LogRocket) in production
     this.logErrorToService(error, errorMessage);
 
-    // Show user-friendly notification
-    this.notifyUser(errorMessage);
+    // Show user-friendly notification using Toast
+    if (errorType === 'warning') {
+      toast.warning(errorMessage);
+    } else {
+      toast.error(errorMessage);
+    }
 
     // Redirect if necessary
     if (shouldRedirect) {
-      router.navigate(['/']);
+      router.navigate(['/login']);
     }
   }
 
-  private getServerErrorMessage(error: HttpErrorResponse): string {
+  private getServerErrorMessage(error: HttpErrorResponse): { message: string; type: 'error' | 'warning' } {
     switch (error.status) {
       case 0:
-        return 'No internet connection. Please check your network.';
+        // Server is down or no network
+        if (!navigator.onLine) {
+          return { message: '📡 No internet connection. Please check your network.', type: 'error' };
+        }
+        return { message: '🔌 Cannot connect to server. The server may be down or starting up.', type: 'error' };
       case 400:
-        return error.error?.message || 'Invalid request. Please check your input.';
+        return { message: error.error?.message || '⚠️ Invalid request. Please check your input.', type: 'warning' };
       case 401:
-        return 'Session expired. Please login again.';
+        return { message: '🔐 Session expired. Please login again.', type: 'warning' };
       case 403:
-        return 'You do not have permission to perform this action.';
+        return { message: '🚫 You do not have permission to perform this action.', type: 'warning' };
       case 404:
-        return 'The requested resource was not found.';
+        return { message: '🔍 The requested resource was not found.', type: 'warning' };
       case 409:
-        return error.error?.message || 'Conflict occurred.';
+        return { message: error.error?.message || '⚠️ Conflict occurred.', type: 'warning' };
       case 429:
-        return 'Too many requests. Please try again later.';
+        return { message: '⏳ Too many requests. Please wait and try again later.', type: 'warning' };
       case 500:
-        return 'Server error. Please try again later.';
+        return { message: '💥 Server error. Our team has been notified.', type: 'error' };
+      case 502:
+        return { message: '🔌 Bad gateway. The server is temporarily unavailable.', type: 'error' };
       case 503:
-        return 'Service temporarily unavailable. Please try again later.';
+        return { message: '🛠️ Service temporarily unavailable. Please try again later.', type: 'error' };
+      case 504:
+        return { message: '⏱️ Server timeout. Please try again.', type: 'error' };
       default:
-        return `Server error (${error.status}). Please try again.`;
+        return { message: `❌ Server error (${error.status}). Please try again.`, type: 'error' };
     }
   }
 
   private getClientErrorMessage(error: Error): string {
     if (error.message.includes('ExpressionChangedAfterItHasBeenCheckedError')) {
-      return 'A display error occurred. Please refresh the page.';
+      return '🔄 A display error occurred. Please refresh the page.';
     }
     if (error.message.includes('ChunkLoadError')) {
-      return 'Failed to load application. Please refresh the page.';
+      return '📦 Failed to load application. Please refresh the page.';
     }
     if (error.message.includes('null') || error.message.includes('undefined')) {
-      return 'A data error occurred. Please try again.';
+      return '📊 A data error occurred. Please try again.';
     }
-    return error.message || 'An unexpected error occurred. Please try again.';
+    return error.message || '❌ An unexpected error occurred. Please try again.';
   }
 
   private shouldRedirectOnError(error: HttpErrorResponse): boolean {
-    // Redirect to home on critical errors
-    return error.status === 401 || error.status === 403;
-  }
-
-  private notifyUser(message: string): void {
-    // Simple alert for now - you can replace with a toast notification service
-    if (typeof window !== 'undefined') {
-      // Use setTimeout to avoid blocking the error handler
-      setTimeout(() => alert(message), 0);
-    }
+    // Redirect to login on authentication errors
+    return error.status === 401;
   }
 
   private logErrorToService(error: Error | HttpErrorResponse, message: string): void {
