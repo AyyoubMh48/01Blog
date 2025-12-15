@@ -77,9 +77,19 @@ ngOnInit(): void {
       this.router.navigate(['/login']);
       return;
     }
-    this.likeService.toggleLike(post.id).subscribe(() => {
-      post.likedByCurrentUser = !post.likedByCurrentUser;
-      post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
+    this.likeService.toggleLike(post.id).subscribe({
+      next: () => {
+        post.likedByCurrentUser = !post.likedByCurrentUser;
+        post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.snackBar.open('This post is no longer available', 'Close', { duration: 3000 });
+          this.router.navigate(['/feed']);
+        } else {
+          this.snackBar.open('Failed to like post', 'Close', { duration: 3000 });
+        }
+      }
     });
   }
 

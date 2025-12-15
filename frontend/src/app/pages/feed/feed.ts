@@ -188,17 +188,28 @@ export class Feed implements OnInit {
       return;
     }
 
-    this.likeService.toggleLike(post.id).subscribe(() => {
-      const wasLiked = post.likedByCurrentUser;
-      post.likedByCurrentUser = !post.likedByCurrentUser;
-      post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
-      
-      if (!wasLiked) {
-        this.snackBar.open('Post liked! ❤️', '', {
-          duration: 1500,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
+    this.likeService.toggleLike(post.id).subscribe({
+      next: () => {
+        const wasLiked = post.likedByCurrentUser;
+        post.likedByCurrentUser = !post.likedByCurrentUser;
+        post.likedByCurrentUser ? post.likeCount++ : post.likeCount--;
+        
+        if (!wasLiked) {
+          this.snackBar.open('Post liked! ❤️', '', {
+            duration: 1500,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+        }
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          // Post was hidden/deleted - remove from feed
+          this.posts = this.posts.filter(p => p.id !== post.id);
+          this.snackBar.open('This post is no longer available', 'Close', { duration: 3000 });
+        } else {
+          this.snackBar.open('Failed to like post', 'Close', { duration: 3000 });
+        }
       }
     });
   }

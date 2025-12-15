@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Comment } from '../../models/comment';
 import { CommentService } from '../../services/comment';
 import { AuthService } from '../../services/auth';
@@ -42,7 +43,8 @@ export class CommentSectionComponent implements OnInit {
     private commentService: CommentService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -106,7 +108,12 @@ export class CommentSectionComponent implements OnInit {
         this.snackBar.open('Comment added! 💬', 'Close', { duration: 2000 });
       },
       error: (err) => {
-        this.snackBar.open('Failed to add comment', 'Close', { duration: 4000 });
+        if (err.status === 404) {
+          this.snackBar.open('This post is no longer available', 'Close', { duration: 3000 });
+          this.router.navigate(['/feed']);
+        } else {
+          this.snackBar.open('Failed to add comment', 'Close', { duration: 4000 });
+        }
       }
     });
   }

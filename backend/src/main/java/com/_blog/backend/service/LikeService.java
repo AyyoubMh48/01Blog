@@ -2,7 +2,9 @@ package com._blog.backend.service;
 
 import com._blog.backend.entity.Like;
 import com._blog.backend.entity.Post;
+import com._blog.backend.entity.PostStatus;
 import com._blog.backend.entity.User;
+import com._blog.backend.exception.ResourceNotFoundException;
 import com._blog.backend.repository.LikeRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.UserRepository;
@@ -35,7 +37,11 @@ public class LikeService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found: " + postId));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+
+        if (post.getStatus() != PostStatus.PUBLISHED) {
+            throw new ResourceNotFoundException("Post not found");
+        }
 
         Optional<Like> existingLike = likeRepository.findByPostAndUser(post, user);
 

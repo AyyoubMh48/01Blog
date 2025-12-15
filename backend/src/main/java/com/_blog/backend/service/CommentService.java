@@ -5,7 +5,9 @@ import com._blog.backend.dto.CommentRequestDto;
 import com._blog.backend.dto.CommentResponseDto;
 import com._blog.backend.entity.Comment;
 import com._blog.backend.entity.Post;
+import com._blog.backend.entity.PostStatus;
 import com._blog.backend.entity.User;
+import com._blog.backend.exception.ResourceNotFoundException;
 import com._blog.backend.repository.CommentRepository;
 import com._blog.backend.repository.PostRepository;
 import com._blog.backend.repository.UserRepository;
@@ -36,7 +38,12 @@ public class CommentService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public CommentResponseDto addComment(Long postId, CommentRequestDto commentDto, String userEmail) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+        
+        if (post.getStatus() != PostStatus.PUBLISHED) {
+            throw new ResourceNotFoundException("Post not found");
+        }
+        
         User author = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
