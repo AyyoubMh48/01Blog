@@ -19,6 +19,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByAuthorOrderByCreatedAtDesc(User author, Pageable pageable);
 
     List<Post> findAllByAuthor(User author);
+    
+    // Find all posts by author ordered by newest first (for profile/block page)
+    List<Post> findAllByAuthorOrderByCreatedAtDesc(User author);
 
     Page<Post> findAllByAuthorAndStatusOrderByCreatedAtDesc(User author, PostStatus status, Pageable pageable);
 

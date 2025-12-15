@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com._blog.backend.entity.Media;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,22 +58,23 @@ public class AdminService {
     private NotificationRepository notificationRepository;
 
     public List<ReportResponseDto> getOpenReports() {
-        return reportRepository.findAllByStatus(ReportStatus.OPEN)
+        return reportRepository.findAllByStatusOrderByCreatedAtDesc(ReportStatus.OPEN)
                 .stream()
                 .map(this::mapToReportDto) // Convert each report to a DTO
                 .collect(Collectors.toList());
     }
 
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream()
+        // Get all users ordered by newest first (by ID descending)
+        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "id")).stream()
                 .map(this::mapToUserDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> getAllPosts() {
-        // We can't know who the "current user" is in this context, so we pass null
-        return postRepository.findAll().stream()
+        // Get all posts ordered by newest first
+        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
                 .map(post -> postService.mapToDto(post, null))
                 .toList();
     }

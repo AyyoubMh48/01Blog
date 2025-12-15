@@ -102,7 +102,8 @@ export class CommentSectionComponent implements OnInit {
 
     this.commentService.addComment(this.postId, form.value.content).subscribe({
       next: (newComment) => {
-        this.comments.push(newComment); // Add new comment to the list
+        //this.comments.push(newComment); 
+         this.comments.unshift(newComment); // Add new comment at the top
         this.commentAdded.emit(); // Notify the parent component
         form.reset();
         this.snackBar.open('Comment added! 💬', 'Close', { duration: 2000 });

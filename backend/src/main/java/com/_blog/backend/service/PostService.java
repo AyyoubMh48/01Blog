@@ -127,10 +127,10 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
 
-        // Security Check: Only show non-published posts to admins or the author
+        // Hidden posts are not visible to anyone including the author
         if (post.getStatus() != PostStatus.PUBLISHED) {
-            if (currentUser == null || (!currentUser.getRole().equals("ROLE_ADMIN") && !post.getAuthor().getId().equals(currentUser.getId()))) {
-                throw new ResourceNotFoundException("Post not found"); // Hide it
+            if (currentUser == null || !currentUser.getRole().equals("ROLE_ADMIN")) {
+                throw new ResourceNotFoundException("Post not found"); 
             }
         }
         
@@ -186,7 +186,12 @@ public class PostService {
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+
+        // Hidden posts cannot be edited (only admins can see them)
+        if (post.getStatus() != PostStatus.PUBLISHED) {
+            throw new ResourceNotFoundException("Post not found");
+        }
 
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("You do not have permission to edit this post.");
@@ -216,7 +221,12 @@ public class PostService {
         User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+
+        // Hidden posts cannot be deleted by owner (only admins can manage them)
+        if (post.getStatus() != PostStatus.PUBLISHED) {
+            throw new ResourceNotFoundException("Post not found");
+        }
 
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("You do not have permission to delete this post.");

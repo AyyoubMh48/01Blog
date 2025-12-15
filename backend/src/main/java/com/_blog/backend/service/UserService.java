@@ -55,7 +55,8 @@ public class UserService {
                   //  System.out.println("--- [DEBUG] Database check: Is Following? " + isFollowing);
         }
 
-        List<Post> userPosts = postRepository.findAllByAuthor(user);
+        // Get user posts ordered by newest first
+        List<Post> userPosts = postRepository.findAllByAuthorOrderByCreatedAtDesc(user);
         
         List<PostResponseDto> postDtos = userPosts.stream()
                 .filter(post -> post.getStatus() == PostStatus.PUBLISHED) 

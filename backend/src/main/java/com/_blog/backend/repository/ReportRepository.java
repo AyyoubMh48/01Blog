@@ -16,6 +16,9 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     // finds reports by status 
     List<Report> findAllByStatus(ReportStatus status);
+    
+    // finds reports by status ordered by newest first
+    List<Report> findAllByStatusOrderByCreatedAtDesc(ReportStatus status);
 
     @Modifying
     @Query("DELETE FROM Report r WHERE r.reporter = :user OR r.reportedUser = :user")
