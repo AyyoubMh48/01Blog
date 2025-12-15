@@ -11,6 +11,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(ToastService);
   const authToken = localStorage.getItem('authToken');
   
+  // Check if this is an auth endpoint (login/register) - don't handle 401 for these
+  const isAuthEndpoint = req.url.includes('/api/auth/');
+  
   let authReq = req;
   if (authToken) {
     authReq = req.clone({
@@ -44,14 +47,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           }
           break;
         case 401:
-          // Unauthorized - session expired
-          toast.sessionExpired();
-          authService.logout();
-          router.navigate(['/login']);
+          // Only handle 401 for non-auth endpoints (session expired)
+          if (!isAuthEndpoint) {
+            toast.sessionExpired();
+            authService.logout();
+            router.navigate(['/login']);
+          }
           break;
         case 403:
-          // Forbidden - clear session
-          authService.logout();
+          // Only handle 403 for non-auth endpoints
+          if (!isAuthEndpoint) {
+            authService.logout();
+          }
           break;
         // Other errors will be handled by GlobalErrorHandler
       }
