@@ -566,6 +566,43 @@ mat-card-actions.stats {
   }
 }
 
+// Password requirements checklist
+.password-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--color-bg-section);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 8px;
+
+  .requirement {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-muted);
+      transition: color 0.2s ease;
+    }
+
+    &.valid {
+      color: #10b981;
+
+      mat-icon {
+        color: #10b981;
+      }
+    }
+  }
+}
+
 // ===========================
 // MESSAGES - MORE VISIBLE
 // ===========================

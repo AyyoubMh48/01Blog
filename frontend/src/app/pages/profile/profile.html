@@ -96,6 +96,31 @@
                 <mat-error *ngIf="newPasswordInput.errors?.['required'] && newPasswordInput.touched">New password is required.</mat-error>
                 <mat-error *ngIf="newPasswordInput.errors?.['minlength'] && newPasswordInput.touched">New password must be at least 8 characters.</mat-error>
               </mat-form-field>
+              
+              <!-- Password requirements checklist -->
+              <div class="password-requirements" *ngIf="newPasswordInput.value">
+                <small class="requirement" [class.valid]="hasMinLength(newPasswordInput.value)">
+                  <mat-icon>{{ hasMinLength(newPasswordInput.value) ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                  At least 8 characters
+                </small>
+                <small class="requirement" [class.valid]="hasUppercase(newPasswordInput.value)">
+                  <mat-icon>{{ hasUppercase(newPasswordInput.value) ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                  One uppercase letter
+                </small>
+                <small class="requirement" [class.valid]="hasLowercase(newPasswordInput.value)">
+                  <mat-icon>{{ hasLowercase(newPasswordInput.value) ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                  One lowercase letter
+                </small>
+                <small class="requirement" [class.valid]="hasDigit(newPasswordInput.value)">
+                  <mat-icon>{{ hasDigit(newPasswordInput.value) ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                  One number
+                </small>
+                <small class="requirement" [class.valid]="hasSpecial(newPasswordInput.value)">
+                  <mat-icon>{{ hasSpecial(newPasswordInput.value) ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                  One special character (&#64;#$%^&+=!*)
+                </small>
+              </div>
+
               <mat-form-field appearance="outline">
                 <mat-label>Confirm New Password</mat-label>
                 <input matInput type="password" name="confirmPassword" ngModel required #confirmPasswordInput="ngModel" />

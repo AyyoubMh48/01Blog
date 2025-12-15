@@ -45,6 +45,13 @@ export class Profile {
   expandedPostIds = new Set<number>();
   isLoggedIn = false;
 
+  // Password validation patterns (same as registration)
+  private readonly passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!*]).{8,}$/;
+  private readonly hasUpperCase = /[A-Z]/;
+  private readonly hasLowerCase = /[a-z]/;
+  private readonly hasNumber = /\d/;
+  private readonly hasSpecialChar = /[@#$%^&+=!*]/;
+
   constructor(private userService: UserService,
     private authService: AuthService,
     private postService: PostService,
@@ -118,6 +125,13 @@ export class Profile {
     this.errorMessage = null;
 
     const { newPassword, confirmPassword } = form.value;
+    
+    // Validate password strength (same rules as registration)
+    if (!this.isPasswordValid(newPassword)) {
+      this.snackBar.open('Password must contain at least 8 characters, including uppercase, lowercase, number, and special character (@#$%^&+=!*)', 'Close', { duration: 5000 });
+      return;
+    }
+    
     if (newPassword !== confirmPassword) {
       this.snackBar.open('New passwords do not match', 'Close', { duration: 4000 });
       return;
@@ -192,5 +206,28 @@ export class Profile {
     post.commentCount++;
   }
 
+  // Password validation methods
+  isPasswordValid(password: string): boolean {
+    return this.passwordPattern.test(password);
+  }
 
+  hasMinLength(password: string): boolean {
+    return password?.length >= 8;
+  }
+
+  hasUppercase(password: string): boolean {
+    return this.hasUpperCase.test(password);
+  }
+
+  hasLowercase(password: string): boolean {
+    return this.hasLowerCase.test(password);
+  }
+
+  hasDigit(password: string): boolean {
+    return this.hasNumber.test(password);
+  }
+
+  hasSpecial(password: string): boolean {
+    return this.hasSpecialChar.test(password);
+  }
 }
