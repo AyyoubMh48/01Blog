@@ -18,11 +18,9 @@ import java.util.HashMap;
 import com._blog.backend.dto.LoginDto;
 import com._blog.backend.dto.JwtResponse;
 import jakarta.validation.Valid;
-// import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController //It means methods here return JSON responses (not HTML pages)
 @RequestMapping("/api/auth")
-// @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     @Autowired
@@ -75,6 +73,6 @@ public class AuthController {
         if (xfHeader == null) {
             return request.getRemoteAddr();
         }
-        return xfHeader.split(",")[0];
+        return xfHeader.split(",")[0]; // if use a proxy : X-Forwarded-For = "41.250.10.5, 10.0.0.1" we get the real ip the first one
     }
 }

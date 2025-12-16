@@ -124,6 +124,6 @@ public class RateLimitConfig {
             return response;
         }
         
-        return null; // Rate limit not exceeded
+        return null; 
     }
 }
