@@ -27,38 +27,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println("--- [JWT FILTER] Processing request for: " + request.getRequestURI());
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        System.out.println("--- [JWT FILTER] Authorization Header: " + authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                        System.out.println("--- [JWT FILTER] No JWT Token found. Passing to next filter.");
             filterChain.doFilter(request, response);
-
             return;
         }
 
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwt);
-        System.out.println("--- [JWT FILTER] Extracted User Email from JWT: " + userEmail);
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {// if user oredy authenticated skip 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                                System.out.println("--- [JWT FILTER] Token is valid. Setting security context.");
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(//creates authenticated user token with roles
                         userDetails,
                         null,
                         userDetails.getAuthorities()
                 );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }else {
-                System.out.println("--- [JWT FILTER] Token is NOT valid.");
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));//add infos from request like:(ip address ,browser/client info,request metatdata)
+                SecurityContextHolder.getContext().setAuthentication(authToken);//add authToken in SecurityContextHolder(spring security continer)
             }
-        }else {
-            System.out.println("--- [JWT FILTER] User email not found in token or user is already authenticated.");
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); // go -> next filter-> controller
     }
 }
