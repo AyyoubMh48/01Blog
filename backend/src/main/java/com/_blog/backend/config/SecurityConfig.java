@@ -30,21 +30,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
-@RequiredArgsConstructor
+@EnableWebSecurity //http request ->  filter -> controller
+@EnableMethodSecurity // like @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor //auto creates a constructor just for final
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() { //hash password , compare it
+        return new BCryptPasswordEncoder();//one way hashing
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider() { //auth for login (check,compare with DB)
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -54,8 +54,8 @@ public class SecurityConfig {
    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults())
-            .csrf(csrf -> csrf.disable()) //csrf disable - rest api whit jwt (not cookies) 
+            .cors(withDefaults())//allows cross-origin requests(Angular → Spring API)
+            .csrf(csrf -> csrf.disable()) //csrf disable - jwt (not cookies ,session) 
 
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -70,29 +70,31 @@ public class SecurityConfig {
                 .requestMatchers("/api/media/upload").authenticated()
                 .anyRequest().authenticated()
             )
-            // Tell Spring to not manage sessions (we're using JWTs)
+            //  not manage sessions (we're using JWTs)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
             .authenticationProvider(authenticationProvider())
-            // Add JWT filter before the standard username/password filter
+            // add JWT filter before the standard username/password filter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {//defines which frontend is allowed to call your backend from the browser.
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);// applay configration for all paths
         return source;
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    @Bean 
+    public AuthenticationManager authenticationManager( //decides if credentials are valid or not for login
+        AuthenticationConfiguration authenticationConfiguration
+    ) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
