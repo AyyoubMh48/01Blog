@@ -15,18 +15,18 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private WebSocketAuthInterceptor webSocketAuthInterceptor; 
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
+    public void configureMessageBroker(MessageBrokerRegistry registry) {//how messages are routed (/topic = public, /queue = private).
         registry.enableSimpleBroker("/topic", "/queue");
         registry.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
+    public void registerStompEndpoints(StompEndpointRegistry registry) { //where the frontend connects (/ws).
         registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200").withSockJS();
     }
     
     @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
+    public void configureClientInboundChannel(ChannelRegistration registration) {//Secures WebSocket messages with JWT
         registration.interceptors(webSocketAuthInterceptor);
     }
 }

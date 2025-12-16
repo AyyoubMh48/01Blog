@@ -22,7 +22,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
     private UserDetailsService userDetailsService;
 
     @Override
-    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+    public Message<?> preSend(Message<?> message, MessageChannel channel) {//authenticates WebSocket connections with JWT and links them to the correct user for real-time messaging
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
