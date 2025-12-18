@@ -26,7 +26,7 @@ import com._blog.backend.dto.ProfileUpdateRequestDto;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserService userService;       
 
     @GetMapping("/{username}")
     public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable String username, Principal principal) {

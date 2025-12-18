@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
         System.out.println("--- [DEBUG] Caught generic exception type: " + ex.getClass().getName());
         Map<String, Object> body = new HashMap<>();
-        body.put("message", ex.getMessage());
+        body.put("message", "Bad Request");
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST); // Returns 400
     }
 
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, Object> body = new HashMap<>();
-        body.put("message", ex.getMessage());
+        body.put("messagefgdfgdfgdfgd", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST); // Returns 400
     }
 
@@ -99,7 +99,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN); // Returns 403
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({
+        MethodArgumentNotValidException.class,
+    })
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, Object> body = new HashMap<>();
         String errors = ex.getBindingResult().getFieldErrors().stream()
@@ -109,6 +111,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST); // Returns 400
     }
 
+  
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         Map<String, Object> body = new HashMap<>();

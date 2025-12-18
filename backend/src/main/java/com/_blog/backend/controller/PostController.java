@@ -102,6 +102,7 @@ public class PostController {
     
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long postId, Principal principal) {
+        System.out.println("ppppppppppppppppppppppppppppppppppppppppppppp ===========>          " + postId);
         String currentUserEmail = (principal != null) ? principal.getName() : null;
         PostResponseDto post = postService.getPostById(postId, currentUserEmail);
         return ResponseEntity.ok(post);
